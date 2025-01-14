@@ -1,0 +1,5 @@
+name: JobQuests
+version: '1.0-SNAPSHOT'
+main: me.exyin.jobQuests.JobQuests
+api-version: '1.21'
+authors: [ ExyiN ]

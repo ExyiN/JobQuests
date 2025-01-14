@@ -1,0 +1,177 @@
+package me.exyin.jobQuests.utils;
+
+import me.exyin.jobQuests.JobQuests;
+import me.exyin.jobQuests.model.Job;
+import me.exyin.jobQuests.model.Objective;
+import me.exyin.jobQuests.model.Quest;
+import me.exyin.jobQuests.model.Reward;
+import me.exyin.jobQuests.model.enums.ObjectiveEventType;
+import me.exyin.jobQuests.model.enums.RewardType;
+import me.exyin.jobQuests.model.objectives.ObjectiveFactory;
+import me.exyin.jobQuests.model.objectives.interfaces.ObjectiveType;
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.MessageFormat;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+public class JobLoader {
+    private final JobQuests jobQuests;
+
+    public JobLoader(JobQuests jobQuests) {
+        this.jobQuests = jobQuests;
+    }
+
+    public void saveDefaultJobs() {
+        jobQuests.saveResource("jobs" + File.separator + "hunter.yml", false);
+    }
+
+    public Set<Job> loadAllJobs() {
+        File jobDir = new File(jobQuests.getDataFolder(), "jobs");
+        if (!jobDir.exists()) {
+            saveDefaultJobs();
+        }
+        Set<Job> jobs = new HashSet<>();
+        File[] jobsFiles = jobDir.listFiles();
+        if (jobsFiles == null) {
+            return jobs;
+        }
+        YamlConfiguration yaml = new YamlConfiguration();
+        for (File jobFile : jobsFiles) {
+            try {
+                yaml.load(jobFile);
+                jobs.add(loadJob(yaml, jobFile.getPath()));
+            } catch (IOException | InvalidConfigurationException e) {
+                jobQuests.getLogger().severe(MessageFormat.format("Cannot read configuration for job: {0}", jobFile.getName()));
+            }
+        }
+        return jobs;
+    }
+
+    public Job loadJob(YamlConfiguration jobYaml, String filePath) {
+        String id = jobYaml.getString("id");
+        String name = jobYaml.getString("name");
+        Material material = Material.STONE;
+        try {
+            material = Material.valueOf(jobYaml.getString("material"));
+        } catch (IllegalArgumentException e) {
+            jobQuests.getLogger().severe(MessageFormat.format("In file {0}: Invalid material {1}.", filePath, jobYaml.getString("material")));
+        }
+        List<String> lore = jobYaml.getStringList("lore");
+        Set<Quest> quests = loadQuestsFromJob(jobYaml, filePath);
+        return new Job(id, name, material, lore, quests);
+    }
+
+    public Set<Quest> loadQuestsFromJob(YamlConfiguration jobYaml, String filePath) {
+        ConfigurationSection questsSection = jobYaml.getConfigurationSection("quests");
+        Set<Quest> quests = new HashSet<>();
+        if (questsSection == null) {
+            return quests;
+        }
+        for (String questKey : questsSection.getKeys(false)) {
+            Quest newQuest = loadQuest(questsSection, questKey, filePath);
+            if (newQuest == null) {
+                continue;
+            }
+            quests.add(newQuest);
+        }
+        return quests;
+    }
+
+    public Quest loadQuest(ConfigurationSection questsSection, String questKey, String filePath) {
+        ConfigurationSection questSection = questsSection.getConfigurationSection(questKey);
+        if (questSection == null) {
+            return null;
+        }
+        try {
+            int id = Integer.parseInt(questKey);
+            String title = questSection.getString("title");
+            int requiredLevel = questSection.getInt("requiredLevel");
+            Set<Objective> objectives = loadObjectivesFromQuest(questSection, filePath);
+            Set<Reward> rewards = loadRewardsFromQuest(questSection, filePath);
+            return new Quest(id, title, requiredLevel, objectives, rewards);
+        } catch (NumberFormatException e) {
+            jobQuests.getLogger().severe(MessageFormat.format("In file {0}: Invalid quest key {1}. It should be a number.", filePath, questKey));
+            return null;
+        }
+    }
+
+    private Set<Objective> loadObjectivesFromQuest(ConfigurationSection questSection, String filePath) {
+        ConfigurationSection objectivesSection = questSection.getConfigurationSection("objectives");
+        Set<Objective> objectives = new HashSet<>();
+        if (objectivesSection == null) {
+            return objectives;
+        }
+        for (String objectiveKey : objectivesSection.getKeys(false)) {
+            Objective newObjective = loadObjective(objectivesSection, objectiveKey, filePath);
+            if (newObjective == null) {
+                continue;
+            }
+            objectives.add(newObjective);
+        }
+        return objectives;
+    }
+
+    private Objective loadObjective(ConfigurationSection objectivesSection, String objectiveKey, String filePath) {
+        ConfigurationSection objectiveSection = objectivesSection.getConfigurationSection(objectiveKey);
+        if (objectiveSection == null) {
+            return null;
+        }
+        try {
+            int id = Integer.parseInt(objectiveKey);
+            ObjectiveEventType objectiveEventType = ObjectiveEventType.valueOf(objectiveSection.getString("eventType"));
+            String type = objectiveSection.getString("type");
+            ObjectiveFactory objectiveFactory = new ObjectiveFactory();
+            ObjectiveType objectiveType = objectiveFactory.getStrategy(objectiveEventType);
+            objectiveType.setType(type);
+            int quantity = objectiveSection.getInt("quantity");
+            return new Objective(id, objectiveEventType, objectiveType, quantity);
+        } catch (NumberFormatException e) {
+            jobQuests.getLogger().severe(MessageFormat.format("In file {0}: Invalid objective key {1} format. It should be a number.", filePath, objectiveKey));
+        } catch (IllegalArgumentException e) {
+            jobQuests.getLogger().severe(MessageFormat.format("In file {0}: Invalid objective type {1}. Possible values: {2}", filePath, objectiveSection.getString("eventType"), Arrays.asList(ObjectiveEventType.values())));
+        }
+        return null;
+    }
+
+    private Set<Reward> loadRewardsFromQuest(ConfigurationSection questSection, String filePath) {
+        ConfigurationSection rewardsSection = questSection.getConfigurationSection("rewards");
+        Set<Reward> rewards = new HashSet<>();
+        if (rewardsSection == null) {
+            return rewards;
+        }
+        for (String rewardKey : rewardsSection.getKeys(false)) {
+            Reward newReward = loadReward(rewardsSection, rewardKey, filePath);
+            if (newReward == null) {
+                continue;
+            }
+            rewards.add(newReward);
+        }
+        return rewards;
+    }
+
+    private Reward loadReward(ConfigurationSection rewardsSection, String rewardKey, String filePath) {
+        ConfigurationSection rewardSection = rewardsSection.getConfigurationSection(rewardKey);
+        if (rewardSection == null) {
+            return null;
+        }
+        try {
+            int id = Integer.parseInt(rewardKey);
+            RewardType type = RewardType.valueOf(rewardSection.getString("type"));
+            int quantity = rewardSection.getInt("quantity");
+            return new Reward(id, type, quantity);
+        } catch (NumberFormatException e) {
+            jobQuests.getLogger().severe(MessageFormat.format("In file {0}: Invalid reward key {1} format. It should be a number.", filePath, rewardKey));
+        } catch (IllegalArgumentException e) {
+            jobQuests.getLogger().severe(MessageFormat.format("In file {0}: Invalid reward type {1}. Possible values: {2}", filePath, rewardSection.getString("type"), Arrays.asList(RewardType.values())));
+        }
+        return null;
+    }
+}

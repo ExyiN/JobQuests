@@ -1,0 +1,26 @@
+id: hunter
+name: Hunter
+material: BOW
+lore:
+  - Kill mobs to earn XP and money
+  - This is a cool job
+quests:
+  1:
+    title: Hunt of the day
+    requiredLevel: 1
+    objectives:
+      1:
+        eventType: KILL
+        type: ZOMBIE
+        quantity: 6
+      2:
+        eventType: BREAK
+        type: IRON_ORE
+        quantity: 5
+    rewards:
+      1:
+        type: XP
+        quantity: 150
+      2:
+        type: MONEY
+        quantity: 1000
