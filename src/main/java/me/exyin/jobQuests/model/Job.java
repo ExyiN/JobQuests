@@ -19,4 +19,5 @@ public class Job {
     private Material material;
     private List<String> lore;
     private Set<Quest> quests;
+
 }
