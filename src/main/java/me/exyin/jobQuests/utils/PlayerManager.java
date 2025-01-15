@@ -2,7 +2,9 @@ package me.exyin.jobQuests.utils;
 
 import lombok.Getter;
 import me.exyin.jobQuests.JobQuests;
-import me.exyin.jobQuests.model.*;
+import me.exyin.jobQuests.model.Job;
+import me.exyin.jobQuests.model.Objective;
+import me.exyin.jobQuests.model.Quest;
 import me.exyin.jobQuests.model.player.JQPlayer;
 import me.exyin.jobQuests.model.player.PlayerJob;
 import me.exyin.jobQuests.model.player.PlayerObjective;
@@ -134,7 +136,8 @@ public class PlayerManager {
             Date completedDate = null;
             String date = playerQuestSection.getString("completedDate");
             if (date != null) {
-                completedDate = SimpleDateFormat.getDateTimeInstance().parse(date);
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
+                completedDate = formatter.parse(date);
             }
             Set<PlayerObjective> playerObjectives = loadPlayerObjectives(playerQuestSection);
             return new PlayerQuest(questId, completedDate, playerObjectives);
@@ -171,6 +174,47 @@ public class PlayerManager {
         } catch (NumberFormatException e) {
             return null;
         }
+    }
+
+    public void updatePlayer(UUID uuid) {
+        JQPlayer jqPlayer = jqPlayers.stream().filter(player -> player.getUuid() == uuid).toList().getFirst();
+        jobQuests.getJobs().forEach(job -> {
+            if (jqPlayer.getPlayerJobs().stream().filter(playerJob -> playerJob.getJobId().equals(job.getId())).toList().isEmpty()) {
+                jqPlayer.getPlayerJobs().add(createPlayerJob(job));
+                return;
+            }
+            PlayerJob playerJob = jqPlayer.getPlayerJobs().stream().filter(playerJob1 -> playerJob1.getJobId().equals(job.getId())).toList().getFirst();
+            Set<PlayerQuest> questsToRemove = new HashSet<>();
+            playerJob.getPlayerQuests().forEach(playerQuest -> {
+                if (job.getQuests().stream().filter(quest -> quest.getId() == playerQuest.getQuestId()).toList().isEmpty()) {
+                    questsToRemove.add(playerQuest);
+                } else {
+                    Quest jobQuest = job.getQuests().stream().filter(quest -> quest.getId() == playerQuest.getQuestId()).toList().getFirst();
+                    Set<PlayerObjective> objectivesToRemove = new HashSet<>();
+                    playerQuest.getPlayerObjectives().forEach(playerObjective -> {
+                        if (jobQuest.getObjectives().stream().filter(objective -> objective.getId() == playerObjective.getObjectiveId()).toList().isEmpty()) {
+                            objectivesToRemove.add(playerObjective);
+                        }
+                    });
+                    playerQuest.getPlayerObjectives().removeAll(objectivesToRemove);
+                    if (playerQuest.getPlayerObjectives().size() < jobQuest.getObjectives().size()) {
+                        jobQuest.getObjectives().forEach(objective -> {
+                            if (playerQuest.getPlayerObjectives().stream().filter(playerObjective -> playerObjective.getObjectiveId() == objective.getId()).toList().isEmpty()) {
+                                playerQuest.getPlayerObjectives().add(createPlayerObjective(objective));
+                            }
+                        });
+                    }
+                }
+            });
+            playerJob.getPlayerQuests().removeAll(questsToRemove);
+            if (playerJob.getPlayerQuests().size() < job.getQuests().size()) {
+                job.getQuests().forEach(quest -> {
+                    if (playerJob.getPlayerQuests().stream().filter(playerQuest -> playerQuest.getQuestId() == quest.getId()).toList().isEmpty()) {
+                        playerJob.getPlayerQuests().add(createPlayerQuest(quest));
+                    }
+                });
+            }
+        });
     }
 
     public void savePlayer(UUID uuid) {

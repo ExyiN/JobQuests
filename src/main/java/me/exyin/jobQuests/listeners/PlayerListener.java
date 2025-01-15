@@ -19,6 +19,7 @@ public class PlayerListener implements Listener {
             return;
         }
         jobQuests.getPlayerManager().loadPlayer(playerJoinEvent.getPlayer().getUniqueId());
+        jobQuests.getPlayerManager().updatePlayer(playerJoinEvent.getPlayer().getUniqueId());
     }
 
     @EventHandler
