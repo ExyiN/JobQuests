@@ -19,19 +19,19 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.UUID;
 
 public class PlayerManager {
     private final JobQuests jobQuests;
     @Getter
-    private final Set<JQPlayer> jqPlayers;
+    private final List<JQPlayer> jqPlayers;
 
     public PlayerManager(JobQuests jobQuests) {
         this.jobQuests = jobQuests;
-        this.jqPlayers = new HashSet<>();
+        this.jqPlayers = new ArrayList<>();
     }
 
     public boolean isPlayerLoaded(UUID uuid) {
@@ -80,7 +80,7 @@ public class PlayerManager {
     }
 
     private void createJQPlayer(UUID uuid) {
-        Set<PlayerJob> playerJobs = new HashSet<>();
+        List<PlayerJob> playerJobs = new ArrayList<>();
         jobQuests.getJobManager().getJobs().forEach(job -> {
             PlayerJob playerJob = createPlayerJob(job);
             playerJobs.add(playerJob);
@@ -89,7 +89,7 @@ public class PlayerManager {
     }
 
     private PlayerJob createPlayerJob(Job job) {
-        Set<PlayerQuest> playerQuests = new HashSet<>();
+        List<PlayerQuest> playerQuests = new ArrayList<>();
         job.getQuests().forEach(quest -> {
             PlayerQuest playerQuest = createPlayerQuest(quest);
             playerQuests.add(playerQuest);
@@ -98,7 +98,7 @@ public class PlayerManager {
     }
 
     private PlayerQuest createPlayerQuest(Quest quest) {
-        Set<PlayerObjective> playerObjectives = new HashSet<>();
+        List<PlayerObjective> playerObjectives = new ArrayList<>();
         quest.getObjectives().forEach(objective -> {
             PlayerObjective playerObjective = createPlayerObjective(objective);
             playerObjectives.add(playerObjective);
@@ -119,13 +119,13 @@ public class PlayerManager {
             return;
         }
         YamlConfiguration yaml = YamlConfiguration.loadConfiguration(playerFile);
-        Set<PlayerJob> playerJobs = loadPlayerJobs(yaml);
+        List<PlayerJob> playerJobs = loadPlayerJobs(yaml);
         jqPlayers.add(new JQPlayer(uuid, playerJobs));
     }
 
-    private Set<PlayerJob> loadPlayerJobs(YamlConfiguration yaml) {
+    private List<PlayerJob> loadPlayerJobs(YamlConfiguration yaml) {
         ConfigurationSection playerJobsSection = yaml.getConfigurationSection("jobs");
-        Set<PlayerJob> playerJobs = new HashSet<>();
+        List<PlayerJob> playerJobs = new ArrayList<>();
         if (playerJobsSection == null) {
             return playerJobs;
         }
@@ -145,13 +145,13 @@ public class PlayerManager {
             return null;
         }
         long xp = playerJobSection.getLong("xp");
-        Set<PlayerQuest> playerQuests = loadPlayerQuests(playerJobSection);
+        List<PlayerQuest> playerQuests = loadPlayerQuests(playerJobSection);
         return new PlayerJob(jobKey, xp, playerQuests);
     }
 
-    private Set<PlayerQuest> loadPlayerQuests(ConfigurationSection playerJobSection) {
+    private List<PlayerQuest> loadPlayerQuests(ConfigurationSection playerJobSection) {
         ConfigurationSection playerQuestsSection = playerJobSection.getConfigurationSection("quests");
-        Set<PlayerQuest> playerQuests = new HashSet<>();
+        List<PlayerQuest> playerQuests = new ArrayList<>();
         if (playerQuestsSection == null) {
             return playerQuests;
         }
@@ -178,16 +178,16 @@ public class PlayerManager {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:mm:ss");
                 completedDate = LocalDateTime.from(formatter.parse(date));
             }
-            Set<PlayerObjective> playerObjectives = loadPlayerObjectives(playerQuestSection);
+            List<PlayerObjective> playerObjectives = loadPlayerObjectives(playerQuestSection);
             return new PlayerQuest(questId, completedDate, playerObjectives);
         } catch (NumberFormatException e) {
             return null;
         }
     }
 
-    private Set<PlayerObjective> loadPlayerObjectives(ConfigurationSection playerQuestSection) {
+    private List<PlayerObjective> loadPlayerObjectives(ConfigurationSection playerQuestSection) {
         ConfigurationSection playerObjectivesSection = playerQuestSection.getConfigurationSection("objectives");
-        Set<PlayerObjective> playerObjectives = new HashSet<>();
+        List<PlayerObjective> playerObjectives = new ArrayList<>();
         if (playerObjectivesSection == null) {
             return playerObjectives;
         }
@@ -223,13 +223,13 @@ public class PlayerManager {
                 return;
             }
             PlayerJob playerJob = jqPlayer.getPlayerJobs().stream().filter(playerJob1 -> playerJob1.getJobId().equals(job.getId())).toList().getFirst();
-            Set<PlayerQuest> questsToRemove = new HashSet<>();
+            List<PlayerQuest> questsToRemove = new ArrayList<>();
             playerJob.getPlayerQuests().forEach(playerQuest -> {
                 if (job.getQuests().stream().filter(quest -> quest.getId() == playerQuest.getQuestId()).toList().isEmpty()) {
                     questsToRemove.add(playerQuest);
                 } else {
                     Quest jobQuest = job.getQuests().stream().filter(quest -> quest.getId() == playerQuest.getQuestId()).toList().getFirst();
-                    Set<PlayerObjective> objectivesToRemove = new HashSet<>();
+                    List<PlayerObjective> objectivesToRemove = new ArrayList<>();
                     playerQuest.getPlayerObjectives().forEach(playerObjective -> {
                         if (jobQuest.getObjectives().stream().filter(objective -> objective.getId() == playerObjective.getObjectiveId()).toList().isEmpty()) {
                             objectivesToRemove.add(playerObjective);
@@ -261,7 +261,7 @@ public class PlayerManager {
             loadPlayer(uuid);
         }
         JQPlayer jqPlayer = getJQPlayer(uuid);
-        Set<PlayerJob> jobsToRemove = new HashSet<>();
+        List<PlayerJob> jobsToRemove = new ArrayList<>();
         jqPlayer.getPlayerJobs().forEach(playerJob -> {
             if (jobQuests.getJobManager().getJobs().stream().filter(job -> job.getId().equals(playerJob.getJobId())).toList().isEmpty()) {
                 jobsToRemove.add(playerJob);

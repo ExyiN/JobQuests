@@ -6,14 +6,14 @@ import me.exyin.jobQuests.model.Job;
 import me.exyin.jobQuests.model.Objective;
 import me.exyin.jobQuests.model.Quest;
 
-import java.util.Set;
+import java.util.List;
 
 @Setter
 @Getter
 public class JobManager {
-    private Set<Job> jobs;
+    private List<Job> jobs;
 
-    public JobManager(Set<Job> jobs) {
+    public JobManager(List<Job> jobs) {
         this.jobs = jobs;
     }
 

@@ -6,7 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
@@ -15,5 +15,5 @@ import java.util.Set;
 public class PlayerQuest {
     private int questId;
     private LocalDateTime completedDate;
-    private Set<PlayerObjective> playerObjectives;
+    private List<PlayerObjective> playerObjectives;
 }

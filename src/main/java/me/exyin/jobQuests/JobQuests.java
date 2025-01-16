@@ -10,8 +10,8 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Getter
 public final class JobQuests extends JavaPlugin {
@@ -33,7 +33,7 @@ public final class JobQuests extends JavaPlugin {
         messageConfig = new MessageConfig(this);
         messageManager = new MessageManager(this);
         jobLoader = new JobLoader(this);
-        Set<Job> jobs = jobLoader.loadAllJobs();
+        List<Job> jobs = jobLoader.loadAllJobs();
         jobManager = new JobManager(jobs);
         playerManager = new PlayerManager(this);
 
@@ -64,7 +64,7 @@ public final class JobQuests extends JavaPlugin {
     }
 
     public void reloadJobs() {
-        Set<Job> jobs = jobLoader.loadAllJobs();
+        List<Job> jobs = jobLoader.loadAllJobs();
         jobManager.setJobs(jobs);
     }
 

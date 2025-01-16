@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
@@ -14,5 +14,5 @@ import java.util.Set;
 public class PlayerJob {
     private String jobId;
     private long xp;
-    private Set<PlayerQuest> playerQuests;
+    private List<PlayerQuest> playerQuests;
 }

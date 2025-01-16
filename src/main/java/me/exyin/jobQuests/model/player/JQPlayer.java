@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -14,5 +14,5 @@ import java.util.UUID;
 @AllArgsConstructor
 public class JQPlayer {
     private UUID uuid;
-    private Set<PlayerJob> playerJobs;
+    private List<PlayerJob> playerJobs;
 }

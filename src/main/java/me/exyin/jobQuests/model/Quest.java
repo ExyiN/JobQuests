@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @ToString
@@ -13,6 +13,6 @@ public class Quest {
     private int id;
     private String title;
     private int requiredLevel;
-    private Set<Objective> objectives;
-    private Set<Reward> rewards;
+    private List<Objective> objectives;
+    private List<Reward> rewards;
 }

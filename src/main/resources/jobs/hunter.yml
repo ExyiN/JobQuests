@@ -12,11 +12,11 @@ quests:
       1:
         eventType: KILL
         type: ZOMBIE
-        quantity: 6
+        quantity: 10
       2:
-        eventType: BREAK
-        type: IRON_ORE
-        quantity: 5
+        eventType: KILL
+        type: SKELETON
+        quantity: 10
     rewards:
       1:
         type: XP

@@ -7,7 +7,6 @@ import lombok.ToString;
 import org.bukkit.Material;
 
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -18,6 +17,6 @@ public class Job {
     private String name;
     private Material material;
     private List<String> lore;
-    private Set<Quest> quests;
+    private List<Quest> quests;
 
 }

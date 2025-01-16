@@ -17,10 +17,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class JobLoader {
     private final JobQuests jobQuests;
@@ -33,12 +32,12 @@ public class JobLoader {
         jobQuests.saveResource("jobs" + File.separator + "hunter.yml", false);
     }
 
-    public Set<Job> loadAllJobs() {
+    public List<Job> loadAllJobs() {
         File jobDir = new File(jobQuests.getDataFolder(), "jobs");
         if (!jobDir.exists() || jobDir.listFiles() == null) {
             saveDefaultJobs();
         }
-        Set<Job> jobs = new HashSet<>();
+        List<Job> jobs = new ArrayList<>();
         File[] jobsFiles = jobDir.listFiles();
         if (jobsFiles == null) {
             return jobs;
@@ -65,13 +64,13 @@ public class JobLoader {
             jobQuests.getLogger().severe(MessageFormat.format("In file {0}: Invalid material {1}.", filePath, jobYaml.getString("material")));
         }
         List<String> lore = jobYaml.getStringList("lore");
-        Set<Quest> quests = loadQuestsFromJob(jobYaml, filePath);
+        List<Quest> quests = loadQuestsFromJob(jobYaml, filePath);
         return new Job(id, name, material, lore, quests);
     }
 
-    public Set<Quest> loadQuestsFromJob(YamlConfiguration jobYaml, String filePath) {
+    public List<Quest> loadQuestsFromJob(YamlConfiguration jobYaml, String filePath) {
         ConfigurationSection questsSection = jobYaml.getConfigurationSection("quests");
-        Set<Quest> quests = new HashSet<>();
+        List<Quest> quests = new ArrayList<>();
         if (questsSection == null) {
             return quests;
         }
@@ -94,8 +93,8 @@ public class JobLoader {
             int id = Integer.parseInt(questKey);
             String title = questSection.getString("title");
             int requiredLevel = questSection.getInt("requiredLevel");
-            Set<Objective> objectives = loadObjectivesFromQuest(questSection, filePath);
-            Set<Reward> rewards = loadRewardsFromQuest(questSection, filePath);
+            List<Objective> objectives = loadObjectivesFromQuest(questSection, filePath);
+            List<Reward> rewards = loadRewardsFromQuest(questSection, filePath);
             return new Quest(id, title, requiredLevel, objectives, rewards);
         } catch (NumberFormatException e) {
             jobQuests.getLogger().severe(MessageFormat.format("In file {0}: Invalid quest key {1}. It should be a number.", filePath, questKey));
@@ -103,9 +102,9 @@ public class JobLoader {
         }
     }
 
-    private Set<Objective> loadObjectivesFromQuest(ConfigurationSection questSection, String filePath) {
+    private List<Objective> loadObjectivesFromQuest(ConfigurationSection questSection, String filePath) {
         ConfigurationSection objectivesSection = questSection.getConfigurationSection("objectives");
-        Set<Objective> objectives = new HashSet<>();
+        List<Objective> objectives = new ArrayList<>();
         if (objectivesSection == null) {
             return objectives;
         }
@@ -141,9 +140,9 @@ public class JobLoader {
         return null;
     }
 
-    private Set<Reward> loadRewardsFromQuest(ConfigurationSection questSection, String filePath) {
+    private List<Reward> loadRewardsFromQuest(ConfigurationSection questSection, String filePath) {
         ConfigurationSection rewardsSection = questSection.getConfigurationSection("rewards");
-        Set<Reward> rewards = new HashSet<>();
+        List<Reward> rewards = new ArrayList<>();
         if (rewardsSection == null) {
             return rewards;
         }
