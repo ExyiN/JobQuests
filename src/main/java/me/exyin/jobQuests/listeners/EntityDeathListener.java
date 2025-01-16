@@ -25,30 +25,28 @@ public class EntityDeathListener implements Listener {
         if (!(entity instanceof Player player)) {
             return;
         }
-        jobQuests.getJobManager().getJobs().forEach(job -> {
-            job.getQuests().forEach(quest -> {
-                if (jobQuests.getPlayerManager().getPlayerQuest(player.getUniqueId(), job.getId(), quest.getId()).getCompletedDate() != null) {
+        jobQuests.getJobManager().getJobs().forEach(job -> job.getQuests().forEach(quest -> {
+            if (jobQuests.getPlayerManager().getPlayerQuest(player.getUniqueId(), job.getId(), quest.getId()).getCompletedDate() != null) {
+                return;
+            }
+            quest.getObjectives().forEach(objective -> {
+                if (objective.getObjectiveEventType() != ObjectiveEventType.KILL) {
                     return;
                 }
-                quest.getObjectives().forEach(objective -> {
-                    if (objective.getObjectiveEventType() != ObjectiveEventType.KILL) {
-                        return;
-                    }
-                    EntityType entityType = (EntityType) objective.getObjectiveType().getType();
-                    if (entityDeathEvent.getEntity().getType() != entityType) {
-                        return;
-                    }
-                    PlayerObjective playerObjective = jobQuests.getPlayerManager().getPlayerObjective(player.getUniqueId(), job.getId(), quest.getId(), objective.getId());
-                    if (playerObjective.getProgression() >= objective.getQuantity()) {
-                        return;
-                    }
-                    jobQuests.getPlayerManager().incrementProgression(player.getUniqueId(), job.getId(), quest.getId(), objective.getId());
-                });
-                if(jobQuests.getPlayerManager().checkQuestCompletion(player.getUniqueId(), job.getId(), quest.getId())) {
-                    jobQuests.getPlayerManager().giveRewards(player.getUniqueId(), job.getId(), quest.getId());
-                    jobQuests.getPlayerManager().getPlayerQuest(player.getUniqueId(), job.getId(), quest.getId()).setCompletedDate(LocalDateTime.now());
+                EntityType entityType = (EntityType) objective.getObjectiveType().getType();
+                if (entityDeathEvent.getEntity().getType() != entityType) {
+                    return;
                 }
+                PlayerObjective playerObjective = jobQuests.getPlayerManager().getPlayerObjective(player.getUniqueId(), job.getId(), quest.getId(), objective.getId());
+                if (playerObjective.getProgression() >= objective.getQuantity()) {
+                    return;
+                }
+                jobQuests.getPlayerManager().incrementProgression(player.getUniqueId(), job.getId(), quest.getId(), objective.getId());
             });
-        });
+            if(jobQuests.getPlayerManager().checkQuestCompletion(player.getUniqueId(), job.getId(), quest.getId())) {
+                jobQuests.getPlayerManager().giveRewards(player.getUniqueId(), job.getId(), quest.getId());
+                jobQuests.getPlayerManager().getPlayerQuest(player.getUniqueId(), job.getId(), quest.getId()).setCompletedDate(LocalDateTime.now());
+            }
+        }));
     }
 }

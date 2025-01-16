@@ -1,0 +1,22 @@
+package me.exyin.jobQuests.utils;
+
+import me.exyin.jobQuests.JobQuests;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+
+public class MessageManager {
+    private final JobQuests jobQuests;
+    private final MiniMessage miniMessage;
+
+    public MessageManager(JobQuests jobQuests) {
+        this.jobQuests = jobQuests;
+        this.miniMessage = MiniMessage.miniMessage();
+    }
+
+    public void sendMessage(Audience audience, String message) {
+        if(message.isBlank()) {
+            return;
+        }
+        audience.sendMessage(miniMessage.deserialize(jobQuests.getMessageConfig().getPrefix() + message));
+    }
+}

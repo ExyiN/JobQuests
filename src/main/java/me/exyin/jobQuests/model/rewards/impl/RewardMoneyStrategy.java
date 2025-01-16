@@ -5,6 +5,7 @@ import me.exyin.jobQuests.model.rewards.interfaces.Reward;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.text.MessageFormat;
 import java.util.UUID;
 
 public class RewardMoneyStrategy implements Reward {
@@ -17,9 +18,10 @@ public class RewardMoneyStrategy implements Reward {
     @Override
     public void giveReward(UUID uuid, String jobId, int quantity) {
         Player player = Bukkit.getPlayer(uuid);
-        if(player == null) {
+        if (player == null) {
             return;
         }
         jobQuests.getEconomy().depositPlayer(player, quantity);
+        jobQuests.getMessageManager().sendMessage(jobQuests.getServer().getPlayer(uuid), MessageFormat.format(jobQuests.getMessageConfig().getRewardMoney(), jobQuests.getEconomy().format(quantity)));
     }
 }
