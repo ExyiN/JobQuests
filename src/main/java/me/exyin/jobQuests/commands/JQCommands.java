@@ -21,6 +21,7 @@ public class JQCommands implements CommandExecutor {
         if(args[0].equals("reload")) {
             jobQuests.reloadJobs();
             jobQuests.reloadMessages();
+            jobQuests.reloadConfig();
         }
         return true;
     }

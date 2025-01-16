@@ -11,8 +11,6 @@ import java.io.File;
 public class MessageConfig {
     @Getter(AccessLevel.NONE)
     private final JobQuests jobQuests;
-    @Getter(AccessLevel.NONE)
-    private YamlConfiguration yaml;
     private String prefix;
     private String questCompleted;
     private String rewardXp;
@@ -28,7 +26,7 @@ public class MessageConfig {
         if (!messageFile.exists()) {
             jobQuests.saveResource("messages.yml", false);
         }
-        yaml = YamlConfiguration.loadConfiguration(messageFile);
+        YamlConfiguration yaml = YamlConfiguration.loadConfiguration(messageFile);
         prefix = yaml.getString("prefix");
         questCompleted = yaml.getString("questCompleted");
         rewardXp = yaml.getString("rewardXp");

@@ -1,0 +1,11 @@
+version: 1
+
+sounds:
+  questCompletion:
+    sound: ENTITY_EXPERIENCE_ORB_PICKUP
+    volume: 1
+    pitch: 0.8
+  jobLevelUp:
+    sound: ENTITY_PLAYER_LEVELUP
+    volume: 1
+    pitch: 0.8

@@ -3,6 +3,7 @@ package me.exyin.jobQuests.listeners;
 import me.exyin.jobQuests.JobQuests;
 import me.exyin.jobQuests.model.enums.ObjectiveEventType;
 import me.exyin.jobQuests.model.player.PlayerObjective;
+import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -10,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 
+import java.text.MessageFormat;
 import java.time.LocalDateTime;
 
 public class EntityDeathListener implements Listener {
@@ -43,7 +45,9 @@ public class EntityDeathListener implements Listener {
                 }
                 jobQuests.getPlayerManager().incrementProgression(player.getUniqueId(), job.getId(), quest.getId(), objective.getId());
             });
-            if(jobQuests.getPlayerManager().checkQuestCompletion(player.getUniqueId(), job.getId(), quest.getId())) {
+            if (jobQuests.getPlayerManager().checkQuestCompletion(player.getUniqueId(), job.getId(), quest.getId())) {
+                jobQuests.getMessageManager().sendMessage(player, MessageFormat.format(jobQuests.getMessageConfig().getQuestCompleted(), quest.getTitle()));
+                player.playSound(player.getLocation(), Sound.valueOf(jobQuests.getConfigManager().getQuestCompletionSound()), jobQuests.getConfigManager().getQuestCompletionSoundVolume(), jobQuests.getConfigManager().getQuestCompletionSoundPitch());
                 jobQuests.getPlayerManager().giveRewards(player.getUniqueId(), job.getId(), quest.getId());
                 jobQuests.getPlayerManager().getPlayerQuest(player.getUniqueId(), job.getId(), quest.getId()).setCompletedDate(LocalDateTime.now());
             }

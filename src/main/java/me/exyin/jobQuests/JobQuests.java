@@ -19,26 +19,27 @@ public final class JobQuests extends JavaPlugin {
     private JobManager jobManager;
     private PlayerManager playerManager;
     private MessageConfig messageConfig;
-    private MessageManager  messageManager;
+    private MessageManager messageManager;
+    private ConfigManager configManager;
     private Economy economy;
 
     @Override
     public void onEnable() {
-        if(!setupEconomy()) {
+        if (!setupEconomy()) {
             this.getLogger().severe("Vault dependency not found. Disabling plugin.");
             this.getServer().getPluginManager().disablePlugin(this);
         }
+        configManager = new ConfigManager(this);
+        messageConfig = new MessageConfig(this);
+        messageManager = new MessageManager(this);
         jobLoader = new JobLoader(this);
         Set<Job> jobs = jobLoader.loadAllJobs();
         jobManager = new JobManager(jobs);
         playerManager = new PlayerManager(this);
-        messageConfig = new MessageConfig(this);
-        messageManager = new MessageManager(this);
 
         registerListeners();
         Objects.requireNonNull(this.getCommand("jobquests")).setExecutor(new JQCommands(this));
     }
-
 
     @Override
     public void onDisable() {
@@ -54,7 +55,7 @@ public final class JobQuests extends JavaPlugin {
             return false;
         }
         economy = rsp.getProvider();
-        return economy != null;
+        return true;
     }
 
     private void registerListeners() {
@@ -69,5 +70,9 @@ public final class JobQuests extends JavaPlugin {
 
     public void reloadMessages() {
         messageConfig.setupValues();
+    }
+
+    public void reloadConfig() {
+        configManager.setupValues();
     }
 }

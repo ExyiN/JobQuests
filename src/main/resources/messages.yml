@@ -1,4 +1,4 @@
-prefix: '<gradient:#43F6B5:#FFFDA5>JobQuests</gradient> <dark_gray>»</dark_gray>'
-questCompleted: '<blue>Quest completed: <white>{0}</white></blue>'
+prefix: '<gradient:#43F6B5:#FFFDA5>JobQuests</gradient> <dark_gray>»</dark_gray> '
+questCompleted: '<blue>Quest completed:</blue> {0}'
 rewardXp: '{0} <green>+{1} XP</green>'
 rewardMoney: '<gray>You earned</green> <gold>{0}</gold>'
