@@ -127,7 +127,7 @@ public class JobLoader {
             int id = Integer.parseInt(objectiveKey);
             ObjectiveEventType objectiveEventType = ObjectiveEventType.valueOf(objectiveSection.getString("eventType"));
             String type = objectiveSection.getString("type");
-            ObjectiveFactory objectiveFactory = new ObjectiveFactory();
+            ObjectiveFactory objectiveFactory = new ObjectiveFactory(jobQuests);
             ObjectiveType objectiveType = objectiveFactory.getStrategy(objectiveEventType);
             objectiveType.setType(type);
             int quantity = objectiveSection.getInt("quantity");

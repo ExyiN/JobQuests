@@ -1,11 +1,22 @@
 version: 1
 
+job:
+  xpLevelUpRequirement:
+    # XP requirement to level up
+    base: 200.0
+    # XP requirement multiplier. ex: At job level 3, requirement is base*multiplier²
+    multiplier: 1.5
+
 sounds:
+  jobLevelUp:
+    sound: ENTITY_PLAYER_LEVELUP
+    volume: 1
+    pitch: 0.8
   questCompletion:
     sound: ENTITY_EXPERIENCE_ORB_PICKUP
     volume: 1
     pitch: 0.8
-  jobLevelUp:
-    sound: ENTITY_PLAYER_LEVELUP
+  objectiveCompletion:
+    sound: ENTITY_EXPERIENCE_ORB_PICKUP
     volume: 1
     pitch: 0.8

@@ -2,6 +2,7 @@ package me.exyin.jobQuests.listeners;
 
 import me.exyin.jobQuests.JobQuests;
 import me.exyin.jobQuests.model.enums.ObjectiveEventType;
+import me.exyin.jobQuests.model.player.PlayerJob;
 import me.exyin.jobQuests.model.player.PlayerObjective;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
@@ -44,12 +45,23 @@ public class EntityDeathListener implements Listener {
                     return;
                 }
                 jobQuests.getPlayerManager().incrementProgression(player.getUniqueId(), job.getId(), quest.getId(), objective.getId());
+                if (playerObjective.getProgression() >= objective.getQuantity()) {
+                    jobQuests.getMessageManager().sendMessage(player, MessageFormat.format(jobQuests.getMessageConfig().getObjectiveCompleted(), objective.getObjectiveType().getDescription(playerObjective.getProgression(), objective.getQuantity())));
+                    player.playSound(player.getLocation(), Sound.valueOf(jobQuests.getConfigManager().getObjectiveCompletionSound()), jobQuests.getConfigManager().getObjectiveCompletionSoundVolume(), jobQuests.getConfigManager().getObjectiveCompletionSoundPitch());
+                }
             });
             if (jobQuests.getPlayerManager().checkQuestCompletion(player.getUniqueId(), job.getId(), quest.getId())) {
                 jobQuests.getMessageManager().sendMessage(player, MessageFormat.format(jobQuests.getMessageConfig().getQuestCompleted(), quest.getTitle()));
                 player.playSound(player.getLocation(), Sound.valueOf(jobQuests.getConfigManager().getQuestCompletionSound()), jobQuests.getConfigManager().getQuestCompletionSoundVolume(), jobQuests.getConfigManager().getQuestCompletionSoundPitch());
-                jobQuests.getPlayerManager().giveRewards(player.getUniqueId(), job.getId(), quest.getId());
                 jobQuests.getPlayerManager().getPlayerQuest(player.getUniqueId(), job.getId(), quest.getId()).setCompletedDate(LocalDateTime.now());
+                PlayerJob playerJob = jobQuests.getPlayerManager().getPlayerJob(player.getUniqueId(), job.getId());
+                long oldLevel = jobQuests.getPlayerManager().calculateJobLevel(playerJob.getXp(), 1);
+                jobQuests.getPlayerManager().giveRewards(player.getUniqueId(), job.getId(), quest.getId());
+                long newLevel = jobQuests.getPlayerManager().calculateJobLevel(playerJob.getXp(), 1);
+                if (oldLevel < newLevel) {
+                    jobQuests.getMessageManager().sendMessage(player, MessageFormat.format(jobQuests.getMessageConfig().getJobLevelUp(), job.getName(), oldLevel, newLevel));
+                    player.playSound(player.getLocation(), Sound.valueOf(jobQuests.getConfigManager().getJobLevelUpSound()), jobQuests.getConfigManager().getJobLevelUpSoundVolume(), jobQuests.getConfigManager().getJobLevelUpSoundPitch());
+                }
             }
         }));
     }

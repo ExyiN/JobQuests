@@ -24,3 +24,26 @@ quests:
       2:
         type: MONEY
         quantity: 1000
+  2:
+    title: Hunt of the week
+    requiredLevel: 3
+    objectives:
+      1:
+        eventType: KILL
+        type: ZOMBIE
+        quantity: 30
+      2:
+        eventType: KILL
+        type: SKELETON
+        quantity: 30
+      3:
+        eventType: KILL
+        type: CREEPER
+        quantity: 30
+    rewards:
+      1:
+        type: XP
+        quantity: 1000
+      2:
+        type: MONEY
+        quantity: 15000

@@ -79,6 +79,14 @@ public class PlayerManager {
         });
     }
 
+    public long calculateJobLevel(double jobXp, int level) {
+        double nextLevelRequiredXp = jobQuests.getConfigManager().getJobXpLevelUpRequirementBase() * Math.pow(jobQuests.getConfigManager().getJobXpLevelUpRequirementMultiplier(), level - 1);
+        if (jobXp < nextLevelRequiredXp) {
+            return level;
+        }
+        return calculateJobLevel(jobXp - nextLevelRequiredXp, level + 1);
+    }
+
     private void createJQPlayer(UUID uuid) {
         List<PlayerJob> playerJobs = new ArrayList<>();
         jobQuests.getJobManager().getJobs().forEach(job -> {
@@ -144,7 +152,7 @@ public class PlayerManager {
         if (playerJobSection == null) {
             return null;
         }
-        long xp = playerJobSection.getLong("xp");
+        double xp = playerJobSection.getDouble("xp");
         List<PlayerQuest> playerQuests = loadPlayerQuests(playerJobSection);
         return new PlayerJob(jobKey, xp, playerQuests);
     }

@@ -11,12 +11,17 @@ import java.io.File;
 public class ConfigManager {
     @Getter(AccessLevel.NONE)
     private final JobQuests jobQuests;
-    private String questCompletionSound;
-    private int questCompletionSoundVolume;
-    private int questCompletionSoundPitch;
+    private double jobXpLevelUpRequirementBase;
+    private double jobXpLevelUpRequirementMultiplier;
     private String jobLevelUpSound;
-    private int jobLevelUpSoundVolume;
-    private int jobLevelUpSoundPitch;
+    private float jobLevelUpSoundVolume;
+    private float jobLevelUpSoundPitch;
+    private String questCompletionSound;
+    private float questCompletionSoundVolume;
+    private float questCompletionSoundPitch;
+    private String objectiveCompletionSound;
+    private float objectiveCompletionSoundVolume;
+    private float objectiveCompletionSoundPitch;
 
     public ConfigManager(JobQuests jobQuests) {
         this.jobQuests = jobQuests;
@@ -29,11 +34,16 @@ public class ConfigManager {
             jobQuests.saveResource("config.yml", false);
         }
         YamlConfiguration yaml = YamlConfiguration.loadConfiguration(messageFile);
-        questCompletionSound = yaml.getString("sounds.questCompletion.sound");
-        questCompletionSoundVolume = yaml.getInt("sounds.questCompletion.volume");
-        questCompletionSoundPitch = yaml.getInt("sounds.questCompletion.pitch");
+        jobXpLevelUpRequirementBase = yaml.getDouble("job.xpLevelUpRequirement.base");
+        jobXpLevelUpRequirementMultiplier = yaml.getDouble("job.xpLevelUpRequirement.multiplier");
         jobLevelUpSound = yaml.getString("sounds.jobLevelUp.sound");
-        jobLevelUpSoundVolume = yaml.getInt("sounds.jobLevelUp.volume");
-        jobLevelUpSoundPitch = yaml.getInt("sounds.jobLevelUp.pitch");
+        jobLevelUpSoundVolume = (float) yaml.getDouble("sounds.jobLevelUp.volume");
+        jobLevelUpSoundPitch = (float) yaml.getDouble("sounds.jobLevelUp.pitch");
+        questCompletionSound = yaml.getString("sounds.questCompletion.sound");
+        questCompletionSoundVolume = (float) yaml.getDouble("sounds.questCompletion.volume");
+        questCompletionSoundPitch = (float) yaml.getDouble("sounds.questCompletion.pitch");
+        objectiveCompletionSound = yaml.getString("sounds.objectiveCompletion.sound");
+        objectiveCompletionSoundVolume = (float) yaml.getDouble("sounds.objectiveCompletion.volume");
+        objectiveCompletionSoundPitch = (float) yaml.getDouble("sounds.objectiveCompletion.pitch");
     }
 }

@@ -12,9 +12,13 @@ public class MessageConfig {
     @Getter(AccessLevel.NONE)
     private final JobQuests jobQuests;
     private String prefix;
+    private String jobLevelUp;
     private String questCompleted;
+    private String objectiveCompleted;
     private String rewardXp;
     private String rewardMoney;
+    private String objectiveKILLDesc;
+    private String objectiveBREAKDesc;
 
     public MessageConfig(JobQuests jobQuests) {
         this.jobQuests = jobQuests;
@@ -28,8 +32,12 @@ public class MessageConfig {
         }
         YamlConfiguration yaml = YamlConfiguration.loadConfiguration(messageFile);
         prefix = yaml.getString("prefix");
+        jobLevelUp = yaml.getString("jobLevelUp");
         questCompleted = yaml.getString("questCompleted");
+        objectiveCompleted = yaml.getString("objectiveCompleted");
         rewardXp = yaml.getString("rewardXp");
         rewardMoney = yaml.getString("rewardMoney");
+        objectiveKILLDesc = yaml.getString("objectiveKILLDesc");
+        objectiveBREAKDesc = yaml.getString("objectiveBREAKDesc");
     }
 }

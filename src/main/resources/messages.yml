@@ -1,4 +1,11 @@
 prefix: '<gradient:#43F6B5:#FFFDA5>JobQuests</gradient> <dark_gray>»</dark_gray> '
+
+jobLevelUp: '{0} <color:#FFFDA5>level up</color> <dark_gray>◇</dark_gray> <gray>{1}</gray> <dark_gray>🠖</dark_gray> <green>{2}</green>'
 questCompleted: '<blue>Quest completed:</blue> {0}'
+objectiveCompleted: '<blue>Objective completed:<blue> {0}'
+
 rewardXp: '{0} <green>+{1} XP</green>'
-rewardMoney: '<gray>You earned</green> <gold>{0}</gold>'
+rewardMoney: '<gray>You earned</gray> <gold>{0}</gold>'
+
+objectiveKILLDesc: '<gray>Kill {0}/{1} {2}'
+objectiveBREAKDesc: '<gray>Break {0}/{1} {2}'
