@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Getter
@@ -14,6 +14,6 @@ import java.util.Set;
 @AllArgsConstructor
 public class PlayerQuest {
     private int questId;
-    private Date completedDate;
+    private LocalDateTime completedDate;
     private Set<PlayerObjective> playerObjectives;
 }

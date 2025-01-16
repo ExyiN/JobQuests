@@ -9,16 +9,18 @@ import me.exyin.jobQuests.model.player.JQPlayer;
 import me.exyin.jobQuests.model.player.PlayerJob;
 import me.exyin.jobQuests.model.player.PlayerObjective;
 import me.exyin.jobQuests.model.player.PlayerQuest;
+import me.exyin.jobQuests.model.rewards.RewardFactory;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -40,9 +42,46 @@ public class PlayerManager {
         jqPlayers.remove(jqPlayers.stream().filter(jqPlayer -> jqPlayer.getUuid() == uuid).toList().getFirst());
     }
 
+    public JQPlayer getJQPlayer(UUID uuid) {
+        return jqPlayers.stream().filter(jqPlayer -> jqPlayer.getUuid() == uuid).toList().getFirst();
+    }
+
+    public PlayerJob getPlayerJob(UUID uuid, String jobId) {
+        return getJQPlayer(uuid).getPlayerJobs().stream().filter(playerJob -> playerJob.getJobId().equals(jobId)).toList().getFirst();
+    }
+
+    public PlayerQuest getPlayerQuest(UUID uuid, String jobId, int questId) {
+        return getPlayerJob(uuid, jobId).getPlayerQuests().stream().filter(playerQuest -> playerQuest.getQuestId() == questId).toList().getFirst();
+    }
+
+    public PlayerObjective getPlayerObjective(UUID uuid, String jobId, int questId, int objectiveId) {
+        return getPlayerQuest(uuid, jobId, questId).getPlayerObjectives().stream().filter(playerObjective -> playerObjective.getObjectiveId() == objectiveId).toList().getFirst();
+    }
+
+    public void incrementProgression(UUID uuid, String jobId, int questId, int objectiveId) {
+        PlayerObjective playerObjective = getPlayerObjective(uuid, jobId, questId, objectiveId);
+        playerObjective.setProgression(playerObjective.getProgression() + 1);
+    }
+
+    public boolean checkQuestCompletion(UUID uuid, String jobId, int questId) {
+        for (Objective objective : jobQuests.getJobManager().getQuest(jobId, questId).getObjectives()) {
+            if (getPlayerObjective(uuid, jobId, questId, objective.getId()).getProgression() < objective.getQuantity()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void giveRewards(UUID uuid, String jobId, int questId) {
+        jobQuests.getJobManager().getQuest(jobId, questId).getRewards().forEach(reward -> {
+            RewardFactory rewardFactory = new RewardFactory(jobQuests);
+            rewardFactory.getStrategy(reward.getType()).giveReward(uuid, jobId, reward.getQuantity());
+        });
+    }
+
     private void createJQPlayer(UUID uuid) {
         Set<PlayerJob> playerJobs = new HashSet<>();
-        jobQuests.getJobs().forEach(job -> {
+        jobQuests.getJobManager().getJobs().forEach(job -> {
             PlayerJob playerJob = createPlayerJob(job);
             playerJobs.add(playerJob);
         });
@@ -133,15 +172,15 @@ public class PlayerManager {
         }
         try {
             int questId = Integer.parseInt(questKey);
-            Date completedDate = null;
+            LocalDateTime completedDate = null;
             String date = playerQuestSection.getString("completedDate");
             if (date != null) {
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
-                completedDate = formatter.parse(date);
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:mm:ss");
+                completedDate = LocalDateTime.from(formatter.parse(date));
             }
             Set<PlayerObjective> playerObjectives = loadPlayerObjectives(playerQuestSection);
             return new PlayerQuest(questId, completedDate, playerObjectives);
-        } catch (NumberFormatException | ParseException e) {
+        } catch (NumberFormatException e) {
             return null;
         }
     }
@@ -177,8 +216,8 @@ public class PlayerManager {
     }
 
     public void updatePlayer(UUID uuid) {
-        JQPlayer jqPlayer = jqPlayers.stream().filter(player -> player.getUuid() == uuid).toList().getFirst();
-        jobQuests.getJobs().forEach(job -> {
+        JQPlayer jqPlayer = getJQPlayer(uuid);
+        jobQuests.getJobManager().getJobs().forEach(job -> {
             if (jqPlayer.getPlayerJobs().stream().filter(playerJob -> playerJob.getJobId().equals(job.getId())).toList().isEmpty()) {
                 jqPlayer.getPlayerJobs().add(createPlayerJob(job));
                 return;
@@ -217,8 +256,25 @@ public class PlayerManager {
         });
     }
 
+    public void purgePlayerJobs(UUID uuid) {
+        if (!isPlayerLoaded(uuid)) {
+            loadPlayer(uuid);
+        }
+        JQPlayer jqPlayer = getJQPlayer(uuid);
+        Set<PlayerJob> jobsToRemove = new HashSet<>();
+        jqPlayer.getPlayerJobs().forEach(playerJob -> {
+            if (jobQuests.getJobManager().getJobs().stream().filter(job -> job.getId().equals(playerJob.getJobId())).toList().isEmpty()) {
+                jobsToRemove.add(playerJob);
+            }
+        });
+        jqPlayer.getPlayerJobs().removeAll(jobsToRemove);
+        if (!Objects.requireNonNull(Bukkit.getPlayer(uuid)).isOnline()) {
+            unloadPlayer(uuid);
+        }
+    }
+
     public void savePlayer(UUID uuid) {
-        JQPlayer jqPlayer = jqPlayers.stream().filter(player -> player.getUuid() == uuid).toList().getFirst();
+        JQPlayer jqPlayer = getJQPlayer(uuid);
         String playerFilePath = jobQuests.getDataFolder().getPath() + File.separator + "data" + File.separator + uuid.toString() + ".yml";
         File playerFile = new File(playerFilePath);
         YamlConfiguration yaml = YamlConfiguration.loadConfiguration(playerFile);
@@ -230,7 +286,7 @@ public class PlayerManager {
             ConfigurationSection playerQuestsSection = playerJobSection.createSection("quests");
             playerJob.getPlayerQuests().forEach(playerQuest -> {
                 ConfigurationSection playerQuestSection = playerQuestsSection.createSection(String.valueOf(playerQuest.getQuestId()));
-                playerQuestSection.set("completedDate", playerQuest.getCompletedDate() == null ? null : playerQuest.getCompletedDate().toString());
+                playerQuestSection.set("completedDate", playerQuest.getCompletedDate() == null ? null : playerQuest.getCompletedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:mm:ss")));
                 ConfigurationSection playerObjectivesSection = playerQuestSection.createSection("objectives");
                 playerQuest.getPlayerObjectives().forEach(playerObjective -> {
                     ConfigurationSection playerObjectiveSection = playerObjectivesSection.createSection(String.valueOf(playerObjective.getObjectiveId()));

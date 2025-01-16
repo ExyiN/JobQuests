@@ -35,7 +35,7 @@ public class JobLoader {
 
     public Set<Job> loadAllJobs() {
         File jobDir = new File(jobQuests.getDataFolder(), "jobs");
-        if (!jobDir.exists()) {
+        if (!jobDir.exists() || jobDir.listFiles() == null) {
             saveDefaultJobs();
         }
         Set<Job> jobs = new HashSet<>();
