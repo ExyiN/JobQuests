@@ -27,6 +27,6 @@ public class ObjectiveTypeKillStrategy implements ObjectiveType {
 
     @Override
     public String getDescription(int progression, int quantity) {
-        return MessageFormat.format(jobQuests.getMessageConfig().getObjectiveKILLDesc(), progression, quantity, getType().toString());
+        return MessageFormat.format(jobQuests.getMessageConfig().getObjectiveKILLDesc(), progression, quantity, type.toString().toLowerCase());
     }
 }

@@ -27,6 +27,6 @@ public class ObjectiveTypeBreakStrategy implements ObjectiveType {
 
     @Override
     public String getDescription(int progression, int quantity) {
-        return MessageFormat.format(jobQuests.getMessageConfig().getObjectiveBREAKDesc(), progression, quantity, getType().toString());
+        return MessageFormat.format(jobQuests.getMessageConfig().getObjectiveBREAKDesc(), progression, quantity, type.toString().toLowerCase());
     }
 }

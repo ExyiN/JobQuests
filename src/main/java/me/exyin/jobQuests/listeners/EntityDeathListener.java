@@ -5,7 +5,6 @@ import me.exyin.jobQuests.model.enums.ObjectiveEventType;
 import me.exyin.jobQuests.model.player.PlayerJob;
 import me.exyin.jobQuests.model.player.PlayerObjective;
 import org.bukkit.Sound;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -24,8 +23,8 @@ public class EntityDeathListener implements Listener {
 
     @EventHandler
     public void onEntityDeath(EntityDeathEvent entityDeathEvent) {
-        Entity entity = entityDeathEvent.getDamageSource().getCausingEntity();
-        if (!(entity instanceof Player player)) {
+        Player player = entityDeathEvent.getEntity().getKiller();
+        if (player == null) {
             return;
         }
         jobQuests.getJobManager().getJobs().forEach(job -> job.getQuests().forEach(quest -> {
