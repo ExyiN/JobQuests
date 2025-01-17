@@ -18,7 +18,12 @@ public class TimeManager {
         if (splitRefreshTime.length > 1) {
             unit = splitRefreshTime[1];
         }
-        int time = Integer.parseInt(splitRefreshTime[0]);
+        int time;
+        try {
+            time = Integer.parseInt(splitRefreshTime[0]);
+        } catch (NumberFormatException e) {
+            time = 1;
+        }
         return switch (unit) {
             case "d" -> dateTime.plusDays(time);
             case "h" -> dateTime.plusHours(time);
