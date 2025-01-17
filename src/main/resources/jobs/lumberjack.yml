@@ -1,0 +1,52 @@
+id: lumberjack
+name: Lumberjack
+material: IRON_AXE
+lore:
+  - Cut wood to earn XP and money
+quests:
+  1:
+    title: Another day of cutting wood
+    requiredLevel: 1
+    objectives:
+      1:
+        eventType: BREAK
+        type: OAK_LOG
+        quantity: 16
+      2:
+        eventType: BREAK
+        type: BIRCH_LOG
+        quantity: 16
+      3:
+        eventType: BREAK
+        type: SPRUCE_LOG
+        quantity: 16
+    rewards:
+      1:
+        type: XP
+        quantity: 150
+      2:
+        type: MONEY
+        quantity: 1000
+  2:
+    title: That's a lot of wood
+    requiredLevel: 3
+    objectives:
+      1:
+        eventType: BREAK
+        type: OAK_LOG
+        quantity: 64
+      2:
+        eventType: BREAK
+        type: DARK_OAK_LOG
+        quantity: 64
+      3:
+        eventType: BREAK
+        type: ACACIA_LOG
+        quantity: 64
+    rewards:
+      1:
+        type: XP
+        quantity: 1000
+      2:
+        type: MONEY
+        quantity: 15000

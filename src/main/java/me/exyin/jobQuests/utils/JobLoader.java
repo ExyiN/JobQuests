@@ -30,6 +30,7 @@ public class JobLoader {
 
     public void saveDefaultJobs() {
         jobQuests.saveResource("jobs" + File.separator + "hunter.yml", false);
+        jobQuests.saveResource("jobs" + File.separator + "lumberjack.yml", false);
     }
 
     public List<Job> loadAllJobs() {
