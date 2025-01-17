@@ -4,6 +4,7 @@ import me.exyin.jobQuests.JobQuests;
 import me.exyin.jobQuests.model.enums.ObjectiveEventType;
 import me.exyin.jobQuests.model.player.PlayerJob;
 import me.exyin.jobQuests.model.player.PlayerObjective;
+import me.exyin.jobQuests.model.player.PlayerQuest;
 import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -27,8 +28,14 @@ public class EntityDeathListener implements Listener {
         if (player == null) {
             return;
         }
+        if (jobQuests.getConfigManager().getWorldBlacklist().contains(player.getWorld().getName())
+                || jobQuests.getConfigManager().getGameModeBlacklist().contains(player.getGameMode())) {
+            return;
+        }
         jobQuests.getJobManager().getJobs().forEach(job -> job.getQuests().forEach(quest -> {
-            if (jobQuests.getPlayerManager().getPlayerQuest(player.getUniqueId(), job.getId(), quest.getId()).getCompletedDate() != null) {
+            PlayerJob playerJob = jobQuests.getPlayerManager().getPlayerJob(player.getUniqueId(), job.getId());
+            PlayerQuest playerQuest = jobQuests.getPlayerManager().getPlayerQuest(player.getUniqueId(), job.getId(), quest.getId());
+            if (playerQuest.getCompletedDate() != null || quest.getRequiredLevel() > jobQuests.getPlayerManager().calculateJobLevel(playerJob.getXp(), 1)) {
                 return;
             }
             quest.getObjectives().forEach(objective -> {
@@ -53,7 +60,6 @@ public class EntityDeathListener implements Listener {
                 jobQuests.getMessageManager().sendMessage(player, MessageFormat.format(jobQuests.getMessageConfig().getQuestCompleted(), quest.getTitle()));
                 player.playSound(player.getLocation(), Sound.valueOf(jobQuests.getConfigManager().getQuestCompletionSound()), jobQuests.getConfigManager().getQuestCompletionSoundVolume(), jobQuests.getConfigManager().getQuestCompletionSoundPitch());
                 jobQuests.getPlayerManager().getPlayerQuest(player.getUniqueId(), job.getId(), quest.getId()).setCompletedDate(LocalDateTime.now());
-                PlayerJob playerJob = jobQuests.getPlayerManager().getPlayerJob(player.getUniqueId(), job.getId());
                 long oldLevel = jobQuests.getPlayerManager().calculateJobLevel(playerJob.getXp(), 1);
                 jobQuests.getPlayerManager().giveRewards(player.getUniqueId(), job.getId(), quest.getId());
                 long newLevel = jobQuests.getPlayerManager().calculateJobLevel(playerJob.getXp(), 1);

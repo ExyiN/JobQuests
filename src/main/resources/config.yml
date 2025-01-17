@@ -7,6 +7,15 @@ job:
     # XP requirement multiplier. ex: At job level 3, requirement is base*multiplier²
     multiplier: 1.5
 
+worldBlacklist:
+  - blacklisted_world
+
+# Possible values: SURVIVAL / ADVENTURE / CREATIVE / SPECTATOR
+gameModeBlacklist:
+  - CREATIVE
+  - SPECTATOR
+
+# Check this link for sounds: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
 sounds:
   jobLevelUp:
     sound: ENTITY_PLAYER_LEVELUP

@@ -3,16 +3,21 @@ package me.exyin.jobQuests.utils;
 import lombok.AccessLevel;
 import lombok.Getter;
 import me.exyin.jobQuests.JobQuests;
+import org.bukkit.GameMode;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.util.List;
 
 @Getter
 public class ConfigManager {
     @Getter(AccessLevel.NONE)
     private final JobQuests jobQuests;
+
     private double jobXpLevelUpRequirementBase;
     private double jobXpLevelUpRequirementMultiplier;
+    private List<String> worldBlacklist;
+    private List<GameMode> gameModeBlacklist;
     private String jobLevelUpSound;
     private float jobLevelUpSoundVolume;
     private float jobLevelUpSoundPitch;
@@ -36,6 +41,8 @@ public class ConfigManager {
         YamlConfiguration yaml = YamlConfiguration.loadConfiguration(messageFile);
         jobXpLevelUpRequirementBase = yaml.getDouble("job.xpLevelUpRequirement.base");
         jobXpLevelUpRequirementMultiplier = yaml.getDouble("job.xpLevelUpRequirement.multiplier");
+        worldBlacklist = yaml.getStringList("worldBlacklist");
+        gameModeBlacklist = yaml.getStringList("gameModeBlacklist").stream().map(GameMode::valueOf).toList();
         jobLevelUpSound = yaml.getString("sounds.jobLevelUp.sound");
         jobLevelUpSoundVolume = (float) yaml.getDouble("sounds.jobLevelUp.volume");
         jobLevelUpSoundPitch = (float) yaml.getDouble("sounds.jobLevelUp.pitch");

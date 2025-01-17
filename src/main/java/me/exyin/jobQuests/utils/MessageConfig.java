@@ -19,6 +19,7 @@ public class MessageConfig {
     private String rewardMoney;
     private String objectiveKILLDesc;
     private String objectiveBREAKDesc;
+    private String reload;
 
     public MessageConfig(JobQuests jobQuests) {
         this.jobQuests = jobQuests;
@@ -39,5 +40,6 @@ public class MessageConfig {
         rewardMoney = yaml.getString("rewardMoney");
         objectiveKILLDesc = yaml.getString("objectiveKILLDesc");
         objectiveBREAKDesc = yaml.getString("objectiveBREAKDesc");
+        reload = yaml.getString("reload");
     }
 }

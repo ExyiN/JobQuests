@@ -2,6 +2,7 @@ package me.exyin.jobQuests;
 
 import lombok.Getter;
 import me.exyin.jobQuests.commands.JQCommands;
+import me.exyin.jobQuests.listeners.BlockBreakListener;
 import me.exyin.jobQuests.listeners.EntityDeathListener;
 import me.exyin.jobQuests.listeners.PlayerListener;
 import me.exyin.jobQuests.model.Job;
@@ -61,6 +62,7 @@ public final class JobQuests extends JavaPlugin {
     private void registerListeners() {
         this.getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
         this.getServer().getPluginManager().registerEvents(new EntityDeathListener(this), this);
+        this.getServer().getPluginManager().registerEvents(new BlockBreakListener(this), this);
     }
 
     public void reloadJobs() {

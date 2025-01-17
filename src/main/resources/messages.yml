@@ -9,3 +9,5 @@ rewardMoney: '<gray>You earned</gray> <gold>{0}</gold>'
 
 objectiveKILLDesc: '<gray>Kill {0}/{1} <lang:entity.minecraft.{2}>'
 objectiveBREAKDesc: '<gray>Break {0}/{1} <lang:block.minecraft.{2}>'
+
+reload: '<green>Configurations reloaded.</green>'
