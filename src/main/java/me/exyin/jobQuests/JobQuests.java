@@ -4,6 +4,7 @@ import lombok.Getter;
 import me.exyin.jobQuests.commands.JQCommands;
 import me.exyin.jobQuests.listeners.BlockBreakListener;
 import me.exyin.jobQuests.listeners.EntityDeathListener;
+import me.exyin.jobQuests.listeners.InventoryListener;
 import me.exyin.jobQuests.listeners.PlayerListener;
 import me.exyin.jobQuests.model.Job;
 import me.exyin.jobQuests.runnables.CheckQuestRefreshRunnable;
@@ -23,7 +24,9 @@ public final class JobQuests extends JavaPlugin {
     private JobLoader jobLoader;
     private JobManager jobManager;
     private PlayerManager playerManager;
-    private TimeManager timeManager;
+    private TimeUtil timeUtil;
+    private GuiUtil guiUtil;
+    private GuiConfig guiConfig;
     private Economy economy;
 
     @Override
@@ -39,7 +42,9 @@ public final class JobQuests extends JavaPlugin {
         List<Job> jobs = jobLoader.loadAllJobs();
         jobManager = new JobManager(jobs);
         playerManager = new PlayerManager(this);
-        timeManager = new TimeManager();
+        timeUtil = new TimeUtil();
+        guiUtil = new GuiUtil(this);
+        guiConfig = new GuiConfig(this);
 
         registerListeners();
         Objects.requireNonNull(this.getCommand("jobquests")).setExecutor(new JQCommands(this));
@@ -67,6 +72,7 @@ public final class JobQuests extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
         this.getServer().getPluginManager().registerEvents(new EntityDeathListener(this), this);
         this.getServer().getPluginManager().registerEvents(new BlockBreakListener(this), this);
+        this.getServer().getPluginManager().registerEvents(new InventoryListener(), this);
     }
 
     public void reloadJobs() {
@@ -80,5 +86,9 @@ public final class JobQuests extends JavaPlugin {
 
     public void reloadConfig() {
         configManager.setupValues();
+    }
+
+    public void reloadGuiConfig() {
+        guiConfig.setupValues();
     }
 }

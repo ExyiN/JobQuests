@@ -1,8 +1,8 @@
 id: lumberjack
 name: Lumberjack
 material: IRON_AXE
-lore:
-  - Cut wood to earn XP and money
+description:
+  - <dark_gray>Cut wood to earn XP and money
 quests:
   1:
     title: Another day of cutting wood

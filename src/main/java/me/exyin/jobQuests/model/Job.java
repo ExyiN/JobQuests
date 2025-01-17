@@ -16,7 +16,7 @@ public class Job {
     private String id;
     private String name;
     private Material material;
-    private List<String> lore;
+    private List<String> description;
     private List<Quest> quests;
 
 }

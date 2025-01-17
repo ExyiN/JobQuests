@@ -1,0 +1,10 @@
+title: JobQuests
+rows: 3
+empty: BLACK_STAINED_GLASS_PANE
+jobItem:
+  name: '{0} <dark_gray>◇</dark_gray> <gray>ʟᴠʟ</gray> <yellow>{1}</yellow>'
+  lore:
+    - '<gray>Next level</gray> <dark_gray>»</dark_gray> <green>{0}</green><gray>/{1} XP</gray>'
+jobSlot:
+  hunter: 10
+  lumberjack: 11

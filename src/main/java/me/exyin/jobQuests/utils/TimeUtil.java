@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Getter
-public class TimeManager {
+public class TimeUtil {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:mm:ss");
 
     public LocalDateTime getRefreshDate(LocalDateTime dateTime, String refreshTime) {

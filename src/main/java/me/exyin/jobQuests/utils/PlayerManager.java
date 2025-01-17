@@ -78,8 +78,20 @@ public class PlayerManager {
         });
     }
 
+    public double getNextLevelRequiredXp(long level) {
+        return jobQuests.getConfigManager().getJobXpLevelUpRequirementBase() * Math.pow(jobQuests.getConfigManager().getJobXpLevelUpRequirementMultiplier(), level - 1);
+    }
+
+    public double getCurrentLevelXp(double jobXp, long level) {
+        double currentLevelRequiredXp = getNextLevelRequiredXp(level - 1);
+        if (level <= 1) {
+            return jobXp;
+        }
+        return getCurrentLevelXp(jobXp - currentLevelRequiredXp, level - 1);
+    }
+
     public long calculateJobLevel(double jobXp, int level) {
-        double nextLevelRequiredXp = jobQuests.getConfigManager().getJobXpLevelUpRequirementBase() * Math.pow(jobQuests.getConfigManager().getJobXpLevelUpRequirementMultiplier(), level - 1);
+        double nextLevelRequiredXp = getNextLevelRequiredXp(level);
         if (jobXp < nextLevelRequiredXp) {
             return level;
         }
@@ -190,7 +202,7 @@ public class PlayerManager {
             LocalDateTime completedDate = null;
             String date = playerQuestSection.getString("completedDate");
             if (date != null) {
-                completedDate = LocalDateTime.from(jobQuests.getTimeManager().getFormatter().parse(date));
+                completedDate = LocalDateTime.from(jobQuests.getTimeUtil().getFormatter().parse(date));
             }
             List<PlayerObjective> playerObjectives = loadPlayerObjectives(playerQuestSection);
             return new PlayerQuest(questId, completedDate, playerObjectives);
@@ -300,7 +312,7 @@ public class PlayerManager {
             ConfigurationSection playerQuestsSection = playerJobSection.createSection("quests");
             playerJob.getPlayerQuests().forEach(playerQuest -> {
                 ConfigurationSection playerQuestSection = playerQuestsSection.createSection(String.valueOf(playerQuest.getQuestId()));
-                playerQuestSection.set("completedDate", playerQuest.getCompletedDate() == null ? null : playerQuest.getCompletedDate().format(jobQuests.getTimeManager().getFormatter()));
+                playerQuestSection.set("completedDate", playerQuest.getCompletedDate() == null ? null : playerQuest.getCompletedDate().format(jobQuests.getTimeUtil().getFormatter()));
                 ConfigurationSection playerObjectivesSection = playerQuestSection.createSection("objectives");
                 playerQuest.getPlayerObjectives().forEach(playerObjective -> {
                     ConfigurationSection playerObjectiveSection = playerObjectivesSection.createSection(String.valueOf(playerObjective.getObjectiveId()));

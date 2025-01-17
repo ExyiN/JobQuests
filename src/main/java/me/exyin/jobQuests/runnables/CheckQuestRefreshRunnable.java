@@ -22,7 +22,7 @@ public class CheckQuestRefreshRunnable extends BukkitRunnable {
                                 return;
                             }
                             Quest quest = jobQuests.getJobManager().getQuest(playerJob.getJobId(), playerQuest.getQuestId());
-                            if (LocalDateTime.now().isBefore(jobQuests.getTimeManager().getRefreshDate(playerQuest.getCompletedDate(), quest.getRefreshTime()))) {
+                            if (LocalDateTime.now().isBefore(jobQuests.getTimeUtil().getRefreshDate(playerQuest.getCompletedDate(), quest.getRefreshTime()))) {
                                 return;
                             }
                             jobQuests.getPlayerManager().refreshPlayerQuest(player.getUniqueId(), playerJob.getJobId(), playerQuest.getQuestId());
