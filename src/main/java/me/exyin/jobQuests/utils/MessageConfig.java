@@ -15,6 +15,7 @@ public class MessageConfig {
     private String jobLevelUp;
     private String questCompleted;
     private String objectiveCompleted;
+    private String questRefreshed;
     private String rewardXp;
     private String rewardMoney;
     private String objectiveKILLDesc;
@@ -36,6 +37,7 @@ public class MessageConfig {
         jobLevelUp = yaml.getString("jobLevelUp");
         questCompleted = yaml.getString("questCompleted");
         objectiveCompleted = yaml.getString("objectiveCompleted");
+        questRefreshed = yaml.getString("questRefreshed");
         rewardXp = yaml.getString("rewardXp");
         rewardMoney = yaml.getString("rewardMoney");
         objectiveKILLDesc = yaml.getString("objectiveKILLDesc");

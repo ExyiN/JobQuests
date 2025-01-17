@@ -13,6 +13,7 @@ public class Quest {
     private int id;
     private String title;
     private int requiredLevel;
+    private String refreshTime;
     private List<Objective> objectives;
     private List<Reward> rewards;
 }

@@ -8,6 +8,7 @@ quests:
   1:
     title: Hunt of the day
     requiredLevel: 1
+    refreshTime: 1 d
     objectives:
       1:
         eventType: KILL
@@ -27,6 +28,7 @@ quests:
   2:
     title: Hunt of the week
     requiredLevel: 3
+    refreshTime: 7 d
     objectives:
       1:
         eventType: KILL

@@ -7,6 +7,7 @@ quests:
   1:
     title: Another day of cutting wood
     requiredLevel: 1
+    refreshTime: 1 d
     objectives:
       1:
         eventType: BREAK
@@ -30,6 +31,7 @@ quests:
   2:
     title: That's a lot of wood
     requiredLevel: 3
+    refreshTime: 7 d
     objectives:
       1:
         eventType: BREAK

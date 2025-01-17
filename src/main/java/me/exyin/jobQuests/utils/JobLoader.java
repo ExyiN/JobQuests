@@ -94,9 +94,10 @@ public class JobLoader {
             int id = Integer.parseInt(questKey);
             String title = questSection.getString("title");
             int requiredLevel = questSection.getInt("requiredLevel");
+            String refreshTime = questSection.getString("refreshTime");
             List<Objective> objectives = loadObjectivesFromQuest(questSection, filePath);
             List<Reward> rewards = loadRewardsFromQuest(questSection, filePath);
-            return new Quest(id, title, requiredLevel, objectives, rewards);
+            return new Quest(id, title, requiredLevel, refreshTime, objectives, rewards);
         } catch (NumberFormatException e) {
             jobQuests.getLogger().severe(MessageFormat.format("In file {0}: Invalid quest key {1}. It should be a number.", filePath, questKey));
             return null;

@@ -6,6 +6,7 @@ import me.exyin.jobQuests.listeners.BlockBreakListener;
 import me.exyin.jobQuests.listeners.EntityDeathListener;
 import me.exyin.jobQuests.listeners.PlayerListener;
 import me.exyin.jobQuests.model.Job;
+import me.exyin.jobQuests.runnables.CheckQuestRefreshRunnable;
 import me.exyin.jobQuests.utils.*;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -16,12 +17,13 @@ import java.util.Objects;
 
 @Getter
 public final class JobQuests extends JavaPlugin {
+    private ConfigManager configManager;
+    private MessageConfig messageConfig;
+    private MessageManager messageManager;
     private JobLoader jobLoader;
     private JobManager jobManager;
     private PlayerManager playerManager;
-    private MessageConfig messageConfig;
-    private MessageManager messageManager;
-    private ConfigManager configManager;
+    private TimeManager timeManager;
     private Economy economy;
 
     @Override
@@ -37,9 +39,11 @@ public final class JobQuests extends JavaPlugin {
         List<Job> jobs = jobLoader.loadAllJobs();
         jobManager = new JobManager(jobs);
         playerManager = new PlayerManager(this);
+        timeManager = new TimeManager();
 
         registerListeners();
         Objects.requireNonNull(this.getCommand("jobquests")).setExecutor(new JQCommands(this));
+        new CheckQuestRefreshRunnable(this).runTaskTimer(this, 0L, 20L);
     }
 
     @Override

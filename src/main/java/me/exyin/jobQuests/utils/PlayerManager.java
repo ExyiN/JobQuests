@@ -18,7 +18,6 @@ import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -85,6 +84,14 @@ public class PlayerManager {
             return level;
         }
         return calculateJobLevel(jobXp - nextLevelRequiredXp, level + 1);
+    }
+
+    public void refreshPlayerQuest(UUID uuid, String jobId, int questId) {
+        PlayerQuest playerQuest = getPlayerQuest(uuid, jobId, questId);
+        playerQuest.setCompletedDate(null);
+        playerQuest.getPlayerObjectives().forEach(playerObjective -> playerObjective.setProgression(0));
+        Quest quest = jobQuests.getJobManager().getQuest(jobId, questId);
+        jobQuests.getMessageManager().sendMessage(jobQuests.getServer().getPlayer(uuid), MessageFormat.format(jobQuests.getMessageConfig().getQuestRefreshed(), quest.getTitle()));
     }
 
     private void createJQPlayer(UUID uuid) {
@@ -183,8 +190,7 @@ public class PlayerManager {
             LocalDateTime completedDate = null;
             String date = playerQuestSection.getString("completedDate");
             if (date != null) {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:mm:ss");
-                completedDate = LocalDateTime.from(formatter.parse(date));
+                completedDate = LocalDateTime.from(jobQuests.getTimeManager().getFormatter().parse(date));
             }
             List<PlayerObjective> playerObjectives = loadPlayerObjectives(playerQuestSection);
             return new PlayerQuest(questId, completedDate, playerObjectives);
@@ -294,7 +300,7 @@ public class PlayerManager {
             ConfigurationSection playerQuestsSection = playerJobSection.createSection("quests");
             playerJob.getPlayerQuests().forEach(playerQuest -> {
                 ConfigurationSection playerQuestSection = playerQuestsSection.createSection(String.valueOf(playerQuest.getQuestId()));
-                playerQuestSection.set("completedDate", playerQuest.getCompletedDate() == null ? null : playerQuest.getCompletedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:mm:ss")));
+                playerQuestSection.set("completedDate", playerQuest.getCompletedDate() == null ? null : playerQuest.getCompletedDate().format(jobQuests.getTimeManager().getFormatter()));
                 ConfigurationSection playerObjectivesSection = playerQuestSection.createSection("objectives");
                 playerQuest.getPlayerObjectives().forEach(playerObjective -> {
                     ConfigurationSection playerObjectiveSection = playerObjectivesSection.createSection(String.valueOf(playerObjective.getObjectiveId()));
