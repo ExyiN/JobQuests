@@ -20,7 +20,7 @@ public class JQGui implements InventoryHolder {
 
     public JQGui(JobQuests jobQuests, UUID playerUuid) {
         this.jobQuests = jobQuests;
-        this.inventory = jobQuests.getServer().createInventory(this, 9 * jobQuests.getGuiConfig().getJobRows());
+        this.inventory = jobQuests.getServer().createInventory(this, 9 * jobQuests.getGuiConfig().getJobRows(), jobQuests.getMessageManager().toMiniMessageComponent(jobQuests.getGuiConfig().getJobTitle()));
         this.playerUuid = playerUuid;
         setupItems();
     }
