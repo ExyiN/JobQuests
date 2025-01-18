@@ -4,8 +4,6 @@ job:
   xpLevelUpRequirement:
     # XP requirement to level up
     base: 200.0
-    # XP requirement multiplier. ex: At job level 3, requirement is base*multiplier²
-    multiplier: 1.5
 
 worldBlacklist:
   - blacklisted_world

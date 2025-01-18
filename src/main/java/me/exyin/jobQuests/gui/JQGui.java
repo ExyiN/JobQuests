@@ -33,14 +33,13 @@ public class JQGui implements InventoryHolder {
         jobQuests.getGuiConfig().getJobSlot().forEach((jobId, slot) -> {
             Job job = jobQuests.getJobManager().getJob(jobId);
             PlayerJob playerJob = jobQuests.getPlayerManager().getPlayerJob(playerUuid, jobId);
-            long level = jobQuests.getPlayerManager().calculateJobLevel(playerJob.getXp(), 1);
+            long level = playerJob.getLevel();
             String itemName = MessageFormat.format(jobQuests.getGuiConfig().getJobName(), job.getName(), level);
             double nextLevelRequiredXp = jobQuests.getPlayerManager().getNextLevelRequiredXp(level);
-            double currentLevelXp = jobQuests.getPlayerManager().getCurrentLevelXp(playerJob.getXp(), level);
             List<String> lore = new ArrayList<>(job.getDescription());
-            jobQuests.getGuiConfig().getJobLore().forEach(line -> lore.add(MessageFormat.format(line, String.format("%.2f", currentLevelXp), String.format("%.2f", nextLevelRequiredXp))));
+            jobQuests.getGuiConfig().getJobLore().forEach(line -> lore.add(MessageFormat.format(line, String.format("%.2f", playerJob.getXp()), String.format("%.2f", nextLevelRequiredXp))));
             List<String> modifiedLore = lore.stream().map(line -> "<!i><white>" + line).toList();
-            ItemStack itemStack = jobQuests.getGuiUtil().getItemStack(job.getMaterial(), itemName, modifiedLore, (int) level);
+            ItemStack itemStack = jobQuests.getGuiUtil().getItemStack(job.getMaterial(), itemName, modifiedLore, 1);
             inventory.setItem(slot, itemStack);
         });
     }

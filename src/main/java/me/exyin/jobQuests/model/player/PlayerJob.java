@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class PlayerJob {
     private String jobId;
+    private long level;
     private double xp;
     private List<PlayerQuest> playerQuests;
 }

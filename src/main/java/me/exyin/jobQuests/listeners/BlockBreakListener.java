@@ -32,7 +32,7 @@ public class BlockBreakListener implements Listener {
         jobQuests.getJobManager().getJobs().forEach(job -> job.getQuests().forEach(quest -> {
             PlayerJob playerJob = jobQuests.getPlayerManager().getPlayerJob(player.getUniqueId(), job.getId());
             PlayerQuest playerQuest = jobQuests.getPlayerManager().getPlayerQuest(player.getUniqueId(), job.getId(), quest.getId());
-            if (playerQuest.getCompletedDate() != null || quest.getRequiredLevel() > jobQuests.getPlayerManager().calculateJobLevel(playerJob.getXp(), 1)) {
+            if (playerQuest.getCompletedDate() != null || quest.getRequiredLevel() > playerJob.getLevel()) {
                 return;
             }
             quest.getObjectives().forEach(objective -> {
@@ -57,9 +57,9 @@ public class BlockBreakListener implements Listener {
                 jobQuests.getMessageManager().sendMessage(player, MessageFormat.format(jobQuests.getMessageConfig().getQuestCompleted(), quest.getTitle()));
                 player.playSound(player.getLocation(), Sound.valueOf(jobQuests.getConfigManager().getQuestCompletionSound()), jobQuests.getConfigManager().getQuestCompletionSoundVolume(), jobQuests.getConfigManager().getQuestCompletionSoundPitch());
                 jobQuests.getPlayerManager().getPlayerQuest(player.getUniqueId(), job.getId(), quest.getId()).setCompletedDate(LocalDateTime.now());
-                long oldLevel = jobQuests.getPlayerManager().calculateJobLevel(playerJob.getXp(), 1);
+                long oldLevel = playerJob.getLevel();
                 jobQuests.getPlayerManager().giveRewards(player.getUniqueId(), job.getId(), quest.getId());
-                long newLevel = jobQuests.getPlayerManager().calculateJobLevel(playerJob.getXp(), 1);
+                long newLevel = jobQuests.getPlayerManager().changeJobLevel(player.getUniqueId(), job.getId());
                 if (oldLevel < newLevel) {
                     jobQuests.getMessageManager().sendMessage(player, MessageFormat.format(jobQuests.getMessageConfig().getJobLevelUp(), job.getName(), oldLevel, newLevel));
                     player.playSound(player.getLocation(), Sound.valueOf(jobQuests.getConfigManager().getJobLevelUpSound()), jobQuests.getConfigManager().getJobLevelUpSoundVolume(), jobQuests.getConfigManager().getJobLevelUpSoundPitch());

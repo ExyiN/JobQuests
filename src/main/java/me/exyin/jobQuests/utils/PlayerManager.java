@@ -79,23 +79,26 @@ public class PlayerManager {
     }
 
     public double getNextLevelRequiredXp(long level) {
-        return jobQuests.getConfigManager().getJobXpLevelUpRequirementBase() * Math.pow(jobQuests.getConfigManager().getJobXpLevelUpRequirementMultiplier(), level - 1);
+        return jobQuests.getConfigManager().getJobXpLevelUpRequirementBase() + Math.pow(level - 1, 2) * 5;
     }
 
-    public double getCurrentLevelXp(double jobXp, long level) {
-        double currentLevelRequiredXp = getNextLevelRequiredXp(level - 1);
-        if (level <= 1) {
-            return jobXp;
-        }
-        return getCurrentLevelXp(jobXp - currentLevelRequiredXp, level - 1);
-    }
-
-    public long calculateJobLevel(double jobXp, int level) {
-        double nextLevelRequiredXp = getNextLevelRequiredXp(level);
-        if (jobXp < nextLevelRequiredXp) {
-            return level;
-        }
-        return calculateJobLevel(jobXp - nextLevelRequiredXp, level + 1);
+    public long changeJobLevel(UUID uuid, String jobId) {
+        PlayerJob playerJob = getPlayerJob(uuid, jobId);
+        long newLevel = playerJob.getLevel();
+        double jobXp = playerJob.getXp();
+        boolean loopEnd = false;
+        do {
+            double xpRequirement = getNextLevelRequiredXp(newLevel);
+            if (jobXp >= xpRequirement) {
+                jobXp -= xpRequirement;
+                newLevel++;
+            } else {
+                loopEnd = true;
+            }
+        } while (!loopEnd);
+        playerJob.setLevel(newLevel);
+        playerJob.setXp(jobXp);
+        return newLevel;
     }
 
     public void refreshPlayerQuest(UUID uuid, String jobId, int questId) {
@@ -121,7 +124,7 @@ public class PlayerManager {
             PlayerQuest playerQuest = createPlayerQuest(quest);
             playerQuests.add(playerQuest);
         });
-        return new PlayerJob(job.getId(), 0, playerQuests);
+        return new PlayerJob(job.getId(), 1, 0, playerQuests);
     }
 
     private PlayerQuest createPlayerQuest(Quest quest) {
@@ -171,9 +174,10 @@ public class PlayerManager {
         if (playerJobSection == null) {
             return null;
         }
+        long level = playerJobSection.getLong("level");
         double xp = playerJobSection.getDouble("xp");
         List<PlayerQuest> playerQuests = loadPlayerQuests(playerJobSection);
-        return new PlayerJob(jobKey, xp, playerQuests);
+        return new PlayerJob(jobKey, level, xp, playerQuests);
     }
 
     private List<PlayerQuest> loadPlayerQuests(ConfigurationSection playerJobSection) {
@@ -308,6 +312,7 @@ public class PlayerManager {
         ConfigurationSection playerJobsSection = yaml.createSection("jobs");
         jqPlayer.getPlayerJobs().forEach(playerJob -> {
             ConfigurationSection playerJobSection = playerJobsSection.createSection(playerJob.getJobId());
+            playerJobSection.set("level", playerJob.getLevel());
             playerJobSection.set("xp", playerJob.getXp());
             ConfigurationSection playerQuestsSection = playerJobSection.createSection("quests");
             playerJob.getPlayerQuests().forEach(playerQuest -> {
