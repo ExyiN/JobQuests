@@ -11,5 +11,5 @@ import me.exyin.jobQuests.model.enums.RewardType;
 public class Reward {
     private int id;
     private RewardType type;
-    private int quantity;
+    private double quantity;
 }

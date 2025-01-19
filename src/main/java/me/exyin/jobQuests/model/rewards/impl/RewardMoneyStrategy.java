@@ -22,7 +22,7 @@ public class RewardMoneyStrategy implements Reward {
     }
 
     @Override
-    public void giveReward(UUID uuid, String jobId, int quantity) {
+    public void giveReward(UUID uuid, String jobId, double quantity) {
         Player player = Bukkit.getPlayer(uuid);
         if (player == null) {
             return;

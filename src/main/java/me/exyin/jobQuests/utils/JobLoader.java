@@ -166,7 +166,7 @@ public class JobLoader {
         try {
             int id = Integer.parseInt(rewardKey);
             RewardType type = RewardType.valueOf(rewardSection.getString("type"));
-            int quantity = rewardSection.getInt("quantity");
+            double quantity = rewardSection.getDouble("quantity");
             return new Reward(id, type, quantity);
         } catch (NumberFormatException e) {
             jobQuests.getLogger().warning(MessageFormat.format("In file {0}: Invalid reward key {1} format. It should be a number.", filePath, rewardKey));

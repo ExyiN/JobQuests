@@ -22,7 +22,7 @@ public class RewardXpStrategy implements Reward {
     }
 
     @Override
-    public void giveReward(UUID uuid, String jobId, int quantity) {
+    public void giveReward(UUID uuid, String jobId, double quantity) {
         PlayerJob playerJob = jobQuests.getPlayerManager().getPlayerJob(uuid, jobId);
         Job job = jobQuests.getJobManager().getJob(jobId);
         playerJob.setXp(playerJob.getXp() + quantity);
