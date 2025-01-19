@@ -84,9 +84,9 @@ public class GuiConfig {
     }
 
     private void setupJobGuiValues() {
-        File jobGuiFile = new File(jobQuests.getDataFolder(), "gui" + File.separator + "jobGui.yml");
+        File jobGuiFile = new File(jobQuests.getDataFolder(), "gui" + File.separator + "jobsGui.yml");
         if (!jobGuiFile.exists()) {
-            jobQuests.saveResource("gui" + File.separator + "jobGui.yml", false);
+            jobQuests.saveResource("gui" + File.separator + "jobsGui.yml", false);
         }
         YamlConfiguration yaml = YamlConfiguration.loadConfiguration(jobGuiFile);
         jobGuiTitle = yaml.getString("title");
@@ -117,9 +117,9 @@ public class GuiConfig {
     }
 
     private void setupQuestGuiValues() {
-        File questGuiFile = new File(jobQuests.getDataFolder(), "gui" + File.separator + "questGui.yml");
+        File questGuiFile = new File(jobQuests.getDataFolder(), "gui" + File.separator + "questsGui.yml");
         if (!questGuiFile.exists()) {
-            jobQuests.saveResource("gui" + File.separator + "questGui.yml", false);
+            jobQuests.saveResource("gui" + File.separator + "questsGui.yml", false);
         }
         YamlConfiguration yaml = YamlConfiguration.loadConfiguration(questGuiFile);
         questGuiTitle = yaml.getString("title");
