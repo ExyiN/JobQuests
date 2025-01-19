@@ -9,6 +9,9 @@ import me.exyin.jobQuests.listeners.PlayerListener;
 import me.exyin.jobQuests.model.Job;
 import me.exyin.jobQuests.runnables.CheckQuestRefreshRunnable;
 import me.exyin.jobQuests.utils.*;
+import me.exyin.jobQuests.utils.config.ConfigManager;
+import me.exyin.jobQuests.utils.config.GuiConfig;
+import me.exyin.jobQuests.utils.config.MessageConfig;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -20,7 +23,7 @@ import java.util.Objects;
 public final class JobQuests extends JavaPlugin {
     private ConfigManager configManager;
     private MessageConfig messageConfig;
-    private MessageManager messageManager;
+    private MessageUtil messageUtil;
     private JobLoader jobLoader;
     private JobManager jobManager;
     private PlayerManager playerManager;
@@ -37,7 +40,7 @@ public final class JobQuests extends JavaPlugin {
         }
         configManager = new ConfigManager(this);
         messageConfig = new MessageConfig(this);
-        messageManager = new MessageManager(this);
+        messageUtil = new MessageUtil(this);
         jobLoader = new JobLoader(this);
         List<Job> jobs = jobLoader.loadAllJobs();
         jobManager = new JobManager(jobs);

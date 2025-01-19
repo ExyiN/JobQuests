@@ -106,7 +106,7 @@ public class PlayerManager {
         playerQuest.setCompletedDate(null);
         playerQuest.getPlayerObjectives().forEach(playerObjective -> playerObjective.setProgression(0));
         Quest quest = jobQuests.getJobManager().getQuest(jobId, questId);
-        jobQuests.getMessageManager().sendMessage(jobQuests.getServer().getPlayer(uuid), MessageFormat.format(jobQuests.getMessageConfig().getQuestRefreshed(), quest.getTitle()));
+        jobQuests.getMessageUtil().sendMessage(jobQuests.getServer().getPlayer(uuid), MessageFormat.format(jobQuests.getMessageConfig().getQuestRefreshed(), quest.getTitle()));
     }
 
     private void createJQPlayer(UUID uuid) {

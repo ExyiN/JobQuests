@@ -5,11 +5,11 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
-public class MessageManager {
+public class MessageUtil {
     private final JobQuests jobQuests;
     private final MiniMessage miniMessage;
 
-    public MessageManager(JobQuests jobQuests) {
+    public MessageUtil(JobQuests jobQuests) {
         this.jobQuests = jobQuests;
         this.miniMessage = MiniMessage.miniMessage();
     }

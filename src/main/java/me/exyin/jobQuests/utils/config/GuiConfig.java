@@ -1,4 +1,4 @@
-package me.exyin.jobQuests.utils;
+package me.exyin.jobQuests.utils.config;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -22,6 +22,7 @@ public class GuiConfig {
     private Material jobEmpty;
     private String jobName;
     private List<String> jobLore;
+    private boolean jobItemEnchanted;
     private Map<String, Integer> jobSlot;
 
     public GuiConfig(JobQuests jobQuests) {
@@ -40,6 +41,7 @@ public class GuiConfig {
         jobEmpty = Material.valueOf(yaml.getString("empty"));
         jobName = yaml.getString("jobItem.name");
         jobLore = yaml.getStringList("jobItem.lore");
+        jobItemEnchanted = yaml.getBoolean("jobItem.enchanted");
         ConfigurationSection jobSlotSection = yaml.getConfigurationSection("jobSlot");
         if (jobSlotSection == null) {
             return;

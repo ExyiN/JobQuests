@@ -35,7 +35,7 @@ public class JQCommands implements CommandExecutor {
             jobQuests.reloadMessages();
             jobQuests.reloadConfig();
             jobQuests.reloadGuiConfig();
-            jobQuests.getMessageManager().sendMessage(commandSender, jobQuests.getMessageConfig().getReload());
+            jobQuests.getMessageUtil().sendMessage(commandSender, jobQuests.getMessageConfig().getReload());
         }
         return true;
     }

@@ -22,6 +22,6 @@ public class RewardMoneyStrategy implements Reward {
             return;
         }
         jobQuests.getEconomy().depositPlayer(player, quantity);
-        jobQuests.getMessageManager().sendMessage(jobQuests.getServer().getPlayer(uuid), MessageFormat.format(jobQuests.getMessageConfig().getRewardMoney(), jobQuests.getEconomy().format(quantity)));
+        jobQuests.getMessageUtil().sendMessage(jobQuests.getServer().getPlayer(uuid), MessageFormat.format(jobQuests.getMessageConfig().getRewardMoney(), jobQuests.getEconomy().format(quantity)));
     }
 }

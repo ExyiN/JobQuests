@@ -20,6 +20,6 @@ public class RewardXpStrategy implements Reward {
         PlayerJob playerJob = jobQuests.getPlayerManager().getPlayerJob(uuid, jobId);
         Job job = jobQuests.getJobManager().getJob(jobId);
         playerJob.setXp(playerJob.getXp() + quantity);
-        jobQuests.getMessageManager().sendMessage(jobQuests.getServer().getPlayer(uuid), MessageFormat.format(jobQuests.getMessageConfig().getRewardXp(), job.getName(), quantity));
+        jobQuests.getMessageUtil().sendMessage(jobQuests.getServer().getPlayer(uuid), MessageFormat.format(jobQuests.getMessageConfig().getRewardXp(), job.getName(), quantity));
     }
 }

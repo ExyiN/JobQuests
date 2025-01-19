@@ -1,4 +1,4 @@
-package me.exyin.jobQuests.utils;
+package me.exyin.jobQuests.utils.config;
 
 import lombok.AccessLevel;
 import lombok.Getter;
