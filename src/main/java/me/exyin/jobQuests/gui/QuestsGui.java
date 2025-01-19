@@ -1,6 +1,7 @@
 package me.exyin.jobQuests.gui;
 
 import lombok.Getter;
+import lombok.Setter;
 import me.exyin.jobQuests.JobQuests;
 import me.exyin.jobQuests.model.Job;
 import me.exyin.jobQuests.model.Quest;
@@ -16,9 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class QuestsGui implements InventoryHolder {
@@ -31,6 +30,14 @@ public class QuestsGui implements InventoryHolder {
     private final Job job;
     @Getter
     private int backButtonSlot;
+    @Getter
+    private int prevPageButtonSlot;
+    @Getter
+    private int nextPageButtonSlot;
+    @Getter
+    @Setter
+    private int pIndex;
+    private final Map<Integer, Map<Integer, ItemStack>> pages;
 
     public QuestsGui(JobQuests jobQuests, JQGui jqGui, UUID playerUuid, String jobId) {
         this.jobQuests = jobQuests;
@@ -39,20 +46,28 @@ public class QuestsGui implements InventoryHolder {
         this.jobId = jobId;
         job = jobQuests.getJobManager().getJob(jobId);
         inventory = jobQuests.getServer().createInventory(this, 9 * jobQuests.getGuiConfig().getQuestGuiRows(), jobQuests.getMessageUtil().toMiniMessageComponent(MessageFormat.format(jobQuests.getGuiConfig().getQuestGuiTitle(), job.getName())));
+        pIndex = 1;
+        pages = new HashMap<>();
         setupItems();
+        setupPage(pIndex);
     }
 
     public void setupItems() {
-        ItemStack emptySlot = jobQuests.getGuiUtil().getItemStack(jobQuests.getGuiConfig().getQuestGuiEmpty(), "", new ArrayList<>(), 1, false);
-        for (int i = 0; i < inventory.getSize(); i++) {
-            inventory.setItem(i, emptySlot);
-        }
-        ItemStack backButton = jobQuests.getGuiUtil().getItemStack(jobQuests.getGuiConfig().getQuestGuiBackButtonMaterial(), jobQuests.getGuiConfig().getQuestGuiBackButtonName(), jobQuests.getGuiConfig().getQuestGuiBackButtonLore(), 1, jobQuests.getGuiConfig().isQuestGuiBackButtonEnchanted());
         backButtonSlot = jobQuests.getGuiConfig().getQuestGuiBackButtonSlot() + 9 * (jobQuests.getGuiConfig().getQuestGuiRows() - 1);
-        inventory.setItem(backButtonSlot, backButton);
-        AtomicInteger slot = new AtomicInteger();
+        AtomicInteger slot = new AtomicInteger(0);
+        AtomicInteger pageIndex = new AtomicInteger(1);
+        Map<Integer, ItemStack> page = new HashMap<>();
         PlayerJob playerJob = jobQuests.getPlayerManager().getPlayerJob(playerUuid, jobId);
         job.getQuests().forEach(quest -> {
+            if (slot.get() >= inventory.getSize() - 9) {
+                pages.put(pageIndex.get(), new HashMap<>(page));
+                page.clear();
+                slot.set(0);
+                pageIndex.incrementAndGet();
+            }
+            if(playerJob.getPlayerQuests().stream().filter(playerQuest -> playerQuest.getQuestId() == quest.getId()).toList().isEmpty()) {
+                return;
+            }
             PlayerQuest playerQuest = jobQuests.getPlayerManager().getPlayerQuest(playerUuid, jobId, quest.getId());
             ItemStack itemStack;
             if (quest.getRequiredLevel() > playerJob.getLevel()) {
@@ -62,9 +77,40 @@ public class QuestsGui implements InventoryHolder {
             } else {
                 itemStack = getQuestItem(jobId, quest);
             }
-            inventory.setItem(slot.get(), itemStack);
-            slot.getAndIncrement();
+            page.put(slot.get(), itemStack);
+            slot.incrementAndGet();
         });
+        pages.put(pageIndex.get(), new HashMap<>(page));
+    }
+
+    public void setupPage(int pageIndex) {
+        prevPageButtonSlot = -1;
+        nextPageButtonSlot = -1;
+        ItemStack emptySlot = jobQuests.getGuiUtil().getItemStack(jobQuests.getGuiConfig().getQuestGuiEmpty(), "", new ArrayList<>(), 1, false);
+        for (int i = 0; i < inventory.getSize(); i++) {
+            inventory.setItem(i, emptySlot);
+        }
+        ItemStack backButton = jobQuests.getGuiUtil().getItemStack(jobQuests.getGuiConfig().getQuestGuiBackButtonMaterial(), jobQuests.getGuiConfig().getQuestGuiBackButtonName(), jobQuests.getGuiConfig().getQuestGuiBackButtonLore(), 1, jobQuests.getGuiConfig().isQuestGuiBackButtonEnchanted());
+        inventory.setItem(backButtonSlot, backButton);
+        Map<Integer, ItemStack> page = pages.get(pageIndex);
+        for (int slot : page.keySet()) {
+            inventory.setItem(slot, page.get(slot));
+        }
+        if (pages.size() <= 1) {
+            return;
+        }
+        if (pageIndex > 1) {
+            List<String> modifiedLore = jobQuests.getGuiConfig().getQuestGuiPrevPageButtonLore().stream().map(line -> MessageFormat.format(line, pageIndex - 1)).toList();
+            ItemStack prevPageButton = jobQuests.getGuiUtil().getItemStack(jobQuests.getGuiConfig().getQuestGuiPrevPageButtonMaterial(), jobQuests.getGuiConfig().getQuestGuiPrevPageButtonName(), modifiedLore, 1, jobQuests.getGuiConfig().isQuestGuiPrevPageButtonEnchanted());
+            prevPageButtonSlot = jobQuests.getGuiConfig().getQuestGuiPrevPageButtonSlot() + 9 * (jobQuests.getGuiConfig().getQuestGuiRows() - 1);
+            inventory.setItem(prevPageButtonSlot, prevPageButton);
+        }
+        if (pageIndex < pages.size()) {
+            List<String> modifiedLore = jobQuests.getGuiConfig().getQuestGuiNextPageButtonLore().stream().map(line -> MessageFormat.format(line, pageIndex + 1)).toList();
+            ItemStack nextPageButton = jobQuests.getGuiUtil().getItemStack(jobQuests.getGuiConfig().getQuestGuiNextPageButtonMaterial(), jobQuests.getGuiConfig().getQuestGuiNextPageButtonName(), modifiedLore, 1, jobQuests.getGuiConfig().isQuestGuiNextPageButtonEnchanted());
+            nextPageButtonSlot = jobQuests.getGuiConfig().getQuestGuiNextPageButtonSlot() + 9 * (jobQuests.getGuiConfig().getQuestGuiRows() - 1);
+            inventory.setItem(nextPageButtonSlot, nextPageButton);
+        }
     }
 
     private ItemStack getQuestItem(String jobId, Quest quest) {

@@ -55,6 +55,16 @@ public class GuiConfig {
     private String questGuiBackButtonName;
     private List<String> questGuiBackButtonLore;
     private boolean questGuiBackButtonEnchanted;
+    private int questGuiPrevPageButtonSlot;
+    private Material questGuiPrevPageButtonMaterial;
+    private String questGuiPrevPageButtonName;
+    private List<String> questGuiPrevPageButtonLore;
+    private boolean questGuiPrevPageButtonEnchanted;
+    private int questGuiNextPageButtonSlot;
+    private Material questGuiNextPageButtonMaterial;
+    private String questGuiNextPageButtonName;
+    private List<String> questGuiNextPageButtonLore;
+    private boolean questGuiNextPageButtonEnchanted;
     private String questGuiYear;
     private String questGuiMonth;
     private String questGuiDay;
@@ -113,7 +123,7 @@ public class GuiConfig {
         }
         YamlConfiguration yaml = YamlConfiguration.loadConfiguration(questGuiFile);
         questGuiTitle = yaml.getString("title");
-        questGuiRows = yaml.getInt("rows");
+        questGuiRows = yaml.getInt("rows") > 1 && yaml.getInt("rows") < 7 ? yaml.getInt("rows") : 6;
         questGuiEmpty = Material.valueOf(yaml.getString("empty"));
 
         ConfigurationSection questItemSection = yaml.getConfigurationSection("questItem");
@@ -180,11 +190,23 @@ public class GuiConfig {
             }
         }
 
-        questGuiBackButtonSlot = yaml.getInt("backButton.slot");
-        questGuiBackButtonMaterial = Material.valueOf(yaml.getString("backButton.material"));
-        questGuiBackButtonName = yaml.getString("backButton.name");
-        questGuiBackButtonLore = yaml.getStringList("backButton.lore");
-        questGuiBackButtonEnchanted = yaml.getBoolean("backButton.enchanted");
+        questGuiBackButtonSlot = yaml.getInt("footer.backButton.slot");
+        questGuiBackButtonMaterial = Material.valueOf(yaml.getString("footer.backButton.material"));
+        questGuiBackButtonName = yaml.getString("footer.backButton.name");
+        questGuiBackButtonLore = yaml.getStringList("footer.backButton.lore");
+        questGuiBackButtonEnchanted = yaml.getBoolean("footer.backButton.enchanted");
+
+        questGuiPrevPageButtonSlot = yaml.getInt("footer.prevPageButton.slot");
+        questGuiPrevPageButtonMaterial = Material.valueOf(yaml.getString("footer.prevPageButton.material"));
+        questGuiPrevPageButtonName = yaml.getString("footer.prevPageButton.name");
+        questGuiPrevPageButtonLore = yaml.getStringList("footer.prevPageButton.lore");
+        questGuiPrevPageButtonEnchanted = yaml.getBoolean("footer.prevPageButton.enchanted");
+
+        questGuiNextPageButtonSlot = yaml.getInt("footer.nextPageButton.slot");
+        questGuiNextPageButtonMaterial = Material.valueOf(yaml.getString("footer.nextPageButton.material"));
+        questGuiNextPageButtonName = yaml.getString("footer.nextPageButton.name");
+        questGuiNextPageButtonLore = yaml.getStringList("footer.nextPageButton.lore");
+        questGuiNextPageButtonEnchanted = yaml.getBoolean("footer.nextPageButton.enchanted");
 
         questGuiYear = yaml.getString("time.year");
         questGuiMonth = yaml.getString("time.month");

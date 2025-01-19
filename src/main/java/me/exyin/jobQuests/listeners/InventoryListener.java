@@ -34,6 +34,14 @@ public class InventoryListener implements Listener {
             if (event.getSlot() == questsGui.getBackButtonSlot()) {
                 event.getWhoClicked().openInventory(questsGui.getJqGui().getInventory());
             }
+            if (event.getSlot() == questsGui.getPrevPageButtonSlot()) {
+                questsGui.setPIndex(questsGui.getPIndex() - 1);
+                questsGui.setupPage(questsGui.getPIndex());
+            }
+            if (event.getSlot() == questsGui.getNextPageButtonSlot()) {
+                questsGui.setPIndex(questsGui.getPIndex() + 1);
+                questsGui.setupPage(questsGui.getPIndex());
+            }
         }
     }
 }
