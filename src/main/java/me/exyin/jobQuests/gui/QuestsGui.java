@@ -6,6 +6,7 @@ import me.exyin.jobQuests.model.Quest;
 import me.exyin.jobQuests.model.player.PlayerJob;
 import me.exyin.jobQuests.model.player.PlayerObjective;
 import me.exyin.jobQuests.model.player.PlayerQuest;
+import me.exyin.jobQuests.model.rewards.RewardFactory;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -71,6 +72,10 @@ public class QuestsGui implements InventoryHolder {
             }
             lore.add(line);
         });
+        quest.getRewards().forEach(reward -> {
+            RewardFactory rewardFactory = new RewardFactory(jobQuests);
+            lore.add(rewardFactory.getStrategy(reward.getType()).getDescription(reward.getQuantity()));
+        });
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime refreshDate = jobQuests.getTimeUtil().getRefreshDate(now, quest.getRefreshTime());
         String refreshTime = jobQuests.getTimeUtil().getTimeFormattedFromDates(now, refreshDate);
@@ -88,6 +93,10 @@ public class QuestsGui implements InventoryHolder {
             String line = MessageFormat.format(jobQuests.getGuiConfig().getLockedQuestItemObjective(), objective.getObjectiveType().getDescription(playerObjective.getProgression(), objective.getQuantity()));
             lore.add(line);
         });
+        quest.getRewards().forEach(reward -> {
+            RewardFactory rewardFactory = new RewardFactory(jobQuests);
+            lore.add(rewardFactory.getStrategy(reward.getType()).getDescription(reward.getQuantity()));
+        });
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime refreshDate = jobQuests.getTimeUtil().getRefreshDate(now, quest.getRefreshTime());
         String refreshTime = jobQuests.getTimeUtil().getTimeFormattedFromDates(now, refreshDate);
@@ -104,6 +113,10 @@ public class QuestsGui implements InventoryHolder {
             PlayerObjective playerObjective = jobQuests.getPlayerManager().getPlayerObjective(playerUuid, jobId, quest.getId(), objective.getId());
             String line = MessageFormat.format(jobQuests.getGuiConfig().getCompletedQuestItemObjective(), objective.getObjectiveType().getDescription(playerObjective.getProgression(), objective.getQuantity()));
             lore.add(line);
+        });
+        quest.getRewards().forEach(reward -> {
+            RewardFactory rewardFactory = new RewardFactory(jobQuests);
+            lore.add(rewardFactory.getStrategy(reward.getType()).getDescription(reward.getQuantity()));
         });
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime refreshDate = jobQuests.getTimeUtil().getRefreshDate(playerQuest.getCompletedDate(), quest.getRefreshTime());

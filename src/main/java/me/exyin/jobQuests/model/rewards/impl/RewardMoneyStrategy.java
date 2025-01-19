@@ -1,6 +1,7 @@
 package me.exyin.jobQuests.model.rewards.impl;
 
 import me.exyin.jobQuests.JobQuests;
+import me.exyin.jobQuests.model.enums.RewardType;
 import me.exyin.jobQuests.model.rewards.interfaces.Reward;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -13,6 +14,11 @@ public class RewardMoneyStrategy implements Reward {
 
     public RewardMoneyStrategy(JobQuests jobQuests) {
         this.jobQuests = jobQuests;
+    }
+
+    @Override
+    public String getDescription(double quantity) {
+        return MessageFormat.format(jobQuests.getGuiConfig().getQuestGuiReward().get(RewardType.MONEY), jobQuests.getEconomy().format(quantity));
     }
 
     @Override

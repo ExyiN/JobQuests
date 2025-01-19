@@ -24,5 +24,5 @@ objective:
   kill: 'Kill {0}/{1} <lang:entity.minecraft.{2}>'
   break: 'Break {0}/{1} <lang:block.minecraft.{2}>'
 reward:
-  xp: '<dark_gray>•</dark_gray> <green>+{0} XP</green>'
-  money: '<dark_gray>•</dark_gray> <gold>+{0}</gold>'
+  xp: '<dark_gray>»</dark_gray> <green>+{0} XP</green>'
+  money: '<dark_gray>»</dark_gray> <gold>+{0}</gold>'

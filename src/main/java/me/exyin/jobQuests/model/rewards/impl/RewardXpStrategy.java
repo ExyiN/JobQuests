@@ -2,6 +2,7 @@ package me.exyin.jobQuests.model.rewards.impl;
 
 import me.exyin.jobQuests.JobQuests;
 import me.exyin.jobQuests.model.Job;
+import me.exyin.jobQuests.model.enums.RewardType;
 import me.exyin.jobQuests.model.player.PlayerJob;
 import me.exyin.jobQuests.model.rewards.interfaces.Reward;
 
@@ -13,6 +14,11 @@ public class RewardXpStrategy implements Reward {
 
     public RewardXpStrategy(JobQuests jobQuests) {
         this.jobQuests = jobQuests;
+    }
+
+    @Override
+    public String getDescription(double quantity) {
+        return MessageFormat.format(jobQuests.getGuiConfig().getQuestGuiReward().get(RewardType.XP), quantity);
     }
 
     @Override
