@@ -1,0 +1,28 @@
+title: '{0}'
+rows: 6
+empty: BLACK_STAINED_GLASS_PANE
+questItem:
+  material: PAPER
+  name: '{0} <dark_gray>◇</dark_gray> <gray>ʟᴠʟ</gray> <yellow>{1}</yellow>'
+  objective: '<dark_gray>•</dark_gray> <gray>{0}</gray>'
+  completedObjective: '<dark_gray>•</dark_gray> <green>{0} ✔</green>'
+  refreshTime: '<gray>Refresh time <dark_gray>»</dark_gray> <gold>{0}</gold>'
+  enchanted: false
+lockedQuestItem:
+  material: PAPER
+  name: '{0} <dark_gray>◇</dark_gray> <gray>ʟᴠʟ</gray> <red>{1} 🔒</red>'
+  objective: '<dark_gray>•</dark_gray> <gray>{0}</gray>'
+  refreshTime: '<gray>Refresh time <dark_gray>»</dark_gray> <gold>{0}</gold>'
+  enchanted: false
+completedQuestItem:
+  material: PAPER
+  name: '{0} <dark_gray>◇</dark_gray> <gray>ʟᴠʟ</gray> <yellow>{1}</yellow> <green>✔</green>'
+  objective: '<dark_gray>•</dark_gray> <gray>{0}</gray>'
+  refreshTime: '<gray>Refresh in <dark_gray>»</dark_gray> <red>{0}</red>'
+  enchanted: false
+objective:
+  kill: 'Kill {0}/{1} <lang:entity.minecraft.{2}>'
+  break: 'Break {0}/{1} <lang:block.minecraft.{2}>'
+reward:
+  xp: '<dark_gray>•</dark_gray> <green>+{0} XP</green>'
+  money: '<dark_gray>•</dark_gray> <gold>+{0}</gold>'

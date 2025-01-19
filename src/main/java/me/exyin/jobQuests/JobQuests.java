@@ -75,7 +75,7 @@ public final class JobQuests extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
         this.getServer().getPluginManager().registerEvents(new EntityDeathListener(this), this);
         this.getServer().getPluginManager().registerEvents(new BlockBreakListener(this), this);
-        this.getServer().getPluginManager().registerEvents(new InventoryListener(), this);
+        this.getServer().getPluginManager().registerEvents(new InventoryListener(this), this);
     }
 
     public void reloadJobs() {

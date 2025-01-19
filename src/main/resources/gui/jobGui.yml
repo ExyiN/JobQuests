@@ -7,5 +7,5 @@ jobItem:
     - '<gray>Next level</gray> <dark_gray>»</dark_gray> <green>{0}</green><gray>/{1} XP</gray>'
   enchanted: true
 jobSlot:
-  hunter: 10
-  lumberjack: 11
+  10: hunter
+  11: lumberjack

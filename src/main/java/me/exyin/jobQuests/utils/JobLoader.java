@@ -62,7 +62,7 @@ public class JobLoader {
         try {
             material = Material.valueOf(jobYaml.getString("material"));
         } catch (IllegalArgumentException e) {
-            jobQuests.getLogger().severe(MessageFormat.format("In file {0}: Invalid material {1}.", filePath, jobYaml.getString("material")));
+            jobQuests.getLogger().warning(MessageFormat.format("In file {0}: Invalid material {1}.", filePath, jobYaml.getString("material")));
         }
         List<String> description = jobYaml.getStringList("description");
         List<Quest> quests = loadQuestsFromJob(jobYaml, filePath);
@@ -99,7 +99,7 @@ public class JobLoader {
             List<Reward> rewards = loadRewardsFromQuest(questSection, filePath);
             return new Quest(id, title, requiredLevel, refreshTime, objectives, rewards);
         } catch (NumberFormatException e) {
-            jobQuests.getLogger().severe(MessageFormat.format("In file {0}: Invalid quest key {1}. It should be a number.", filePath, questKey));
+            jobQuests.getLogger().warning(MessageFormat.format("In file {0}: Invalid quest key {1}. It should be a number.", filePath, questKey));
             return null;
         }
     }
@@ -135,9 +135,9 @@ public class JobLoader {
             int quantity = objectiveSection.getInt("quantity");
             return new Objective(id, objectiveEventType, objectiveType, quantity);
         } catch (NumberFormatException e) {
-            jobQuests.getLogger().severe(MessageFormat.format("In file {0}: Invalid objective key {1} format. It should be a number.", filePath, objectiveKey));
+            jobQuests.getLogger().warning(MessageFormat.format("In file {0}: Invalid objective key {1} format. It should be a number.", filePath, objectiveKey));
         } catch (IllegalArgumentException e) {
-            jobQuests.getLogger().severe(MessageFormat.format("In file {0}: Invalid objective type {1}. Possible values: {2}", filePath, objectiveSection.getString("eventType"), Arrays.asList(ObjectiveEventType.values())));
+            jobQuests.getLogger().warning(MessageFormat.format("In file {0}: Invalid objective event type {1}. Possible values: {2}", filePath, objectiveSection.getString("eventType"), Arrays.asList(ObjectiveEventType.values())));
         }
         return null;
     }
@@ -169,9 +169,9 @@ public class JobLoader {
             int quantity = rewardSection.getInt("quantity");
             return new Reward(id, type, quantity);
         } catch (NumberFormatException e) {
-            jobQuests.getLogger().severe(MessageFormat.format("In file {0}: Invalid reward key {1} format. It should be a number.", filePath, rewardKey));
+            jobQuests.getLogger().warning(MessageFormat.format("In file {0}: Invalid reward key {1} format. It should be a number.", filePath, rewardKey));
         } catch (IllegalArgumentException e) {
-            jobQuests.getLogger().severe(MessageFormat.format("In file {0}: Invalid reward type {1}. Possible values: {2}", filePath, rewardSection.getString("type"), Arrays.asList(RewardType.values())));
+            jobQuests.getLogger().warning(MessageFormat.format("In file {0}: Invalid reward type {1}. Possible values: {2}", filePath, rewardSection.getString("type"), Arrays.asList(RewardType.values())));
         }
         return null;
     }

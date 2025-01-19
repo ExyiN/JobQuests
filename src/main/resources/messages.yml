@@ -8,7 +8,7 @@ questRefreshed: '<gray>Quest refreshed:</gray> {0}'
 rewardXp: '{0} <green>+{1} XP</green>'
 rewardMoney: '<gray>You earned</gray> <gold>{0}</gold>'
 
-objectiveKILLDesc: '<gray>Kill {0}/{1} <lang:entity.minecraft.{2}>'
-objectiveBREAKDesc: '<gray>Break {0}/{1} <lang:block.minecraft.{2}>'
+objectiveKILLCompleted: '<gray>Kill {0} <lang:entity.minecraft.{1}></gray>'
+objectiveBREAKCompleted: '<gray>Break {0} <lang:block.minecraft.{1}></gray>'
 
 reload: '<green>Configurations reloaded.</green>'

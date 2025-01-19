@@ -18,8 +18,8 @@ public class MessageConfig {
     private String questRefreshed;
     private String rewardXp;
     private String rewardMoney;
-    private String objectiveKILLDesc;
-    private String objectiveBREAKDesc;
+    private String objectiveKILLCompleted;
+    private String objectiveBREAKCompleted;
     private String reload;
 
     public MessageConfig(JobQuests jobQuests) {
@@ -40,8 +40,8 @@ public class MessageConfig {
         questRefreshed = yaml.getString("questRefreshed");
         rewardXp = yaml.getString("rewardXp");
         rewardMoney = yaml.getString("rewardMoney");
-        objectiveKILLDesc = yaml.getString("objectiveKILLDesc");
-        objectiveBREAKDesc = yaml.getString("objectiveBREAKDesc");
+        objectiveKILLCompleted = yaml.getString("objectiveKILLCompleted");
+        objectiveBREAKCompleted = yaml.getString("objectiveBREAKCompleted");
         reload = yaml.getString("reload");
     }
 }

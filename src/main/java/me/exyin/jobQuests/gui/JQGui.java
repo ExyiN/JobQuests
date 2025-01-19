@@ -20,24 +20,24 @@ public class JQGui implements InventoryHolder {
 
     public JQGui(JobQuests jobQuests, UUID playerUuid) {
         this.jobQuests = jobQuests;
-        this.inventory = jobQuests.getServer().createInventory(this, 9 * jobQuests.getGuiConfig().getJobRows(), jobQuests.getMessageUtil().toMiniMessageComponent(jobQuests.getGuiConfig().getJobTitle()));
+        this.inventory = jobQuests.getServer().createInventory(this, 9 * jobQuests.getGuiConfig().getJobGuiRows(), jobQuests.getMessageUtil().toMiniMessageComponent(jobQuests.getGuiConfig().getJobGuiTitle()));
         this.playerUuid = playerUuid;
         setupItems();
     }
 
     public void setupItems() {
-        ItemStack emptySlot = jobQuests.getGuiUtil().getItemStack(jobQuests.getGuiConfig().getJobEmpty(), "", new ArrayList<>(), 1, false);
+        ItemStack emptySlot = jobQuests.getGuiUtil().getItemStack(jobQuests.getGuiConfig().getJobGuiEmpty(), "", new ArrayList<>(), 1, false);
         for (int i = 0; i < inventory.getSize(); i++) {
             inventory.setItem(i, emptySlot);
         }
-        jobQuests.getGuiConfig().getJobSlot().forEach((jobId, slot) -> {
+        jobQuests.getGuiConfig().getJobGuiSlot().forEach((slot, jobId) -> {
             Job job = jobQuests.getJobManager().getJob(jobId);
             PlayerJob playerJob = jobQuests.getPlayerManager().getPlayerJob(playerUuid, jobId);
             long level = playerJob.getLevel();
-            String itemName = MessageFormat.format(jobQuests.getGuiConfig().getJobName(), job.getName(), level);
+            String itemName = MessageFormat.format(jobQuests.getGuiConfig().getJobItemName(), job.getName(), level);
             double nextLevelRequiredXp = jobQuests.getPlayerManager().getNextLevelRequiredXp(level);
             List<String> lore = new ArrayList<>(job.getDescription());
-            jobQuests.getGuiConfig().getJobLore().forEach(line -> lore.add(MessageFormat.format(line, String.format("%.2f", playerJob.getXp()), String.format("%.2f", nextLevelRequiredXp))));
+            jobQuests.getGuiConfig().getJobItemLore().forEach(line -> lore.add(MessageFormat.format(line, String.format("%.2f", playerJob.getXp()), String.format("%.2f", nextLevelRequiredXp))));
             List<String> modifiedLore = lore.stream().map(line -> "<!i><white>" + line).toList();
             ItemStack itemStack = jobQuests.getGuiUtil().getItemStack(job.getMaterial(), itemName, modifiedLore, 1, jobQuests.getGuiConfig().isJobItemEnchanted());
             inventory.setItem(slot, itemStack);
