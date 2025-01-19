@@ -50,12 +50,18 @@ public class GuiConfig {
     private boolean completedQuestItemEnchanted;
     private Map<ObjectiveEventType, String> questGuiObjective;
     private Map<RewardType, String> questGuiReward;
+    private int questGuiBackButtonSlot;
+    private Material questGuiBackButtonMaterial;
+    private String questGuiBackButtonName;
+    private List<String> questGuiBackButtonLore;
+    private boolean questGuiBackButtonEnchanted;
     private String questGuiYear;
     private String questGuiMonth;
     private String questGuiDay;
     private String questGuiHour;
     private String questGuiMinute;
     private String questGuiSecond;
+
 
     public GuiConfig(JobQuests jobQuests) {
         this.jobQuests = jobQuests;
@@ -173,6 +179,13 @@ public class GuiConfig {
                 jobQuests.getLogger().warning(MessageFormat.format("In file {0}: Invalid reward type {1}. Possible values: {2}", questGuiFile.getPath(), rewardTypeKey, Arrays.asList(ObjectiveEventType.values())));
             }
         }
+
+        questGuiBackButtonSlot = yaml.getInt("backButton.slot");
+        questGuiBackButtonMaterial = Material.valueOf(yaml.getString("backButton.material"));
+        questGuiBackButtonName = yaml.getString("backButton.name");
+        questGuiBackButtonLore = yaml.getStringList("backButton.lore");
+        questGuiBackButtonEnchanted = yaml.getBoolean("backButton.enchanted");
+
         questGuiYear = yaml.getString("time.year");
         questGuiMonth = yaml.getString("time.month");
         questGuiDay = yaml.getString("time.day");

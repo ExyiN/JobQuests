@@ -24,10 +24,16 @@ public class InventoryListener implements Listener {
         event.setCancelled(true);
         inventory = event.getClickedInventory();
         if (inventory != null
-                && inventory.getHolder(false) instanceof JQGui
+                && inventory.getHolder(false) instanceof JQGui jqGui
                 && jobQuests.getGuiConfig().getJobGuiSlot().get(event.getSlot()) != null) {
-            QuestsGui questsGui = new QuestsGui(jobQuests, event.getWhoClicked().getUniqueId(), jobQuests.getGuiConfig().getJobGuiSlot().get(event.getSlot()));
+            QuestsGui questsGui = new QuestsGui(jobQuests, jqGui, event.getWhoClicked().getUniqueId(), jobQuests.getGuiConfig().getJobGuiSlot().get(event.getSlot()));
             event.getWhoClicked().openInventory(questsGui.getInventory());
+        }
+        if (inventory != null
+                && inventory.getHolder(false) instanceof QuestsGui questsGui) {
+            if (event.getSlot() == questsGui.getBackButtonSlot()) {
+                event.getWhoClicked().openInventory(questsGui.getJqGui().getInventory());
+            }
         }
     }
 }

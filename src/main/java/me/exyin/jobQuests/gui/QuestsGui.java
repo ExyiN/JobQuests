@@ -1,5 +1,6 @@
 package me.exyin.jobQuests.gui;
 
+import lombok.Getter;
 import me.exyin.jobQuests.JobQuests;
 import me.exyin.jobQuests.model.Job;
 import me.exyin.jobQuests.model.Quest;
@@ -22,13 +23,18 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class QuestsGui implements InventoryHolder {
     private final JobQuests jobQuests;
+    @Getter
+    private final JQGui jqGui;
     private final Inventory inventory;
     private final UUID playerUuid;
     private final String jobId;
     private final Job job;
+    @Getter
+    private int backButtonSlot;
 
-    public QuestsGui(JobQuests jobQuests, UUID playerUuid, String jobId) {
+    public QuestsGui(JobQuests jobQuests, JQGui jqGui, UUID playerUuid, String jobId) {
         this.jobQuests = jobQuests;
+        this.jqGui = jqGui;
         this.playerUuid = playerUuid;
         this.jobId = jobId;
         job = jobQuests.getJobManager().getJob(jobId);
@@ -41,6 +47,9 @@ public class QuestsGui implements InventoryHolder {
         for (int i = 0; i < inventory.getSize(); i++) {
             inventory.setItem(i, emptySlot);
         }
+        ItemStack backButton = jobQuests.getGuiUtil().getItemStack(jobQuests.getGuiConfig().getQuestGuiBackButtonMaterial(), jobQuests.getGuiConfig().getQuestGuiBackButtonName(), jobQuests.getGuiConfig().getQuestGuiBackButtonLore(), 1, jobQuests.getGuiConfig().isQuestGuiBackButtonEnchanted());
+        backButtonSlot = jobQuests.getGuiConfig().getQuestGuiBackButtonSlot() + 9 * (jobQuests.getGuiConfig().getQuestGuiRows() - 1);
+        inventory.setItem(backButtonSlot, backButton);
         AtomicInteger slot = new AtomicInteger();
         PlayerJob playerJob = jobQuests.getPlayerManager().getPlayerJob(playerUuid, jobId);
         job.getQuests().forEach(quest -> {
@@ -80,8 +89,7 @@ public class QuestsGui implements InventoryHolder {
         LocalDateTime refreshDate = jobQuests.getTimeUtil().getRefreshDate(now, quest.getRefreshTime());
         String refreshTime = jobQuests.getTimeUtil().getTimeFormattedFromDates(now, refreshDate);
         lore.add(MessageFormat.format(jobQuests.getGuiConfig().getQuestItemRefreshTime(), refreshTime));
-        List<String> modifiedLore = lore.stream().map(line -> "<!i><white>" + line).toList();
-        return jobQuests.getGuiUtil().getItemStack(material, name, modifiedLore, 1, jobQuests.getGuiConfig().isQuestItemEnchanted());
+        return jobQuests.getGuiUtil().getItemStack(material, name, lore, 1, jobQuests.getGuiConfig().isQuestItemEnchanted());
     }
 
     private ItemStack getLockedQuestItem(String jobId, Quest quest) {
@@ -101,8 +109,7 @@ public class QuestsGui implements InventoryHolder {
         LocalDateTime refreshDate = jobQuests.getTimeUtil().getRefreshDate(now, quest.getRefreshTime());
         String refreshTime = jobQuests.getTimeUtil().getTimeFormattedFromDates(now, refreshDate);
         lore.add(MessageFormat.format(jobQuests.getGuiConfig().getLockedQuestItemRefreshTime(), refreshTime));
-        List<String> modifiedLore = lore.stream().map(line -> "<!i><white>" + line).toList();
-        return jobQuests.getGuiUtil().getItemStack(material, name, modifiedLore, 1, jobQuests.getGuiConfig().isLockedQuestItemEnchanted());
+        return jobQuests.getGuiUtil().getItemStack(material, name, lore, 1, jobQuests.getGuiConfig().isLockedQuestItemEnchanted());
     }
 
     private ItemStack getCompletedQuestItem(String jobId, Quest quest, PlayerQuest playerQuest) {
@@ -122,8 +129,7 @@ public class QuestsGui implements InventoryHolder {
         LocalDateTime refreshDate = jobQuests.getTimeUtil().getRefreshDate(playerQuest.getCompletedDate(), quest.getRefreshTime());
         String refreshTime = jobQuests.getTimeUtil().getTimeFormattedFromDates(now, refreshDate);
         lore.add(MessageFormat.format(jobQuests.getGuiConfig().getCompletedQuestItemRefreshTime(), refreshTime));
-        List<String> modifiedLore = lore.stream().map(line -> "<!i><white>" + line).toList();
-        return jobQuests.getGuiUtil().getItemStack(material, name, modifiedLore, 1, jobQuests.getGuiConfig().isCompletedQuestItemEnchanted());
+        return jobQuests.getGuiUtil().getItemStack(material, name, lore, 1, jobQuests.getGuiConfig().isCompletedQuestItemEnchanted());
     }
 
     @Override

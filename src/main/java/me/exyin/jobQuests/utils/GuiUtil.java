@@ -28,7 +28,8 @@ public class GuiUtil {
             }
         }
         if (!lore.isEmpty()) {
-            itemMeta.lore(lore.stream().map(line -> jobQuests.getMessageUtil().toMiniMessageComponent(line)).toList());
+            List<String> modifiedLore = lore.stream().map(line -> "<!i><white>" + line).toList();
+            itemMeta.lore(modifiedLore.stream().map(line -> jobQuests.getMessageUtil().toMiniMessageComponent(line)).toList());
         }
         itemMeta.setEnchantmentGlintOverride(isEnchanted);
         itemMeta.addAttributeModifier(Attribute.GENERIC_LUCK, new AttributeModifier(new NamespacedKey(jobQuests, "hide"), 0, AttributeModifier.Operation.ADD_NUMBER));
