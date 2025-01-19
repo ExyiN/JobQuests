@@ -50,6 +50,12 @@ public class GuiConfig {
     private boolean completedQuestItemEnchanted;
     private Map<ObjectiveEventType, String> questGuiObjective;
     private Map<RewardType, String> questGuiReward;
+    private String questGuiYear;
+    private String questGuiMonth;
+    private String questGuiDay;
+    private String questGuiHour;
+    private String questGuiMinute;
+    private String questGuiSecond;
 
     public GuiConfig(JobQuests jobQuests) {
         this.jobQuests = jobQuests;
@@ -167,6 +173,11 @@ public class GuiConfig {
                 jobQuests.getLogger().warning(MessageFormat.format("In file {0}: Invalid reward type {1}. Possible values: {2}", questGuiFile.getPath(), rewardTypeKey, Arrays.asList(ObjectiveEventType.values())));
             }
         }
-
+        questGuiYear = yaml.getString("time.year");
+        questGuiMonth = yaml.getString("time.month");
+        questGuiDay = yaml.getString("time.day");
+        questGuiHour = yaml.getString("time.hour");
+        questGuiMinute = yaml.getString("time.minute");
+        questGuiSecond = yaml.getString("time.second");
     }
 }

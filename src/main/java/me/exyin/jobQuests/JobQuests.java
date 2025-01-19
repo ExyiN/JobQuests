@@ -45,7 +45,7 @@ public final class JobQuests extends JavaPlugin {
         List<Job> jobs = jobLoader.loadAllJobs();
         jobManager = new JobManager(jobs);
         playerManager = new PlayerManager(this);
-        timeUtil = new TimeUtil();
+        timeUtil = new TimeUtil(this);
         guiUtil = new GuiUtil(this);
         guiConfig = new GuiConfig(this);
 

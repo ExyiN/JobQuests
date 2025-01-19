@@ -1,6 +1,7 @@
 package me.exyin.jobQuests.utils;
 
 import lombok.Getter;
+import me.exyin.jobQuests.JobQuests;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -8,7 +9,12 @@ import java.time.temporal.ChronoUnit;
 
 @Getter
 public class TimeUtil {
+    private final JobQuests jobQuests;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:mm:ss");
+
+    public TimeUtil(JobQuests jobQuests) {
+        this.jobQuests = jobQuests;
+    }
 
     public LocalDateTime getRefreshDate(LocalDateTime dateTime, String refreshTime) {
         String[] splitRefreshTime = refreshTime.split(" ");
@@ -52,23 +58,23 @@ public class TimeUtil {
 
     private String getTimeFormatted(long years, long months, long days, long hours, long minutes, long seconds) {
         StringBuilder stringBuilder = new StringBuilder();
-        if(years > 0) {
-            stringBuilder.append(years).append("y ");
+        if (years > 0) {
+            stringBuilder.append(years).append(jobQuests.getGuiConfig().getQuestGuiYear()).append(" ");
         }
-        if(months > 0) {
-            stringBuilder.append(months).append("m ");
+        if (months > 0) {
+            stringBuilder.append(months).append(jobQuests.getGuiConfig().getQuestGuiMonth()).append(" ");
         }
-        if(days > 0) {
-            stringBuilder.append(days).append("d ");
+        if (days > 0) {
+            stringBuilder.append(days).append(jobQuests.getGuiConfig().getQuestGuiDay()).append(" ");
         }
-        if(hours > 0) {
-            stringBuilder.append(hours).append("h ");
+        if (hours > 0) {
+            stringBuilder.append(hours).append(jobQuests.getGuiConfig().getQuestGuiHour()).append(" ");
         }
-        if(minutes > 0) {
-            stringBuilder.append(minutes).append("m ");
+        if (minutes > 0) {
+            stringBuilder.append(minutes).append(jobQuests.getGuiConfig().getQuestGuiMinute()).append(" ");
         }
-        if(seconds > 0) {
-            stringBuilder.append(seconds).append("s ");
+        if (seconds > 0) {
+            stringBuilder.append(seconds).append(jobQuests.getGuiConfig().getQuestGuiSecond());
         }
         return stringBuilder.toString();
     }
