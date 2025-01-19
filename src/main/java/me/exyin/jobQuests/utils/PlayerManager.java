@@ -10,7 +10,6 @@ import me.exyin.jobQuests.model.player.PlayerJob;
 import me.exyin.jobQuests.model.player.PlayerObjective;
 import me.exyin.jobQuests.model.player.PlayerQuest;
 import me.exyin.jobQuests.model.rewards.RewardFactory;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -20,7 +19,6 @@ import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 public class PlayerManager {
@@ -143,8 +141,13 @@ public class PlayerManager {
     public void loadPlayer(UUID uuid) {
         String playerFilePath = jobQuests.getDataFolder().getPath() + File.separator + "data" + File.separator + uuid.toString() + ".yml";
         File playerFile = new File(playerFilePath);
+        if (!playerFile.getParentFile().exists()) {
+            boolean isFolderCreated = playerFile.getParentFile().mkdirs();
+            if (isFolderCreated) {
+                jobQuests.getLogger().info("Data folder not found. Creating data folder.");
+            }
+        }
         if (!playerFile.exists()) {
-            playerFile.getParentFile().mkdirs();
             createJQPlayer(uuid);
             return;
         }
@@ -286,7 +289,7 @@ public class PlayerManager {
         });
     }
 
-    public void purgePlayerJobs(UUID uuid) {
+    public List<String> purgePlayerJobs(UUID uuid) {
         if (!isPlayerLoaded(uuid)) {
             loadPlayer(uuid);
         }
@@ -298,9 +301,11 @@ public class PlayerManager {
             }
         });
         jqPlayer.getPlayerJobs().removeAll(jobsToRemove);
-        if (!Objects.requireNonNull(Bukkit.getPlayer(uuid)).isOnline()) {
+        savePlayer(uuid);
+        if (!jobQuests.getServer().getOfflinePlayer(uuid).isOnline()) {
             unloadPlayer(uuid);
         }
+        return jobsToRemove.stream().map(PlayerJob::getJobId).toList();
     }
 
     public void savePlayer(UUID uuid) {

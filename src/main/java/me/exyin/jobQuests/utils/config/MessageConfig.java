@@ -20,6 +20,9 @@ public class MessageConfig {
     private String rewardMoney;
     private String objectiveKILLCompleted;
     private String objectiveBREAKCompleted;
+    private String specifyPlayer;
+    private String playerNotFound;
+    private String purgePlayer;
     private String reload;
 
     public MessageConfig(JobQuests jobQuests) {
@@ -42,6 +45,9 @@ public class MessageConfig {
         rewardMoney = yaml.getString("rewardMoney");
         objectiveKILLCompleted = yaml.getString("objectiveKILLCompleted");
         objectiveBREAKCompleted = yaml.getString("objectiveBREAKCompleted");
+        specifyPlayer = yaml.getString("specifyPlayer");
+        playerNotFound = yaml.getString("playerNotFound");
+        purgePlayer = yaml.getString("purgePlayer");
         reload = yaml.getString("reload");
     }
 }

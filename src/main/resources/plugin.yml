@@ -3,12 +3,16 @@ version: '1.0-SNAPSHOT'
 main: me.exyin.jobQuests.JobQuests
 api-version: '1.21'
 authors: [ ExyiN ]
-depend: [Vault]
+depend: [ Vault ]
 commands:
   jobquests:
-    aliases: ["jq"]
-    description: Main command
+    aliases: [ "jq", "job", "jobs" ]
+    description: Main command of the plugin
     permission: jobquests.use
 permissions:
   jobquests.use:
     default: op
+    description: Allow the player to use the plugin
+  jobquests.admin:
+    default: op
+    description: Allow usage of admin commands

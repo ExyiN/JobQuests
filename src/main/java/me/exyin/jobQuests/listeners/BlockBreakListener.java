@@ -25,7 +25,8 @@ public class BlockBreakListener implements Listener {
     @EventHandler
     public void onBlockBreak(BlockBreakEvent blockBreakEvent) {
         Player player = blockBreakEvent.getPlayer();
-        if (jobQuests.getConfigManager().getWorldBlacklist().contains(player.getWorld().getName())
+        if (!player.hasPermission("jobquests.use")
+                || jobQuests.getConfigManager().getWorldBlacklist().contains(player.getWorld().getName())
                 || jobQuests.getConfigManager().getGameModeBlacklist().contains(player.getGameMode())) {
             return;
         }

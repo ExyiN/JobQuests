@@ -11,4 +11,7 @@ rewardMoney: '<gray>You earned</gray> <gold>{0}</gold>'
 objectiveKILLCompleted: '<gray>Kill {0} <lang:entity.minecraft.{1}></gray>'
 objectiveBREAKCompleted: '<gray>Break {0} <lang:block.minecraft.{1}></gray>'
 
+specifyPlayer: '<red>You must specify a player.</red>'
+playerNotFound: '<red>Player not found.</red>'
+purgePlayer: '<green>Purged player {0} jobs: {1}.</green>'
 reload: '<green>Configurations reloaded.</green>'
