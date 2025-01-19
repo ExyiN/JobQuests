@@ -31,10 +31,8 @@ public class JQCommands implements CommandExecutor {
         }
 
         if(args[0].equals("reload")) {
-            jobQuests.reloadJobs();
-            jobQuests.reloadMessages();
-            jobQuests.reloadConfig();
-            jobQuests.reloadGuiConfig();
+            jobQuests.reloadPlugin();
+            jobQuests.getServer().getOnlinePlayers().forEach(player -> jobQuests.getPlayerManager().updatePlayer(player.getUniqueId()));
             jobQuests.getMessageUtil().sendMessage(commandSender, jobQuests.getMessageConfig().getReload());
         }
         return true;

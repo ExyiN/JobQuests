@@ -18,6 +18,7 @@ public class ConfigManager {
     private double jobXpLevelUpRequirementMultiplier;
     private List<String> worldBlacklist;
     private List<GameMode> gameModeBlacklist;
+    private long autoSavePeriod;
     private String jobLevelUpSound;
     private float jobLevelUpSoundVolume;
     private float jobLevelUpSoundPitch;
@@ -43,6 +44,7 @@ public class ConfigManager {
         jobXpLevelUpRequirementMultiplier = yaml.getDouble("job.xpLevelUpRequirement.multiplier");
         worldBlacklist = yaml.getStringList("worldBlacklist");
         gameModeBlacklist = yaml.getStringList("gameModeBlacklist").stream().map(GameMode::valueOf).toList();
+        autoSavePeriod = yaml.getLong("autoSavePeriod");
         jobLevelUpSound = yaml.getString("sounds.jobLevelUp.sound");
         jobLevelUpSoundVolume = (float) yaml.getDouble("sounds.jobLevelUp.volume");
         jobLevelUpSoundPitch = (float) yaml.getDouble("sounds.jobLevelUp.pitch");

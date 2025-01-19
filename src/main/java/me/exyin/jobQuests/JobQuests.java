@@ -7,6 +7,7 @@ import me.exyin.jobQuests.listeners.EntityDeathListener;
 import me.exyin.jobQuests.listeners.InventoryListener;
 import me.exyin.jobQuests.listeners.PlayerListener;
 import me.exyin.jobQuests.model.Job;
+import me.exyin.jobQuests.runnables.AutoSaveRunnable;
 import me.exyin.jobQuests.runnables.CheckQuestRefreshRunnable;
 import me.exyin.jobQuests.utils.*;
 import me.exyin.jobQuests.utils.config.ConfigManager;
@@ -15,6 +16,7 @@ import me.exyin.jobQuests.utils.config.MessageConfig;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.List;
 import java.util.Objects;
@@ -31,6 +33,7 @@ public final class JobQuests extends JavaPlugin {
     private GuiUtil guiUtil;
     private GuiConfig guiConfig;
     private Economy economy;
+    private BukkitTask autoSaveRunnable;
 
     @Override
     public void onEnable() {
@@ -52,11 +55,12 @@ public final class JobQuests extends JavaPlugin {
         registerListeners();
         Objects.requireNonNull(this.getCommand("jobquests")).setExecutor(new JQCommands(this));
         new CheckQuestRefreshRunnable(this).runTaskTimer(this, 0L, 20L);
+        autoSaveRunnable = new AutoSaveRunnable(this).runTaskTimer(this, 0L, configManager.getAutoSavePeriod());
     }
 
     @Override
     public void onDisable() {
-
+        this.getServer().getOnlinePlayers().forEach(player -> playerManager.savePlayer(player.getUniqueId()));
     }
 
     private boolean setupEconomy() {
@@ -78,20 +82,13 @@ public final class JobQuests extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new InventoryListener(this), this);
     }
 
-    public void reloadJobs() {
+    public void reloadPlugin() {
         List<Job> jobs = jobLoader.loadAllJobs();
         jobManager.setJobs(jobs);
-    }
-
-    public void reloadMessages() {
-        messageConfig.setupValues();
-    }
-
-    public void reloadConfig() {
         configManager.setupValues();
-    }
-
-    public void reloadGuiConfig() {
+        messageConfig.setupValues();
         guiConfig.setupValues();
+        autoSaveRunnable.cancel();
+        autoSaveRunnable = new AutoSaveRunnable(this).runTaskTimer(this, 0L, configManager.getAutoSavePeriod());
     }
 }
