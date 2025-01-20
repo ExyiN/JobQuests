@@ -11,10 +11,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.text.MessageFormat;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Getter
 public class GuiConfig {
@@ -165,7 +162,7 @@ public class GuiConfig {
             jobQuests.getLogger().severe(MessageFormat.format("In file {0}: Missing objective section.", questGuiFile.getPath()));
             return;
         }
-        questGuiObjective = new HashMap<>();
+        questGuiObjective = new EnumMap<>(ObjectiveEventType.class);
         for (String objectiveEventTypeKey : objectiveSection.getKeys(false)) {
             try {
                 ObjectiveEventType objectiveEventType = ObjectiveEventType.valueOf(objectiveEventTypeKey.toUpperCase());
@@ -180,7 +177,7 @@ public class GuiConfig {
             jobQuests.getLogger().severe(MessageFormat.format("In file {0}: Missing reward section.", questGuiFile.getPath()));
             return;
         }
-        questGuiReward = new HashMap<>();
+        questGuiReward = new EnumMap<>(RewardType.class);
         for (String rewardTypeKey : rewardSection.getKeys(false)) {
             try {
                 RewardType rewardType = RewardType.valueOf(rewardTypeKey.toUpperCase());

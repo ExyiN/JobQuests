@@ -6,6 +6,7 @@ import me.exyin.jobquests.JobQuests;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.util.List;
 
 @Getter
 public class MessageConfig {
@@ -20,10 +21,15 @@ public class MessageConfig {
     private String rewardMoney;
     private String objectiveKILLCompleted;
     private String objectiveBREAKCompleted;
-    private String specifyPlayer;
     private String playerNotFound;
+    private String jobNotFound;
+    private String questNotFound;
     private String purgePlayer;
+    private String resetJob;
+    private String resetQuest;
     private String reload;
+    private String noPerm;
+    private List<String> adminHelp;
 
     public MessageConfig(JobQuests jobQuests) {
         this.jobQuests = jobQuests;
@@ -45,9 +51,14 @@ public class MessageConfig {
         rewardMoney = yaml.getString("rewardMoney");
         objectiveKILLCompleted = yaml.getString("objectiveKILLCompleted");
         objectiveBREAKCompleted = yaml.getString("objectiveBREAKCompleted");
-        specifyPlayer = yaml.getString("specifyPlayer");
         playerNotFound = yaml.getString("playerNotFound");
+        jobNotFound = yaml.getString("jobNotFound");
+        questNotFound = yaml.getString("questNotFound");
         purgePlayer = yaml.getString("purgePlayer");
+        resetJob = yaml.getString("resetJob");
+        resetQuest = yaml.getString("resetQuest");
         reload = yaml.getString("reload");
+        noPerm = yaml.getString("noPerm");
+        adminHelp = yaml.getStringList("adminHelp");
     }
 }

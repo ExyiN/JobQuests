@@ -6,11 +6,11 @@ import me.exyin.jobquests.model.objectives.impl.ObjectiveTypeBreakStrategy;
 import me.exyin.jobquests.model.objectives.impl.ObjectiveTypeKillStrategy;
 import me.exyin.jobquests.model.objectives.interfaces.ObjectiveType;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 public class ObjectiveFactory {
-    private final Map<ObjectiveEventType, ObjectiveType> map = new HashMap<>();
+    private final Map<ObjectiveEventType, ObjectiveType> map = new EnumMap<>(ObjectiveEventType.class);
 
     public ObjectiveFactory(JobQuests jobQuests) {
         map.put(ObjectiveEventType.KILL, new ObjectiveTypeKillStrategy(jobQuests));

@@ -4,6 +4,7 @@ import me.exyin.jobquests.JobQuests;
 import me.exyin.jobquests.model.Quest;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.text.MessageFormat;
 import java.time.LocalDateTime;
 
 public class CheckQuestRefreshRunnable extends BukkitRunnable {
@@ -25,7 +26,8 @@ public class CheckQuestRefreshRunnable extends BukkitRunnable {
                             if (LocalDateTime.now().isBefore(jobQuests.getTimeUtil().getRefreshDate(playerQuest.getCompletedDate(), quest.getRefreshTime()))) {
                                 return;
                             }
-                            jobQuests.getPlayerManager().refreshPlayerQuest(player.getUniqueId(), playerJob.getJobId(), playerQuest.getQuestId());
+                            jobQuests.getPlayerManager().resetPlayerQuest(player.getUniqueId(), playerJob.getJobId(), playerQuest.getQuestId());
+                            jobQuests.getMessageUtil().sendMessage(player, MessageFormat.format(jobQuests.getMessageConfig().getQuestRefreshed(), quest.getTitle()));
                         })));
     }
 }

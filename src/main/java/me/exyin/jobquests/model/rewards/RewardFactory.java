@@ -6,11 +6,11 @@ import me.exyin.jobquests.model.rewards.impl.RewardMoneyStrategy;
 import me.exyin.jobquests.model.rewards.impl.RewardXpStrategy;
 import me.exyin.jobquests.model.rewards.interfaces.Reward;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 public class RewardFactory {
-    private final Map<RewardType, Reward> map = new HashMap<>();
+    private final Map<RewardType, Reward> map = new EnumMap<>(RewardType.class);
 
     public RewardFactory(JobQuests jobQuests) {
         map.put(RewardType.XP, new RewardXpStrategy(jobQuests));

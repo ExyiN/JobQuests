@@ -99,12 +99,27 @@ public class PlayerManager {
         return newLevel;
     }
 
-    public void refreshPlayerQuest(UUID uuid, String jobId, int questId) {
+    public void resetPlayerJob(UUID uuid, String jobId) {
+        if (!isPlayerLoaded(uuid)) {
+            loadPlayer(uuid);
+        }
+        PlayerJob playerJob = getPlayerJob(uuid, jobId);
+        playerJob.setLevel(1);
+        playerJob.setXp(0);
+        playerJob.getPlayerQuests().forEach(playerQuest -> resetPlayerQuest(uuid, jobId, playerQuest.getQuestId()));
+    }
+
+    public void resetPlayerQuest(UUID uuid, String jobId, int questId) {
+        if (!isPlayerLoaded(uuid)) {
+            loadPlayer(uuid);
+        }
         PlayerQuest playerQuest = getPlayerQuest(uuid, jobId, questId);
         playerQuest.setCompletedDate(null);
         playerQuest.getPlayerObjectives().forEach(playerObjective -> playerObjective.setProgression(0));
-        Quest quest = jobQuests.getJobManager().getQuest(jobId, questId);
-        jobQuests.getMessageUtil().sendMessage(jobQuests.getServer().getPlayer(uuid), MessageFormat.format(jobQuests.getMessageConfig().getQuestRefreshed(), quest.getTitle()));
+        if (!jobQuests.getServer().getOfflinePlayer(uuid).isOnline()) {
+            savePlayer(uuid);
+            unloadPlayer(uuid);
+        }
     }
 
     private void createJQPlayer(UUID uuid) {
@@ -301,8 +316,8 @@ public class PlayerManager {
             }
         });
         jqPlayer.getPlayerJobs().removeAll(jobsToRemove);
-        savePlayer(uuid);
         if (!jobQuests.getServer().getOfflinePlayer(uuid).isOnline()) {
+            savePlayer(uuid);
             unloadPlayer(uuid);
         }
         return jobsToRemove.stream().map(PlayerJob::getJobId).toList();

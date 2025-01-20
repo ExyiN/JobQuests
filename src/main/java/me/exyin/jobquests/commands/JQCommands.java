@@ -2,7 +2,7 @@ package me.exyin.jobquests.commands;
 
 import me.exyin.jobquests.JobQuests;
 import me.exyin.jobquests.gui.JQGui;
-import org.bukkit.OfflinePlayer;
+import me.exyin.jobquests.model.Job;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -11,12 +11,13 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class JQCommands implements CommandExecutor, TabCompleter {
     private final JobQuests jobQuests;
+    private final List<String> availableCommands = Arrays.asList("purgejobs", "resetjob", "resetquest", "reload");
 
     public JQCommands(JobQuests jobQuests) {
         this.jobQuests = jobQuests;
@@ -32,32 +33,12 @@ public class JQCommands implements CommandExecutor, TabCompleter {
             player.openInventory(jqGui.getInventory());
             return true;
         }
-
-        switch (args[0]) {
-            case "reload":
-                if (!commandSender.hasPermission("jobquests.admin")) {
-                    break;
-                }
-                jobQuests.reloadPlugin();
-                jobQuests.getServer().getOnlinePlayers().forEach(player -> jobQuests.getPlayerManager().updatePlayer(player.getUniqueId()));
-                jobQuests.getMessageUtil().sendMessage(commandSender, jobQuests.getMessageConfig().getReload());
-                break;
-            case "purgejobs":
-                if (args.length < 2) {
-                    jobQuests.getMessageUtil().sendMessage(commandSender, jobQuests.getMessageConfig().getSpecifyPlayer());
-                    break;
-                }
-                OfflinePlayer playerToPurge = jobQuests.getServer().getOfflinePlayer(args[1]);
-                if (!playerToPurge.hasPlayedBefore()) {
-                    jobQuests.getMessageUtil().sendMessage(commandSender, jobQuests.getMessageConfig().getPlayerNotFound());
-                    break;
-                }
-                List<String> jobsRemoved = jobQuests.getPlayerManager().purgePlayerJobs(playerToPurge.getUniqueId());
-                jobQuests.getMessageUtil().sendMessage(commandSender, MessageFormat.format(jobQuests.getMessageConfig().getPurgePlayer(), playerToPurge.getName(), jobsRemoved.toString()));
-                break;
-            default:
-                break;
+        if (!commandSender.hasPermission("jobquests.admin")) {
+            jobQuests.getMessageUtil().sendMessage(commandSender, jobQuests.getMessageConfig().getNoPerm());
+            return true;
         }
+        JQCommandFactory jqCommandFactory = new JQCommandFactory(jobQuests, availableCommands);
+        jqCommandFactory.getStrategy(args[0]).execute(commandSender, args);
         return true;
     }
 
@@ -69,12 +50,20 @@ public class JQCommands implements CommandExecutor, TabCompleter {
             return tabCompleteList;
         }
         if (args.length == 1) {
-            tabCompleteList.add("purgejobs");
-            tabCompleteList.add("reload");
+            tabCompleteList.addAll(availableCommands);
         }
-        if (args.length == 2) {
-            if (args[0].equals("purgejobs")) {
-                tabCompleteList.addAll(jobQuests.getServer().getOnlinePlayers().stream().map(Player::getName).toList());
+        if (args.length == 2 && (args[0].equals(availableCommands.getFirst()) || args[0].equals(availableCommands.get(1)) || args[0].equals(availableCommands.get(2)))) {
+            tabCompleteList.addAll(jobQuests.getServer().getOnlinePlayers().stream().map(Player::getName).toList());
+        }
+
+        if (args.length == 3 && (args[0].equals(availableCommands.get(1)) || args[0].equals(availableCommands.get(2)))) {
+            tabCompleteList.addAll(jobQuests.getJobManager().getJobs().stream().map(Job::getId).toList());
+        }
+
+        if (args.length == 4 && args[0].equals(availableCommands.get(2))) {
+            String jobId = args[2];
+            if (jobQuests.getJobManager().existsJob(jobId)) {
+                tabCompleteList.addAll(jobQuests.getJobManager().getJob(jobId).getQuests().stream().map(quest -> String.valueOf(quest.getId())).toList());
             }
         }
         return tabCompleteList;

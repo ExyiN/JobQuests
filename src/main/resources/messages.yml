@@ -11,7 +11,16 @@ rewardMoney: '<gray>You earned</gray> <gold>{0}</gold>'
 objectiveKILLCompleted: '<gray>Kill {0} <lang:entity.minecraft.{1}></gray>'
 objectiveBREAKCompleted: '<gray>Break {0} <lang:block.minecraft.{1}></gray>'
 
-specifyPlayer: '<red>You must specify a player.</red>'
 playerNotFound: '<red>Player not found.</red>'
+jobNotFound: '<red>Job not found.</red>'
+questNotFound: '<red>Quest not found.</red>'
 purgePlayer: '<green>Purged player {0} jobs: {1}.</green>'
+resetJob: '<green>Reset job {0} for player {1}.</green>'
+resetQuest: '<green>Reset quest {0} of job {1} for player {2}.</green>'
 reload: '<green>Configurations reloaded.</green>'
+noPerm: "<red>You don't have access to this command.</red>"
+adminHelp:
+  - '<gray>Help:</gray>'
+  - '<dark_gray>• <yellow>/jobquests purgejobs <player></yellow> »</dark_gray> <gray>Remove all non-existing jobs from a player data.</gray>'
+  - '<dark_gray>• <yellow>/jobquests resetjob <player> <jobId></yellow> »</dark_gray> <gray>Reset a job for a player.</gray>'
+  - '<dark_gray>• <yellow>/jobquests resetquest <player> <jobId> <questId></yellow> »</dark_gray> <gray>Reset a quest for a player.</gray>'
