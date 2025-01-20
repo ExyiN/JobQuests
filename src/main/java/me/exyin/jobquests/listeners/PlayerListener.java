@@ -15,7 +15,7 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent playerJoinEvent) {
-        if(jobQuests.getPlayerManager().isPlayerLoaded(playerJoinEvent.getPlayer().getUniqueId())) {
+        if (jobQuests.getPlayerManager().isPlayerLoaded(playerJoinEvent.getPlayer().getUniqueId())) {
             return;
         }
         jobQuests.getPlayerManager().loadPlayer(playerJoinEvent.getPlayer().getUniqueId());
@@ -24,6 +24,9 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent playerQuitEvent) {
+        if (!jobQuests.getPlayerManager().isPlayerLoaded(playerQuitEvent.getPlayer().getUniqueId())) {
+            return;
+        }
         jobQuests.getPlayerManager().savePlayer(playerQuitEvent.getPlayer().getUniqueId());
         jobQuests.getPlayerManager().unloadPlayer(playerQuitEvent.getPlayer().getUniqueId());
     }
