@@ -1,0 +1,22 @@
+id: farmer
+name: Farmer
+material: STONE_HOE
+description:
+  - <dark_gray>Farm crops to earn XP and money
+quests:
+  1:
+    title: My dear potatoes
+    requiredLevel: 1
+    refreshTime: 3 h
+    objectives:
+      1:
+        eventType: BREAK
+        type: POTATOES
+        quantity: 32
+    rewards:
+      1:
+        type: XP
+        quantity: 200.0
+      2:
+        type: MONEY
+        quantity: 1000.0

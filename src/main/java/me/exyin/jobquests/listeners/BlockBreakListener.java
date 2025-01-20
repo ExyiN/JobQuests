@@ -7,6 +7,7 @@ import me.exyin.jobquests.model.player.PlayerObjective;
 import me.exyin.jobquests.model.player.PlayerQuest;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.block.data.Ageable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -28,7 +29,8 @@ public class BlockBreakListener implements Listener {
         Player player = blockBreakEvent.getPlayer();
         if (!player.hasPermission("jobquests.use")
                 || jobQuests.getConfigManager().getWorldBlacklist().contains(player.getWorld().getName())
-                || jobQuests.getConfigManager().getGameModeBlacklist().contains(player.getGameMode())) {
+                || jobQuests.getConfigManager().getGameModeBlacklist().contains(player.getGameMode())
+                || (blockBreakEvent.getBlock().getBlockData() instanceof Ageable crop && crop.getAge() < crop.getMaximumAge())) {
             return;
         }
         jobQuests.getJobManager().getJobs().forEach(job -> job.getQuests().forEach(quest -> {

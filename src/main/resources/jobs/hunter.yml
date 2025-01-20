@@ -3,7 +3,6 @@ name: Hunter
 material: BOW
 description:
   - <dark_gray>Kill mobs to earn XP and money
-  - <dark_gray>This is a cool job
 quests:
   1:
     title: Hunt of the day
