@@ -255,22 +255,22 @@ public class PlayerManager {
                 jqPlayer.getPlayerJobs().add(createPlayerJob(job));
                 return;
             }
-            PlayerJob playerJob = jqPlayer.getPlayerJobs().stream().filter(playerJob1 -> playerJob1.getJobId().equals(job.getId())).toList().getFirst();
+            PlayerJob playerJob = getPlayerJob(uuid, job.getId());
             List<PlayerQuest> questsToRemove = new ArrayList<>();
             playerJob.getPlayerQuests().forEach(playerQuest -> {
-                if (job.getQuests().stream().filter(quest -> quest.getId() == playerQuest.getQuestId()).toList().isEmpty()) {
+                if (!jobQuests.getJobManager().existsQuest(job.getId(), playerQuest.getQuestId())) {
                     questsToRemove.add(playerQuest);
                 } else {
-                    Quest jobQuest = job.getQuests().stream().filter(quest -> quest.getId() == playerQuest.getQuestId()).toList().getFirst();
+                    Quest quest = jobQuests.getJobManager().getQuest(job.getId(), playerQuest.getQuestId());
                     List<PlayerObjective> objectivesToRemove = new ArrayList<>();
                     playerQuest.getPlayerObjectives().forEach(playerObjective -> {
-                        if (jobQuest.getObjectives().stream().filter(objective -> objective.getId() == playerObjective.getObjectiveId()).toList().isEmpty()) {
+                        if (!jobQuests.getJobManager().existsObjective(job.getId(), quest.getId(), playerObjective.getObjectiveId())) {
                             objectivesToRemove.add(playerObjective);
                         }
                     });
                     playerQuest.getPlayerObjectives().removeAll(objectivesToRemove);
-                    if (playerQuest.getPlayerObjectives().size() < jobQuest.getObjectives().size()) {
-                        jobQuest.getObjectives().forEach(objective -> {
+                    if (playerQuest.getPlayerObjectives().size() < quest.getObjectives().size()) {
+                        quest.getObjectives().forEach(objective -> {
                             if (playerQuest.getPlayerObjectives().stream().filter(playerObjective -> playerObjective.getObjectiveId() == objective.getId()).toList().isEmpty()) {
                                 playerQuest.getPlayerObjectives().add(createPlayerObjective(objective));
                             }
@@ -296,7 +296,7 @@ public class PlayerManager {
         JQPlayer jqPlayer = getJQPlayer(uuid);
         List<PlayerJob> jobsToRemove = new ArrayList<>();
         jqPlayer.getPlayerJobs().forEach(playerJob -> {
-            if (jobQuests.getJobManager().getJobs().stream().filter(job -> job.getId().equals(playerJob.getJobId())).toList().isEmpty()) {
+            if (!jobQuests.getJobManager().existsJob(playerJob.getJobId())) {
                 jobsToRemove.add(playerJob);
             }
         });
