@@ -9,6 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 
@@ -22,7 +23,7 @@ public class BlockBreakListener implements Listener {
         this.jobQuests = jobQuests;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent blockBreakEvent) {
         Player player = blockBreakEvent.getPlayer();
         if (!player.hasPermission("jobquests.use")
