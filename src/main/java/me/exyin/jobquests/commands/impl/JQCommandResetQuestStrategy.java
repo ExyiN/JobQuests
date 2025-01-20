@@ -2,10 +2,13 @@ package me.exyin.jobquests.commands.impl;
 
 import me.exyin.jobquests.JobQuests;
 import me.exyin.jobquests.commands.JQCommand;
+import me.exyin.jobquests.model.Job;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.text.MessageFormat;
+import java.util.List;
 
 public class JQCommandResetQuestStrategy implements JQCommand {
     private final JobQuests jobQuests;
@@ -40,5 +43,22 @@ public class JQCommandResetQuestStrategy implements JQCommand {
         } catch (NumberFormatException e) {
             jobQuests.getMessageUtil().sendMessage(commandSender, jobQuests.getMessageConfig().getQuestNotFound());
         }
+    }
+
+    @Override
+    public List<String> getTabCompletion(String[] args) {
+        if (args.length == 2) {
+            return jobQuests.getServer().getOnlinePlayers().stream().map(Player::getName).toList();
+        }
+        if (args.length == 3) {
+            return jobQuests.getJobManager().getJobs().stream().map(Job::getId).toList();
+        }
+        if (args.length == 4) {
+            String jobId = args[2];
+            if (jobQuests.getJobManager().existsJob(jobId)) {
+                return jobQuests.getJobManager().getJob(jobId).getQuests().stream().map(quest -> String.valueOf(quest.getId())).toList();
+            }
+        }
+        return List.of();
     }
 }

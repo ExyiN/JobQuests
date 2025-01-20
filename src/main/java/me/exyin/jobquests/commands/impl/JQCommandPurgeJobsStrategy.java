@@ -4,6 +4,7 @@ import me.exyin.jobquests.JobQuests;
 import me.exyin.jobquests.commands.JQCommand;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -28,5 +29,13 @@ public class JQCommandPurgeJobsStrategy implements JQCommand {
         }
         List<String> jobsRemoved = jobQuests.getPlayerManager().purgePlayerJobs(playerToPurge.getUniqueId());
         jobQuests.getMessageUtil().sendMessage(commandSender, MessageFormat.format(jobQuests.getMessageConfig().getPurgePlayer(), playerToPurge.getName(), jobsRemoved.toString()));
+    }
+
+    @Override
+    public List<String> getTabCompletion(String[] args) {
+        if (args.length == 2) {
+            return jobQuests.getServer().getOnlinePlayers().stream().map(Player::getName).toList();
+        }
+        return List.of();
     }
 }
