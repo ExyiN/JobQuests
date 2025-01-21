@@ -48,7 +48,11 @@ public class JobLoader {
         for (File jobFile : jobsFiles) {
             try {
                 yaml.load(jobFile);
-                jobs.add(loadJob(yaml, jobFile.getPath()));
+                Job job = loadJob(yaml, jobFile.getPath());
+                if (job == null) {
+                    continue;
+                }
+                jobs.add(job);
             } catch (IOException | InvalidConfigurationException e) {
                 jobQuests.getLogger().severe(MessageFormat.format("Cannot read configuration for job: {0}", jobFile.getName()));
             }
@@ -58,10 +62,14 @@ public class JobLoader {
 
     public Job loadJob(YamlConfiguration jobYaml, String filePath) {
         String id = jobYaml.getString("id");
-        String name = jobYaml.getString("name");
+        if (id == null) {
+            jobQuests.getLogger().warning(MessageFormat.format("In file {0}: id not found.", filePath));
+            return null;
+        }
+        String name = jobYaml.getString("name", "???");
         Material material = Material.STONE;
         try {
-            material = Material.valueOf(jobYaml.getString("material"));
+            material = Material.valueOf(jobYaml.getString("material", "STONE"));
         } catch (IllegalArgumentException e) {
             jobQuests.getLogger().warning(MessageFormat.format("In file {0}: Invalid material {1}.", filePath, jobYaml.getString("material")));
         }
@@ -93,9 +101,9 @@ public class JobLoader {
         }
         try {
             int id = Integer.parseInt(questKey);
-            String title = questSection.getString("title");
-            int requiredLevel = questSection.getInt("requiredLevel");
-            String refreshTime = questSection.getString("refreshTime");
+            String title = questSection.getString("title", "???");
+            int requiredLevel = questSection.getInt("requiredLevel", 1);
+            String refreshTime = questSection.getString("refreshTime", "1 m");
             List<Objective> objectives = loadObjectivesFromQuest(questSection, filePath);
             List<Reward> rewards = loadRewardsFromQuest(questSection, filePath);
             return new Quest(id, title, requiredLevel, refreshTime, objectives, rewards);
@@ -128,12 +136,17 @@ public class JobLoader {
         }
         try {
             int id = Integer.parseInt(objectiveKey);
-            ObjectiveEventType objectiveEventType = ObjectiveEventType.valueOf(objectiveSection.getString("eventType"));
-            String type = objectiveSection.getString("type");
+            ObjectiveEventType objectiveEventType = ObjectiveEventType.valueOf(objectiveSection.getString("eventType", "undefined"));
+            String type = objectiveSection.getString("type", "undefined");
             ObjectiveFactory objectiveFactory = new ObjectiveFactory(jobQuests);
             ObjectiveType objectiveType = objectiveFactory.getStrategy(objectiveEventType);
-            objectiveType.setType(type);
-            int quantity = objectiveSection.getInt("quantity");
+            try {
+                objectiveType.setType(type);
+            } catch (IllegalArgumentException e) {
+                jobQuests.getLogger().warning(MessageFormat.format("In file {0}: Invalid objective type {1}.", filePath, type));
+                return null;
+            }
+            int quantity = objectiveSection.getInt("quantity", 1);
             return new Objective(id, objectiveEventType, objectiveType, quantity);
         } catch (NumberFormatException e) {
             jobQuests.getLogger().warning(MessageFormat.format("In file {0}: Invalid objective key {1} format. It should be a number.", filePath, objectiveKey));
@@ -166,7 +179,7 @@ public class JobLoader {
         }
         try {
             int id = Integer.parseInt(rewardKey);
-            RewardType type = RewardType.valueOf(rewardSection.getString("type"));
+            RewardType type = RewardType.valueOf(rewardSection.getString("type", "undefined"));
             double quantity = rewardSection.getDouble("quantity");
             return new Reward(id, type, quantity);
         } catch (NumberFormatException e) {

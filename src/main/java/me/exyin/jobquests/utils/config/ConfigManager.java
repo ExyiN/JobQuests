@@ -15,7 +15,6 @@ public class ConfigManager {
     private final JobQuests jobQuests;
 
     private double jobXpLevelUpRequirementBase;
-    private double jobXpLevelUpRequirementMultiplier;
     private List<String> worldBlacklist;
     private List<GameMode> gameModeBlacklist;
     private long autoSavePeriod;
@@ -40,19 +39,18 @@ public class ConfigManager {
             jobQuests.saveResource("config.yml", false);
         }
         YamlConfiguration yaml = YamlConfiguration.loadConfiguration(messageFile);
-        jobXpLevelUpRequirementBase = yaml.getDouble("job.xpLevelUpRequirement.base");
-        jobXpLevelUpRequirementMultiplier = yaml.getDouble("job.xpLevelUpRequirement.multiplier");
+        jobXpLevelUpRequirementBase = yaml.getDouble("job.xpLevelUpRequirement.base", 1000.0);
         worldBlacklist = yaml.getStringList("worldBlacklist");
         gameModeBlacklist = yaml.getStringList("gameModeBlacklist").stream().map(GameMode::valueOf).toList();
-        autoSavePeriod = yaml.getLong("autoSavePeriod");
-        jobLevelUpSound = yaml.getString("sounds.jobLevelUp.sound");
-        jobLevelUpSoundVolume = (float) yaml.getDouble("sounds.jobLevelUp.volume");
-        jobLevelUpSoundPitch = (float) yaml.getDouble("sounds.jobLevelUp.pitch");
-        questCompletionSound = yaml.getString("sounds.questCompletion.sound");
-        questCompletionSoundVolume = (float) yaml.getDouble("sounds.questCompletion.volume");
-        questCompletionSoundPitch = (float) yaml.getDouble("sounds.questCompletion.pitch");
-        objectiveCompletionSound = yaml.getString("sounds.objectiveCompletion.sound");
-        objectiveCompletionSoundVolume = (float) yaml.getDouble("sounds.objectiveCompletion.volume");
-        objectiveCompletionSoundPitch = (float) yaml.getDouble("sounds.objectiveCompletion.pitch");
+        autoSavePeriod = yaml.getLong("autoSavePeriod", 1200);
+        jobLevelUpSound = yaml.getString("sounds.jobLevelUp.sound", "ENTITY_PLAYER_LEVELUP");
+        jobLevelUpSoundVolume = (float) yaml.getDouble("sounds.jobLevelUp.volume", 1.0);
+        jobLevelUpSoundPitch = (float) yaml.getDouble("sounds.jobLevelUp.pitch", 0.8);
+        questCompletionSound = yaml.getString("sounds.questCompletion.sound", "ENTITY_EXPERIENCE_ORB_PICKUP");
+        questCompletionSoundVolume = (float) yaml.getDouble("sounds.questCompletion.volume", 1.0);
+        questCompletionSoundPitch = (float) yaml.getDouble("sounds.questCompletion.pitch", 0.8);
+        objectiveCompletionSound = yaml.getString("sounds.objectiveCompletion.sound", "ENTITY_EXPERIENCE_ORB_PICKUP");
+        objectiveCompletionSoundVolume = (float) yaml.getDouble("sounds.objectiveCompletion.volume", 1.0);
+        objectiveCompletionSoundPitch = (float) yaml.getDouble("sounds.objectiveCompletion.pitch", 0.8);
     }
 }

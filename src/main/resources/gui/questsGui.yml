@@ -17,7 +17,7 @@ lockedQuestItem:
 completedQuestItem:
   material: WRITTEN_BOOK
   name: '{0} <dark_gray>◇</dark_gray> <gray>ʟᴠʟ</gray> <yellow>{1}</yellow> <green>✔</green>'
-  objective: '<dark_gray>•</dark_gray> <gray>{0}</gray>'
+  objective: '<dark_gray>•</dark_gray> <green>{0} ✔</green>'
   refreshTime: '<gray>Refresh in <dark_gray>»</dark_gray> <red>{0}</red>'
   enchanted: false
 objective:

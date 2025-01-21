@@ -86,10 +86,10 @@ public class GuiConfig {
             jobQuests.saveResource("gui" + File.separator + "jobsGui.yml", false);
         }
         YamlConfiguration yaml = YamlConfiguration.loadConfiguration(jobGuiFile);
-        jobGuiTitle = yaml.getString("title");
+        jobGuiTitle = yaml.getString("title", "JobQuests");
         jobGuiRows = yaml.getInt("rows") > 6 || yaml.getInt("rows") < 1 ? 6 : yaml.getInt("rows");
-        jobGuiEmpty = Material.valueOf(yaml.getString("empty"));
-        jobItemName = yaml.getString("jobItem.name");
+        jobGuiEmpty = Material.valueOf(yaml.getString("empty", "AIR"));
+        jobItemName = yaml.getString("jobItem.name", "{0} <dark_gray>◇</dark_gray> <gray>ʟᴠʟ</gray> <yellow>{1}</yellow>");
         jobItemLore = yaml.getStringList("jobItem.lore");
         jobItemEnchanted = yaml.getBoolean("jobItem.enchanted");
         ConfigurationSection jobSlotSection = yaml.getConfigurationSection("jobSlot");
@@ -98,8 +98,8 @@ public class GuiConfig {
         }
         jobGuiSlot = new HashMap<>();
         for (String slotKey : jobSlotSection.getKeys(false)) {
-            String jobId = jobSlotSection.getString(slotKey);
-            if (jobQuests.getJobManager().getJobs().stream().filter(job -> job.getId().equals(jobId)).toList().isEmpty()) {
+            String jobId = jobSlotSection.getString(slotKey, "");
+            if (!jobQuests.getJobManager().existsJob(jobId)) {
                 jobQuests.getLogger().warning(MessageFormat.format("In file {0}: Job {1} not found.", jobGuiFile.getPath(), jobId));
                 continue;
             }
@@ -119,20 +119,20 @@ public class GuiConfig {
             jobQuests.saveResource("gui" + File.separator + "questsGui.yml", false);
         }
         YamlConfiguration yaml = YamlConfiguration.loadConfiguration(questGuiFile);
-        questGuiTitle = yaml.getString("title");
+        questGuiTitle = yaml.getString("title", "{0}");
         questGuiRows = yaml.getInt("rows") > 1 && yaml.getInt("rows") < 7 ? yaml.getInt("rows") : 6;
-        questGuiEmpty = Material.valueOf(yaml.getString("empty"));
+        questGuiEmpty = Material.valueOf(yaml.getString("empty", "AIR"));
 
         ConfigurationSection questItemSection = yaml.getConfigurationSection("questItem");
         if (questItemSection == null) {
             jobQuests.getLogger().severe(MessageFormat.format("In file {0}: Missing questItem section.", questGuiFile.getPath()));
             return;
         }
-        questItemMaterial = Material.valueOf(questItemSection.getString("material"));
-        questItemName = questItemSection.getString("name");
-        questItemObjective = questItemSection.getString("objective");
-        questItemCompletedObjective = questItemSection.getString("completedObjective");
-        questItemRefreshTime = questItemSection.getString("refreshTime");
+        questItemMaterial = Material.valueOf(questItemSection.getString("material", "WRITABLE_BOOK"));
+        questItemName = questItemSection.getString("name", "{0} <dark_gray>◇</dark_gray> <gray>ʟᴠʟ</gray> <yellow>{1}</yellow>");
+        questItemObjective = questItemSection.getString("objective", "<dark_gray>•</dark_gray> <gray>{0}</gray>");
+        questItemCompletedObjective = questItemSection.getString("completedObjective", "<dark_gray>•</dark_gray> <green>{0} ✔</green>");
+        questItemRefreshTime = questItemSection.getString("refreshTime", "<gray>Refresh time <dark_gray>»</dark_gray> <gold>{0}</gold>");
         questItemEnchanted = questItemSection.getBoolean("enchanted");
 
         ConfigurationSection lockedQuestItemSection = yaml.getConfigurationSection("lockedQuestItem");
@@ -140,10 +140,10 @@ public class GuiConfig {
             jobQuests.getLogger().severe(MessageFormat.format("In file {0}: Missing lockedQuestItem section.", questGuiFile.getPath()));
             return;
         }
-        lockedQuestItemMaterial = Material.valueOf(lockedQuestItemSection.getString("material"));
-        lockedQuestItemName = lockedQuestItemSection.getString("name");
-        lockedQuestItemObjective = lockedQuestItemSection.getString("objective");
-        lockedQuestItemRefreshTime = lockedQuestItemSection.getString("refreshTime");
+        lockedQuestItemMaterial = Material.valueOf(lockedQuestItemSection.getString("material", "BOOK"));
+        lockedQuestItemName = lockedQuestItemSection.getString("name", "{0} <dark_gray>◇</dark_gray> <gray>ʟᴠʟ</gray> <red>{1} \uD83D\uDD12</red>");
+        lockedQuestItemObjective = lockedQuestItemSection.getString("objective", "<dark_gray>•</dark_gray> <gray>{0}</gray>");
+        lockedQuestItemRefreshTime = lockedQuestItemSection.getString("refreshTime", "<gray>Refresh time <dark_gray>»</dark_gray> <gold>{0}</gold>");
         lockedQuestItemEnchanted = lockedQuestItemSection.getBoolean("enchanted");
 
         ConfigurationSection completedQuestItemSection = yaml.getConfigurationSection("completedQuestItem");
@@ -151,10 +151,10 @@ public class GuiConfig {
             jobQuests.getLogger().severe(MessageFormat.format("In file {0}: Missing completedQuestItem section.", questGuiFile.getPath()));
             return;
         }
-        completedQuestItemMaterial = Material.valueOf(completedQuestItemSection.getString("material"));
-        completedQuestItemName = completedQuestItemSection.getString("name");
-        completedQuestItemObjective = completedQuestItemSection.getString("objective");
-        completedQuestItemRefreshTime = completedQuestItemSection.getString("refreshTime");
+        completedQuestItemMaterial = Material.valueOf(completedQuestItemSection.getString("material", "WRITTEN_BOOK"));
+        completedQuestItemName = completedQuestItemSection.getString("name", "{0} <dark_gray>◇</dark_gray> <gray>ʟᴠʟ</gray> <yellow>{1}</yellow> <green>✔</green>");
+        completedQuestItemObjective = completedQuestItemSection.getString("objective", "<dark_gray>•</dark_gray> <green>{0} ✔</green>");
+        completedQuestItemRefreshTime = completedQuestItemSection.getString("refreshTime", "<gray>Refresh in <dark_gray>»</dark_gray> <red>{0}</red>");
         completedQuestItemEnchanted = completedQuestItemSection.getBoolean("enchanted");
 
         ConfigurationSection objectiveSection = yaml.getConfigurationSection("objective");
@@ -166,7 +166,7 @@ public class GuiConfig {
         for (String objectiveEventTypeKey : objectiveSection.getKeys(false)) {
             try {
                 ObjectiveEventType objectiveEventType = ObjectiveEventType.valueOf(objectiveEventTypeKey.toUpperCase());
-                questGuiObjective.put(objectiveEventType, objectiveSection.getString(objectiveEventTypeKey));
+                questGuiObjective.put(objectiveEventType, objectiveSection.getString(objectiveEventTypeKey, "??? {0}/{1} {2}"));
             } catch (IllegalArgumentException e) {
                 jobQuests.getLogger().warning(MessageFormat.format("In file {0}: Invalid objective event type {1}. Possible values: {2}", questGuiFile.getPath(), objectiveEventTypeKey, Arrays.asList(ObjectiveEventType.values())));
             }
@@ -181,35 +181,35 @@ public class GuiConfig {
         for (String rewardTypeKey : rewardSection.getKeys(false)) {
             try {
                 RewardType rewardType = RewardType.valueOf(rewardTypeKey.toUpperCase());
-                questGuiReward.put(rewardType, rewardSection.getString(rewardTypeKey));
+                questGuiReward.put(rewardType, rewardSection.getString(rewardTypeKey, "<dark_gray>»</dark_gray> <red>+{0} ???</red>"));
             } catch (IllegalArgumentException e) {
                 jobQuests.getLogger().warning(MessageFormat.format("In file {0}: Invalid reward type {1}. Possible values: {2}", questGuiFile.getPath(), rewardTypeKey, Arrays.asList(ObjectiveEventType.values())));
             }
         }
 
-        questGuiBackButtonSlot = yaml.getInt("footer.backButton.slot");
-        questGuiBackButtonMaterial = Material.valueOf(yaml.getString("footer.backButton.material"));
-        questGuiBackButtonName = yaml.getString("footer.backButton.name");
+        questGuiBackButtonSlot = yaml.getInt("footer.backButton.slot", 4);
+        questGuiBackButtonMaterial = Material.valueOf(yaml.getString("footer.backButton.material", "ARROW"));
+        questGuiBackButtonName = yaml.getString("footer.backButton.name", "<gray>⮪ Back</gray>");
         questGuiBackButtonLore = yaml.getStringList("footer.backButton.lore");
         questGuiBackButtonEnchanted = yaml.getBoolean("footer.backButton.enchanted");
 
-        questGuiPrevPageButtonSlot = yaml.getInt("footer.prevPageButton.slot");
-        questGuiPrevPageButtonMaterial = Material.valueOf(yaml.getString("footer.prevPageButton.material"));
-        questGuiPrevPageButtonName = yaml.getString("footer.prevPageButton.name");
+        questGuiPrevPageButtonSlot = yaml.getInt("footer.prevPageButton.slot", 3);
+        questGuiPrevPageButtonMaterial = Material.valueOf(yaml.getString("footer.prevPageButton.material", "PAPER"));
+        questGuiPrevPageButtonName = yaml.getString("footer.prevPageButton.name", "<gray>⮪ Previous page</gray>");
         questGuiPrevPageButtonLore = yaml.getStringList("footer.prevPageButton.lore");
         questGuiPrevPageButtonEnchanted = yaml.getBoolean("footer.prevPageButton.enchanted");
 
-        questGuiNextPageButtonSlot = yaml.getInt("footer.nextPageButton.slot");
-        questGuiNextPageButtonMaterial = Material.valueOf(yaml.getString("footer.nextPageButton.material"));
-        questGuiNextPageButtonName = yaml.getString("footer.nextPageButton.name");
+        questGuiNextPageButtonSlot = yaml.getInt("footer.nextPageButton.slot", 5);
+        questGuiNextPageButtonMaterial = Material.valueOf(yaml.getString("footer.nextPageButton.material", "PAPER"));
+        questGuiNextPageButtonName = yaml.getString("footer.nextPageButton.name", "<gray>⮫ Next page</gray>");
         questGuiNextPageButtonLore = yaml.getStringList("footer.nextPageButton.lore");
         questGuiNextPageButtonEnchanted = yaml.getBoolean("footer.nextPageButton.enchanted");
 
-        questGuiYear = yaml.getString("time.year");
-        questGuiMonth = yaml.getString("time.month");
-        questGuiDay = yaml.getString("time.day");
-        questGuiHour = yaml.getString("time.hour");
-        questGuiMinute = yaml.getString("time.minute");
-        questGuiSecond = yaml.getString("time.second");
+        questGuiYear = yaml.getString("time.year", "y");
+        questGuiMonth = yaml.getString("time.month", "M");
+        questGuiDay = yaml.getString("time.day", "d");
+        questGuiHour = yaml.getString("time.hour", "h");
+        questGuiMinute = yaml.getString("time.minute", "m");
+        questGuiSecond = yaml.getString("time.second", "s");
     }
 }
