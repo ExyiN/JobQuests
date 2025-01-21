@@ -16,6 +16,7 @@ public class Job {
     private String id;
     private String name;
     private Material material;
+    private int customModelData;
     private List<String> description;
     private List<Quest> quests;
 

@@ -30,17 +30,20 @@ public class GuiConfig {
     private int questGuiRows;
     private Material questGuiEmpty;
     private Material questItemMaterial;
+    private int questItemCustomModelData;
     private String questItemName;
     private String questItemObjective;
     private String questItemCompletedObjective;
     private String questItemRefreshTime;
     private boolean questItemEnchanted;
     private Material lockedQuestItemMaterial;
+    private int lockedQuestItemCustomModelData;
     private String lockedQuestItemName;
     private String lockedQuestItemObjective;
     private String lockedQuestItemRefreshTime;
     private boolean lockedQuestItemEnchanted;
     private Material completedQuestItemMaterial;
+    private int completedQuestItemCustomModelData;
     private String completedQuestItemName;
     private String completedQuestItemObjective;
     private String completedQuestItemRefreshTime;
@@ -49,16 +52,19 @@ public class GuiConfig {
     private Map<RewardType, String> questGuiReward;
     private int questGuiBackButtonSlot;
     private Material questGuiBackButtonMaterial;
+    private int questGuiBackButtonCustomModelData;
     private String questGuiBackButtonName;
     private List<String> questGuiBackButtonLore;
     private boolean questGuiBackButtonEnchanted;
     private int questGuiPrevPageButtonSlot;
     private Material questGuiPrevPageButtonMaterial;
+    private int questGuiPrevPageButtonCustomModelData;
     private String questGuiPrevPageButtonName;
     private List<String> questGuiPrevPageButtonLore;
     private boolean questGuiPrevPageButtonEnchanted;
     private int questGuiNextPageButtonSlot;
     private Material questGuiNextPageButtonMaterial;
+    private int questGuiNextPageButtonCustomModelData;
     private String questGuiNextPageButtonName;
     private List<String> questGuiNextPageButtonLore;
     private boolean questGuiNextPageButtonEnchanted;
@@ -129,6 +135,7 @@ public class GuiConfig {
             return;
         }
         questItemMaterial = Material.valueOf(questItemSection.getString("material", "WRITABLE_BOOK"));
+        questItemCustomModelData = questItemSection.getInt("customModelData", -1);
         questItemName = questItemSection.getString("name", "{0} <dark_gray>◇</dark_gray> <gray>ʟᴠʟ</gray> <yellow>{1}</yellow>");
         questItemObjective = questItemSection.getString("objective", "<dark_gray>•</dark_gray> <gray>{0}</gray>");
         questItemCompletedObjective = questItemSection.getString("completedObjective", "<dark_gray>•</dark_gray> <green>{0} ✔</green>");
@@ -141,6 +148,7 @@ public class GuiConfig {
             return;
         }
         lockedQuestItemMaterial = Material.valueOf(lockedQuestItemSection.getString("material", "BOOK"));
+        lockedQuestItemCustomModelData = lockedQuestItemSection.getInt("customModelData", -1);
         lockedQuestItemName = lockedQuestItemSection.getString("name", "{0} <dark_gray>◇</dark_gray> <gray>ʟᴠʟ</gray> <red>{1} \uD83D\uDD12</red>");
         lockedQuestItemObjective = lockedQuestItemSection.getString("objective", "<dark_gray>•</dark_gray> <gray>{0}</gray>");
         lockedQuestItemRefreshTime = lockedQuestItemSection.getString("refreshTime", "<gray>Refresh time <dark_gray>»</dark_gray> <gold>{0}</gold>");
@@ -152,6 +160,7 @@ public class GuiConfig {
             return;
         }
         completedQuestItemMaterial = Material.valueOf(completedQuestItemSection.getString("material", "WRITTEN_BOOK"));
+        completedQuestItemCustomModelData = completedQuestItemSection.getInt("customModelData", -1);
         completedQuestItemName = completedQuestItemSection.getString("name", "{0} <dark_gray>◇</dark_gray> <gray>ʟᴠʟ</gray> <yellow>{1}</yellow> <green>✔</green>");
         completedQuestItemObjective = completedQuestItemSection.getString("objective", "<dark_gray>•</dark_gray> <green>{0} ✔</green>");
         completedQuestItemRefreshTime = completedQuestItemSection.getString("refreshTime", "<gray>Refresh in <dark_gray>»</dark_gray> <red>{0}</red>");
@@ -189,18 +198,21 @@ public class GuiConfig {
 
         questGuiBackButtonSlot = yaml.getInt("footer.backButton.slot", 4);
         questGuiBackButtonMaterial = Material.valueOf(yaml.getString("footer.backButton.material", "ARROW"));
+        questGuiBackButtonCustomModelData = yaml.getInt("footer.backButton.customModelData", -1);
         questGuiBackButtonName = yaml.getString("footer.backButton.name", "<gray>⮪ Back</gray>");
         questGuiBackButtonLore = yaml.getStringList("footer.backButton.lore");
         questGuiBackButtonEnchanted = yaml.getBoolean("footer.backButton.enchanted");
 
         questGuiPrevPageButtonSlot = yaml.getInt("footer.prevPageButton.slot", 3);
         questGuiPrevPageButtonMaterial = Material.valueOf(yaml.getString("footer.prevPageButton.material", "PAPER"));
+        questGuiPrevPageButtonCustomModelData = yaml.getInt("footer.prevPageButton.customModelData", -1);
         questGuiPrevPageButtonName = yaml.getString("footer.prevPageButton.name", "<gray>⮪ Previous page</gray>");
         questGuiPrevPageButtonLore = yaml.getStringList("footer.prevPageButton.lore");
         questGuiPrevPageButtonEnchanted = yaml.getBoolean("footer.prevPageButton.enchanted");
 
         questGuiNextPageButtonSlot = yaml.getInt("footer.nextPageButton.slot", 5);
         questGuiNextPageButtonMaterial = Material.valueOf(yaml.getString("footer.nextPageButton.material", "PAPER"));
+        questGuiNextPageButtonCustomModelData = yaml.getInt("footer.nextPageButton.customModelData", -1);
         questGuiNextPageButtonName = yaml.getString("footer.nextPageButton.name", "<gray>⮫ Next page</gray>");
         questGuiNextPageButtonLore = yaml.getStringList("footer.nextPageButton.lore");
         questGuiNextPageButtonEnchanted = yaml.getBoolean("footer.nextPageButton.enchanted");

@@ -18,7 +18,7 @@ public class GuiUtil {
         this.jobQuests = jobQuests;
     }
 
-    public ItemStack getItemStack(Material material, String name, List<String> lore, int amount, boolean isEnchanted) {
+    public ItemStack getItemStack(Material material, String name, List<String> lore, int amount, boolean isEnchanted, int customModelData) {
         ItemStack item = new ItemStack(material, amount);
         ItemMeta itemMeta = item.getItemMeta();
         if (name != null) {
@@ -30,6 +30,9 @@ public class GuiUtil {
         if (!lore.isEmpty()) {
             List<String> modifiedLore = lore.stream().map(line -> "<!i><white>" + line).toList();
             itemMeta.lore(modifiedLore.stream().map(line -> jobQuests.getMessageUtil().toMiniMessageComponent(line)).toList());
+        }
+        if (customModelData >= 0) {
+            itemMeta.setCustomModelData(customModelData);
         }
         itemMeta.setEnchantmentGlintOverride(isEnchanted);
         itemMeta.addAttributeModifier(Attribute.GENERIC_LUCK, new AttributeModifier(new NamespacedKey(jobQuests, "hide"), 0, AttributeModifier.Operation.ADD_NUMBER));

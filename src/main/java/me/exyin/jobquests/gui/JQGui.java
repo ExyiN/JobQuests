@@ -26,7 +26,7 @@ public class JQGui implements InventoryHolder {
     }
 
     public void setupItems() {
-        ItemStack emptySlot = jobQuests.getGuiUtil().getItemStack(jobQuests.getGuiConfig().getJobGuiEmpty(), "", new ArrayList<>(), 1, false);
+        ItemStack emptySlot = jobQuests.getGuiUtil().getItemStack(jobQuests.getGuiConfig().getJobGuiEmpty(), "", new ArrayList<>(), 1, false, -1);
         for (int i = 0; i < inventory.getSize(); i++) {
             inventory.setItem(i, emptySlot);
         }
@@ -39,7 +39,7 @@ public class JQGui implements InventoryHolder {
             List<String> lore = new ArrayList<>(job.getDescription());
             jobQuests.getGuiConfig().getJobItemLore().forEach(line -> lore.add(MessageFormat.format(line, String.format("%.2f", playerJob.getXp()), String.format("%.2f", nextLevelRequiredXp))));
             List<String> modifiedLore = lore.stream().map(line -> "<!i><white>" + line).toList();
-            ItemStack itemStack = jobQuests.getGuiUtil().getItemStack(job.getMaterial(), itemName, modifiedLore, 1, jobQuests.getGuiConfig().isJobItemEnchanted());
+            ItemStack itemStack = jobQuests.getGuiUtil().getItemStack(job.getMaterial(), itemName, modifiedLore, 1, jobQuests.getGuiConfig().isJobItemEnchanted(), job.getCustomModelData());
             inventory.setItem(slot, itemStack);
         });
     }

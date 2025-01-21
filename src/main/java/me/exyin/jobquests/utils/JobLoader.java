@@ -73,9 +73,10 @@ public class JobLoader {
         } catch (IllegalArgumentException e) {
             jobQuests.getLogger().warning(MessageFormat.format("In file {0}: Invalid material {1}.", filePath, jobYaml.getString("material")));
         }
+        int customModelData = jobYaml.getInt("customModelData", -1);
         List<String> description = jobYaml.getStringList("description");
         List<Quest> quests = loadQuestsFromJob(jobYaml, filePath);
-        return new Job(id, name, material, description, quests);
+        return new Job(id, name, material, customModelData, description, quests);
     }
 
     public List<Quest> loadQuestsFromJob(YamlConfiguration jobYaml, String filePath) {
