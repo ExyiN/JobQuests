@@ -1,7 +1,7 @@
 package me.exyin.jobquests.commands.impl;
 
 import me.exyin.jobquests.JobQuests;
-import me.exyin.jobquests.commands.JQCommand;
+import me.exyin.jobquests.commands.interfaces.JQCommand;
 import me.exyin.jobquests.model.Job;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;

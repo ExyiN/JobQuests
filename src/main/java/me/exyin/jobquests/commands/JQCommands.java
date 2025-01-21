@@ -1,6 +1,7 @@
 package me.exyin.jobquests.commands;
 
 import me.exyin.jobquests.JobQuests;
+import me.exyin.jobquests.commands.enums.JQCommandsEnum;
 import me.exyin.jobquests.gui.JQGui;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -10,11 +11,11 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class JQCommands implements CommandExecutor, TabCompleter {
     private final JobQuests jobQuests;
-    private final List<String> availableCommands = List.of("purgejobs", "resetjob", "resetquest", "reload");
 
     public JQCommands(JobQuests jobQuests) {
         this.jobQuests = jobQuests;
@@ -34,8 +35,14 @@ public class JQCommands implements CommandExecutor, TabCompleter {
             jobQuests.getMessageUtil().sendMessage(commandSender, jobQuests.getMessageConfig().getNoPerm());
             return true;
         }
-        JQCommandFactory jqCommandFactory = new JQCommandFactory(jobQuests, availableCommands);
-        jqCommandFactory.getStrategy(args[0]).execute(commandSender, args);
+        JQCommandFactory jqCommandFactory = new JQCommandFactory(jobQuests);
+        JQCommandsEnum commandsEnum;
+        try {
+            commandsEnum = JQCommandsEnum.valueOf(args[0].toUpperCase());
+        } catch (IllegalArgumentException e) {
+            commandsEnum = JQCommandsEnum.HELP;
+        }
+        jqCommandFactory.getStrategy(commandsEnum).execute(commandSender, args);
         return true;
     }
 
@@ -46,9 +53,15 @@ public class JQCommands implements CommandExecutor, TabCompleter {
             return List.of();
         }
         if (args.length == 1) {
-            return availableCommands;
+            return Arrays.stream(JQCommandsEnum.values()).map(value -> value.toString().toLowerCase()).toList();
         }
-        JQCommandFactory jqCommandFactory = new JQCommandFactory(jobQuests, availableCommands);
-        return jqCommandFactory.getStrategy(args[0]).getTabCompletion(args);
+        JQCommandFactory jqCommandFactory = new JQCommandFactory(jobQuests);
+        JQCommandsEnum commandsEnum;
+        try {
+            commandsEnum = JQCommandsEnum.valueOf(args[0].toUpperCase());
+        } catch (IllegalArgumentException e) {
+            commandsEnum = JQCommandsEnum.HELP;
+        }
+        return jqCommandFactory.getStrategy(commandsEnum).getTabCompletion(args);
     }
 }

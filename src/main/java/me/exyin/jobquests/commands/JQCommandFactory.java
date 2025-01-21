@@ -1,27 +1,24 @@
 package me.exyin.jobquests.commands;
 
 import me.exyin.jobquests.JobQuests;
+import me.exyin.jobquests.commands.enums.JQCommandsEnum;
 import me.exyin.jobquests.commands.impl.*;
+import me.exyin.jobquests.commands.interfaces.JQCommand;
 
-import java.util.*;
+import java.util.EnumMap;
 
 public class JQCommandFactory {
-    private final Map<String, JQCommand> map = new HashMap<>();
-    private final List<String> availableCommands;
+    private final EnumMap<JQCommandsEnum, JQCommand> map = new EnumMap<>(JQCommandsEnum.class);
 
-    public JQCommandFactory(JobQuests jobQuests, List<String> availableCommands) {
-        this.availableCommands = availableCommands;
-        map.put(availableCommands.getFirst(), new JQCommandPurgeJobsStrategy(jobQuests));
-        map.put(availableCommands.get(1), new JQCommandResetJobStrategy(jobQuests));
-        map.put(availableCommands.get(2), new JQCommandResetQuestStrategy(jobQuests));
-        map.put(availableCommands.get(3), new JQCommandReloadStrategy(jobQuests));
-        map.put("default", new JQCommandDefaultStrategy(jobQuests));
+    public JQCommandFactory(JobQuests jobQuests) {
+        map.put(JQCommandsEnum.PURGEJOB, new JQCommandPurgeJobsStrategy(jobQuests));
+        map.put(JQCommandsEnum.RESETJOB, new JQCommandResetJobStrategy(jobQuests));
+        map.put(JQCommandsEnum.RESETQUEST, new JQCommandResetQuestStrategy(jobQuests));
+        map.put(JQCommandsEnum.RELOAD, new JQCommandReloadStrategy(jobQuests));
+        map.put(JQCommandsEnum.HELP, new JQCommandDefaultStrategy(jobQuests));
     }
 
-    public JQCommand getStrategy(String command) {
-        if (!availableCommands.contains(command)) {
-            return map.get("default");
-        }
+    public JQCommand getStrategy(JQCommandsEnum command) {
         return map.get(command);
     }
 }

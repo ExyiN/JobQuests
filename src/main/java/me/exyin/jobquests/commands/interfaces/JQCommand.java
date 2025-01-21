@@ -1,4 +1,4 @@
-package me.exyin.jobquests.commands;
+package me.exyin.jobquests.commands.interfaces;
 
 import org.bukkit.command.CommandSender;
 
