@@ -22,5 +22,6 @@ noPerm: "<red>You don't have access to this command.</red>"
 adminHelp:
   - '<gray>Help:</gray>'
   - '<dark_gray>• <yellow>/jobquests purgejobs <player></yellow> »</dark_gray> <gray>Remove all non-existing jobs from a player data.</gray>'
+  - '<dark_gray>• <yellow>/jobquests reload »</dark_gray> <gray>Reload all configurations.</gray>'
   - '<dark_gray>• <yellow>/jobquests resetjob <player> <jobId></yellow> »</dark_gray> <gray>Reset a job for a player.</gray>'
   - '<dark_gray>• <yellow>/jobquests resetquest <player> <jobId> <questId></yellow> »</dark_gray> <gray>Reset a quest for a player.</gray>'

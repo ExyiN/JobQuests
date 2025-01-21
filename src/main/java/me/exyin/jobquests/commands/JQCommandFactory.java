@@ -11,7 +11,7 @@ public class JQCommandFactory {
     private final EnumMap<JQCommandsEnum, JQCommand> map = new EnumMap<>(JQCommandsEnum.class);
 
     public JQCommandFactory(JobQuests jobQuests) {
-        map.put(JQCommandsEnum.PURGEJOB, new JQCommandPurgeJobsStrategy(jobQuests));
+        map.put(JQCommandsEnum.PURGEJOBS, new JQCommandPurgeJobsStrategy(jobQuests));
         map.put(JQCommandsEnum.RESETJOB, new JQCommandResetJobStrategy(jobQuests));
         map.put(JQCommandsEnum.RESETQUEST, new JQCommandResetQuestStrategy(jobQuests));
         map.put(JQCommandsEnum.RELOAD, new JQCommandReloadStrategy(jobQuests));
