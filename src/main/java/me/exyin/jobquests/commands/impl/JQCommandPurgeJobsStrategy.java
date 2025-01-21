@@ -22,13 +22,13 @@ public class JQCommandPurgeJobsStrategy implements JQCommand {
             jobQuests.getMessageUtil().sendMessage(commandSender, jobQuests.getMessageConfig().getAdminHelp());
             return;
         }
-        OfflinePlayer playerToPurge = jobQuests.getServer().getOfflinePlayer(args[1]);
-        if (!playerToPurge.hasPlayedBefore()) {
+        OfflinePlayer offlinePlayer = jobQuests.getServer().getOfflinePlayer(args[1]);
+        if (!offlinePlayer.hasPlayedBefore()) {
             jobQuests.getMessageUtil().sendMessage(commandSender, jobQuests.getMessageConfig().getPlayerNotFound());
             return;
         }
-        List<String> jobsRemoved = jobQuests.getPlayerManager().purgePlayerJobs(playerToPurge.getUniqueId());
-        jobQuests.getMessageUtil().sendMessage(commandSender, MessageFormat.format(jobQuests.getMessageConfig().getPurgePlayer(), playerToPurge.getName(), jobsRemoved.toString()));
+        List<String> jobsRemoved = jobQuests.getPlayerManager().purgePlayerJobs(offlinePlayer.getUniqueId());
+        jobQuests.getMessageUtil().sendMessage(commandSender, MessageFormat.format(jobQuests.getMessageConfig().getPurgePlayer(), offlinePlayer.getName(), jobsRemoved.toString()));
     }
 
     @Override

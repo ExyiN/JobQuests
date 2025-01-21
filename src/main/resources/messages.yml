@@ -14,10 +14,12 @@ objectiveBREAKCompleted: '<gray>Break {0} <lang:block.minecraft.{1}></gray>'
 playerNotFound: '<red>Player not found.</red>'
 jobNotFound: '<red>Job not found.</red>'
 questNotFound: '<red>Quest not found.</red>'
+notANumber: '<red>Invalid argument: {0} is not a number.'
 purgePlayer: '<green>Purged player {0} jobs: {1}.</green>'
 resetJob: '<green>Reset job {0} for player {1}.</green>'
 resetQuest: '<green>Reset quest {0} of job {1} for player {2}.</green>'
 reload: '<green>Configurations reloaded.</green>'
+setLevel: '<green>Set {0} job {1} level to {2}.</green>'
 noPerm: "<red>You don't have access to this command.</red>"
 adminHelp:
   - '<gray>Help:</gray>'
@@ -25,3 +27,4 @@ adminHelp:
   - '<dark_gray>• <yellow>/jobquests reload »</dark_gray> <gray>Reload all configurations.</gray>'
   - '<dark_gray>• <yellow>/jobquests resetjob <player> <jobId></yellow> »</dark_gray> <gray>Reset a job for a player.</gray>'
   - '<dark_gray>• <yellow>/jobquests resetquest <player> <jobId> <questId></yellow> »</dark_gray> <gray>Reset a quest for a player.</gray>'
+  - '<dark_gray>• <yellow>/jobquests setlevel <player> <jobId> <level></yellow> »</dark_gray> <gray>Set the level of a job for a player.</gray>'

@@ -24,10 +24,12 @@ public class MessageConfig {
     private String playerNotFound;
     private String jobNotFound;
     private String questNotFound;
+    private String notANumber;
     private String purgePlayer;
     private String resetJob;
     private String resetQuest;
     private String reload;
+    private String setLevel;
     private String noPerm;
     private List<String> adminHelp;
 
@@ -54,10 +56,12 @@ public class MessageConfig {
         playerNotFound = yaml.getString("playerNotFound");
         jobNotFound = yaml.getString("jobNotFound");
         questNotFound = yaml.getString("questNotFound");
+        notANumber = yaml.getString("notANumber");
         purgePlayer = yaml.getString("purgePlayer");
         resetJob = yaml.getString("resetJob");
         resetQuest = yaml.getString("resetQuest");
         reload = yaml.getString("reload");
+        setLevel = yaml.getString("setLevel");
         noPerm = yaml.getString("noPerm");
         adminHelp = yaml.getStringList("adminHelp");
     }

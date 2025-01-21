@@ -1,9 +1,10 @@
 package me.exyin.jobquests.commands.enums;
 
 public enum JQCommandsEnum {
-    RELOAD,
+    HELP,
     PURGEJOBS,
+    RELOAD,
     RESETJOB,
     RESETQUEST,
-    HELP
+    SETLEVEL
 }

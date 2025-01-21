@@ -23,8 +23,8 @@ public class JQCommandResetQuestStrategy implements JQCommand {
             jobQuests.getMessageUtil().sendMessage(commandSender, jobQuests.getMessageConfig().getAdminHelp());
             return;
         }
-        OfflinePlayer playerToResetQuest = jobQuests.getServer().getOfflinePlayer(args[1]);
-        if (!playerToResetQuest.hasPlayedBefore()) {
+        OfflinePlayer offlinePlayer = jobQuests.getServer().getOfflinePlayer(args[1]);
+        if (!offlinePlayer.hasPlayedBefore()) {
             jobQuests.getMessageUtil().sendMessage(commandSender, jobQuests.getMessageConfig().getPlayerNotFound());
             return;
         }
@@ -38,8 +38,8 @@ public class JQCommandResetQuestStrategy implements JQCommand {
                 jobQuests.getMessageUtil().sendMessage(commandSender, jobQuests.getMessageConfig().getQuestNotFound());
                 return;
             }
-            jobQuests.getPlayerManager().resetPlayerQuest(playerToResetQuest.getUniqueId(), args[2], questId);
-            jobQuests.getMessageUtil().sendMessage(commandSender, MessageFormat.format(jobQuests.getMessageConfig().getResetQuest(), questId, args[2], playerToResetQuest.getName()));
+            jobQuests.getPlayerManager().resetPlayerQuest(offlinePlayer.getUniqueId(), args[2], questId);
+            jobQuests.getMessageUtil().sendMessage(commandSender, MessageFormat.format(jobQuests.getMessageConfig().getResetQuest(), questId, args[2], offlinePlayer.getName()));
         } catch (NumberFormatException e) {
             jobQuests.getMessageUtil().sendMessage(commandSender, jobQuests.getMessageConfig().getQuestNotFound());
         }

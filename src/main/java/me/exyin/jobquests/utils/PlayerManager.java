@@ -80,6 +80,22 @@ public class PlayerManager {
         return jobQuests.getConfigManager().getJobXpLevelUpRequirementBase() + Math.pow(level - 1.0, 2.0) * 5;
     }
 
+    public void setJobLevel(UUID uuid, String jobId, long level) {
+        if (!isPlayerLoaded(uuid)) {
+            loadPlayer(uuid);
+        }
+        PlayerJob playerJob = getPlayerJob(uuid, jobId);
+        double xpPercent = playerJob.getXp() / getNextLevelRequiredXp(playerJob.getLevel());
+        playerJob.setLevel(level);
+        if (playerJob.getXp() >= getNextLevelRequiredXp(level)) {
+            playerJob.setXp(Math.round(getNextLevelRequiredXp(level) * xpPercent));
+        }
+        if (!jobQuests.getServer().getOfflinePlayer(uuid).isOnline()) {
+            savePlayer(uuid);
+            unloadPlayer(uuid);
+        }
+    }
+
     public long changeJobLevel(UUID uuid, String jobId) {
         PlayerJob playerJob = getPlayerJob(uuid, jobId);
         long newLevel = playerJob.getLevel();

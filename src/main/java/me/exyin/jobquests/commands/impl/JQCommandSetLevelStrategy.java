@@ -10,16 +10,16 @@ import org.bukkit.entity.Player;
 import java.text.MessageFormat;
 import java.util.List;
 
-public class JQCommandResetJobStrategy implements JQCommand {
+public class JQCommandSetLevelStrategy implements JQCommand {
     private final JobQuests jobQuests;
 
-    public JQCommandResetJobStrategy(JobQuests jobQuests) {
+    public JQCommandSetLevelStrategy(JobQuests jobQuests) {
         this.jobQuests = jobQuests;
     }
 
     @Override
     public void execute(CommandSender commandSender, String[] args) {
-        if (args.length < 3) {
+        if (args.length < 4) {
             jobQuests.getMessageUtil().sendMessage(commandSender, jobQuests.getMessageConfig().getAdminHelp());
             return;
         }
@@ -32,8 +32,13 @@ public class JQCommandResetJobStrategy implements JQCommand {
             jobQuests.getMessageUtil().sendMessage(commandSender, jobQuests.getMessageConfig().getJobNotFound());
             return;
         }
-        jobQuests.getPlayerManager().resetPlayerJob(offlinePlayer.getUniqueId(), args[2]);
-        jobQuests.getMessageUtil().sendMessage(commandSender, MessageFormat.format(jobQuests.getMessageConfig().getResetJob(), args[2], offlinePlayer.getName()));
+        try {
+            long level = Long.parseLong(args[3]);
+            jobQuests.getPlayerManager().setJobLevel(offlinePlayer.getUniqueId(), args[2], level);
+            jobQuests.getMessageUtil().sendMessage(commandSender, MessageFormat.format(jobQuests.getMessageConfig().getSetLevel(), offlinePlayer.getName(), args[2], level));
+        } catch (NumberFormatException e) {
+            jobQuests.getMessageUtil().sendMessage(commandSender, MessageFormat.format(jobQuests.getMessageConfig().getNotANumber(), args[3]));
+        }
     }
 
     @Override
