@@ -36,14 +36,14 @@ public class JobLoader {
 
     public List<Job> loadAllJobs() {
         File jobDir = new File(jobQuests.getDataFolder(), "jobs");
-        if (!jobDir.exists() || jobDir.listFiles() == null) {
+        File[] jobsFiles = jobDir.listFiles();
+        if (jobsFiles == null) {
+            return List.of();
+        }
+        if (!jobDir.exists() || jobsFiles.length == 0) {
             saveDefaultJobs();
         }
         List<Job> jobs = new ArrayList<>();
-        File[] jobsFiles = jobDir.listFiles();
-        if (jobsFiles == null) {
-            return jobs;
-        }
         YamlConfiguration yaml = new YamlConfiguration();
         for (File jobFile : jobsFiles) {
             try {
