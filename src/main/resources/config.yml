@@ -16,6 +16,8 @@ gameModeBlacklist:
 
 # Autosaving online players datas period. In ticks (20 ticks = 1 second)
 autoSavePeriod: 1200
+# Refreshing jobs leaderboards. In ticks
+refreshLeaderboardPeriod: 6000
 
 # Check this link for sounds: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
 sounds:

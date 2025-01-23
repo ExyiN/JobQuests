@@ -18,6 +18,7 @@ public class ConfigManager {
     private List<String> worldBlacklist;
     private List<GameMode> gameModeBlacklist;
     private long autoSavePeriod;
+    private long refreshLeaderboardPeriod;
     private String jobLevelUpSound;
     private float jobLevelUpSoundVolume;
     private float jobLevelUpSoundPitch;
@@ -43,6 +44,7 @@ public class ConfigManager {
         worldBlacklist = yaml.getStringList("worldBlacklist");
         gameModeBlacklist = yaml.getStringList("gameModeBlacklist").stream().map(GameMode::valueOf).toList();
         autoSavePeriod = yaml.getLong("autoSavePeriod", 1200);
+        refreshLeaderboardPeriod = yaml.getLong("refreshLeaderboardPeriod", 6000);
         jobLevelUpSound = yaml.getString("sounds.jobLevelUp.sound", "ENTITY_PLAYER_LEVELUP");
         jobLevelUpSoundVolume = (float) yaml.getDouble("sounds.jobLevelUp.volume", 1.0);
         jobLevelUpSoundPitch = (float) yaml.getDouble("sounds.jobLevelUp.pitch", 0.8);

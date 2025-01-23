@@ -9,6 +9,7 @@ import me.exyin.jobquests.listeners.PlayerListener;
 import me.exyin.jobquests.model.Job;
 import me.exyin.jobquests.runnables.AutoSaveRunnable;
 import me.exyin.jobquests.runnables.CheckQuestRefreshRunnable;
+import me.exyin.jobquests.runnables.LeaderboardUpdateRunnable;
 import me.exyin.jobquests.utils.*;
 import me.exyin.jobquests.utils.config.ConfigManager;
 import me.exyin.jobquests.utils.config.GuiConfig;
@@ -29,11 +30,13 @@ public final class JobQuests extends JavaPlugin {
     private JobLoader jobLoader;
     private JobManager jobManager;
     private PlayerManager playerManager;
+    private LeaderboardManager leaderboardManager;
     private TimeUtil timeUtil;
     private GuiUtil guiUtil;
     private GuiConfig guiConfig;
     private Economy economy;
     private BukkitTask autoSaveRunnable;
+    private BukkitTask leaderboardUpdateRunnable;
 
     @Override
     public void onEnable() {
@@ -48,14 +51,14 @@ public final class JobQuests extends JavaPlugin {
         List<Job> jobs = jobLoader.loadAllJobs();
         jobManager = new JobManager(jobs);
         playerManager = new PlayerManager(this);
+        leaderboardManager = new LeaderboardManager(this);
         timeUtil = new TimeUtil(this);
         guiUtil = new GuiUtil(this);
         guiConfig = new GuiConfig(this);
 
         registerListeners();
         Objects.requireNonNull(this.getCommand("jobquests")).setExecutor(new JQCommands(this));
-        new CheckQuestRefreshRunnable(this).runTaskTimer(this, 0L, 20L);
-        autoSaveRunnable = new AutoSaveRunnable(this).runTaskTimer(this, 0L, configManager.getAutoSavePeriod());
+        launchRunnables();
     }
 
     @Override
@@ -82,6 +85,12 @@ public final class JobQuests extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new InventoryListener(this), this);
     }
 
+    private void launchRunnables() {
+        new CheckQuestRefreshRunnable(this).runTaskTimer(this, 0L, 20L);
+        leaderboardUpdateRunnable =  new LeaderboardUpdateRunnable(this).runTaskTimer(this, 0L, configManager.getRefreshLeaderboardPeriod());
+        autoSaveRunnable = new AutoSaveRunnable(this).runTaskTimer(this, 0L, configManager.getAutoSavePeriod());
+    }
+
     public void reloadPlugin() {
         List<Job> jobs = jobLoader.loadAllJobs();
         jobManager.setJobs(jobs);
@@ -89,6 +98,8 @@ public final class JobQuests extends JavaPlugin {
         messageConfig.setupValues();
         guiConfig.setupValues();
         autoSaveRunnable.cancel();
+        leaderboardUpdateRunnable.cancel();
         autoSaveRunnable = new AutoSaveRunnable(this).runTaskTimer(this, 0L, configManager.getAutoSavePeriod());
+        leaderboardUpdateRunnable =  new LeaderboardUpdateRunnable(this).runTaskTimer(this, 0L, configManager.getRefreshLeaderboardPeriod());
     }
 }

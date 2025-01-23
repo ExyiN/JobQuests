@@ -169,6 +169,31 @@ public class PlayerManager {
         return new PlayerObjective(objective.getId(), 0);
     }
 
+    public void loadAllOfflinePlayers() {
+        File playerDataFolder = new File(jobQuests.getDataFolder(), "data");
+        File[] playerDataFiles = playerDataFolder.listFiles();
+        if (!playerDataFolder.exists() || playerDataFiles == null) {
+            return;
+        }
+        for (File playerDataFile : playerDataFiles) {
+            int dotIndex = playerDataFile.getName().lastIndexOf('.');
+            UUID playerUuid = UUID.fromString(playerDataFile.getName().substring(0, dotIndex));
+            if (isPlayerLoaded(playerUuid)) {
+                continue;
+            }
+            loadPlayer(playerUuid);
+        }
+    }
+
+    public void unloadAllOfflinePlayers() {
+        jqPlayers.forEach(jqPlayer -> {
+            if (jobQuests.getServer().getOfflinePlayer(jqPlayer.getUuid()).isOnline()) {
+                return;
+            }
+            unloadPlayer(jqPlayer.getUuid());
+        });
+    }
+
     public void loadPlayer(UUID uuid) {
         String playerFilePath = jobQuests.getDataFolder().getPath() + File.separator + "data" + File.separator + uuid.toString() + ".yml";
         File playerFile = new File(playerFilePath);
