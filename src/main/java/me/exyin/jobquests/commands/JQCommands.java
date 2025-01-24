@@ -2,7 +2,7 @@ package me.exyin.jobquests.commands;
 
 import me.exyin.jobquests.JobQuests;
 import me.exyin.jobquests.commands.enums.JQCommandsEnum;
-import me.exyin.jobquests.gui.JQGui;
+import me.exyin.jobquests.gui.JobsForQuestsGui;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -27,12 +27,8 @@ public class JQCommands implements CommandExecutor, TabCompleter {
             if (!(commandSender instanceof Player player)) {
                 return true;
             }
-            JQGui jqGui = new JQGui(jobQuests, player.getUniqueId());
-            player.openInventory(jqGui.getInventory());
-            return true;
-        }
-        if (!commandSender.hasPermission("jobquests.admin")) {
-            jobQuests.getMessageUtil().sendMessage(commandSender, jobQuests.getMessageConfig().getNoPerm());
+            JobsForQuestsGui jobsForQuestsGui = new JobsForQuestsGui(jobQuests, player.getUniqueId());
+            player.openInventory(jobsForQuestsGui.getInventory());
             return true;
         }
         JQCommandFactory jqCommandFactory = new JQCommandFactory(jobQuests);
@@ -41,6 +37,10 @@ public class JQCommands implements CommandExecutor, TabCompleter {
             commandsEnum = JQCommandsEnum.valueOf(args[0].toUpperCase());
         } catch (IllegalArgumentException e) {
             commandsEnum = JQCommandsEnum.HELP;
+        }
+        if (!jqCommandFactory.getStrategy(commandsEnum).canExecute(commandSender)) {
+            jobQuests.getMessageUtil().sendMessage(commandSender, jobQuests.getMessageConfig().getNoPerm());
+            return true;
         }
         jqCommandFactory.getStrategy(commandsEnum).execute(commandSender, args);
         return true;
@@ -48,12 +48,11 @@ public class JQCommands implements CommandExecutor, TabCompleter {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
-        if (!commandSender.hasPermission("jobquests.use")
-                || !commandSender.hasPermission("jobquests.admin")) {
-            return List.of();
-        }
         if (args.length == 1) {
-            return Arrays.stream(JQCommandsEnum.values()).map(value -> value.toString().toLowerCase()).toList();
+            if (commandSender.hasPermission("jobquests.admin")) {
+                return Arrays.stream(JQCommandsEnum.values()).map(value -> value.toString().toLowerCase()).toList();
+            }
+            return List.of(JQCommandsEnum.HELP.name().toLowerCase(), JQCommandsEnum.LEADERBOARD.name().toLowerCase());
         }
         JQCommandFactory jqCommandFactory = new JQCommandFactory(jobQuests);
         JQCommandsEnum commandsEnum;
@@ -61,6 +60,9 @@ public class JQCommands implements CommandExecutor, TabCompleter {
             commandsEnum = JQCommandsEnum.valueOf(args[0].toUpperCase());
         } catch (IllegalArgumentException e) {
             commandsEnum = JQCommandsEnum.HELP;
+        }
+        if (!jqCommandFactory.getStrategy(commandsEnum).canExecute(commandSender)) {
+            return List.of();
         }
         return jqCommandFactory.getStrategy(commandsEnum).getTabCompletion(args);
     }

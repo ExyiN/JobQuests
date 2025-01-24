@@ -20,10 +20,9 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class QuestsGui implements InventoryHolder {
+public class QuestsGui implements InventoryHolder, PageableGui {
     private final JobQuests jobQuests;
-    @Getter
-    private final JQGui jqGui;
+    private final JobsForQuestsGui jobsForQuestsGui;
     private final Inventory inventory;
     private final UUID playerUuid;
     private final String jobId;
@@ -39,15 +38,15 @@ public class QuestsGui implements InventoryHolder {
     private int pIndex;
     private final Map<Integer, Map<Integer, ItemStack>> pages;
 
-    public QuestsGui(JobQuests jobQuests, JQGui jqGui, UUID playerUuid, String jobId) {
+    public QuestsGui(JobQuests jobQuests, JobsForQuestsGui jobsForQuestsGui, UUID playerUuid, String jobId) {
         this.jobQuests = jobQuests;
-        this.jqGui = jqGui;
+        this.jobsForQuestsGui = jobsForQuestsGui;
         this.playerUuid = playerUuid;
         this.jobId = jobId;
-        job = jobQuests.getJobManager().getJob(jobId);
-        inventory = jobQuests.getServer().createInventory(this, 9 * jobQuests.getGuiConfig().getQuestGuiRows(), jobQuests.getMessageUtil().toMiniMessageComponent(MessageFormat.format(jobQuests.getGuiConfig().getQuestGuiTitle(), job.getName())));
-        pIndex = 1;
-        pages = new HashMap<>();
+        this.job = jobQuests.getJobManager().getJob(jobId);
+        this.inventory = jobQuests.getServer().createInventory(this, 9 * jobQuests.getGuiConfig().getQuestGuiRows(), jobQuests.getMessageUtil().toMiniMessageComponent(MessageFormat.format(jobQuests.getGuiConfig().getQuestGuiTitle(), job.getName())));
+        this.pIndex = 1;
+        this.pages = new HashMap<>();
         setupItems();
         setupPage(pIndex);
     }
@@ -83,14 +82,15 @@ public class QuestsGui implements InventoryHolder {
         pages.put(pageIndex.get(), new HashMap<>(page));
     }
 
+    @Override
     public void setupPage(int pageIndex) {
         prevPageButtonSlot = -1;
         nextPageButtonSlot = -1;
-        ItemStack emptySlot = jobQuests.getGuiUtil().getItemStack(jobQuests.getGuiConfig().getQuestGuiEmpty(), "", new ArrayList<>(), 1, false, -1);
+        ItemStack emptySlot = jobQuests.getGuiUtil().getItemStack(jobQuests.getGuiConfig().getQuestGuiEmpty(), "", new ArrayList<>(), 1, false, -1, null);
         for (int i = 0; i < inventory.getSize(); i++) {
             inventory.setItem(i, emptySlot);
         }
-        ItemStack backButton = jobQuests.getGuiUtil().getItemStack(jobQuests.getGuiConfig().getQuestGuiBackButtonMaterial(), jobQuests.getGuiConfig().getQuestGuiBackButtonName(), jobQuests.getGuiConfig().getQuestGuiBackButtonLore(), 1, jobQuests.getGuiConfig().isQuestGuiBackButtonEnchanted(), jobQuests.getGuiConfig().getQuestGuiBackButtonCustomModelData());
+        ItemStack backButton = jobQuests.getGuiUtil().getItemStack(jobQuests.getGuiConfig().getQuestGuiBackButtonMaterial(), jobQuests.getGuiConfig().getQuestGuiBackButtonName(), jobQuests.getGuiConfig().getQuestGuiBackButtonLore(), 1, jobQuests.getGuiConfig().isQuestGuiBackButtonEnchanted(), jobQuests.getGuiConfig().getQuestGuiBackButtonCustomModelData(), null);
         inventory.setItem(backButtonSlot, backButton);
         Map<Integer, ItemStack> page = pages.get(pageIndex);
         for (Map.Entry<Integer, ItemStack> entry : page.entrySet()) {
@@ -101,13 +101,13 @@ public class QuestsGui implements InventoryHolder {
         }
         if (pageIndex > 1) {
             List<String> modifiedLore = jobQuests.getGuiConfig().getQuestGuiPrevPageButtonLore().stream().map(line -> MessageFormat.format(line, pageIndex - 1)).toList();
-            ItemStack prevPageButton = jobQuests.getGuiUtil().getItemStack(jobQuests.getGuiConfig().getQuestGuiPrevPageButtonMaterial(), jobQuests.getGuiConfig().getQuestGuiPrevPageButtonName(), modifiedLore, 1, jobQuests.getGuiConfig().isQuestGuiPrevPageButtonEnchanted(), jobQuests.getGuiConfig().getQuestGuiPrevPageButtonCustomModelData());
+            ItemStack prevPageButton = jobQuests.getGuiUtil().getItemStack(jobQuests.getGuiConfig().getQuestGuiPrevPageButtonMaterial(), jobQuests.getGuiConfig().getQuestGuiPrevPageButtonName(), modifiedLore, 1, jobQuests.getGuiConfig().isQuestGuiPrevPageButtonEnchanted(), jobQuests.getGuiConfig().getQuestGuiPrevPageButtonCustomModelData(), null);
             prevPageButtonSlot = jobQuests.getGuiConfig().getQuestGuiPrevPageButtonSlot() + 9 * (jobQuests.getGuiConfig().getQuestGuiRows() - 1);
             inventory.setItem(prevPageButtonSlot, prevPageButton);
         }
         if (pageIndex < pages.size()) {
             List<String> modifiedLore = jobQuests.getGuiConfig().getQuestGuiNextPageButtonLore().stream().map(line -> MessageFormat.format(line, pageIndex + 1)).toList();
-            ItemStack nextPageButton = jobQuests.getGuiUtil().getItemStack(jobQuests.getGuiConfig().getQuestGuiNextPageButtonMaterial(), jobQuests.getGuiConfig().getQuestGuiNextPageButtonName(), modifiedLore, 1, jobQuests.getGuiConfig().isQuestGuiNextPageButtonEnchanted(), jobQuests.getGuiConfig().getQuestGuiNextPageButtonCustomModelData());
+            ItemStack nextPageButton = jobQuests.getGuiUtil().getItemStack(jobQuests.getGuiConfig().getQuestGuiNextPageButtonMaterial(), jobQuests.getGuiConfig().getQuestGuiNextPageButtonName(), modifiedLore, 1, jobQuests.getGuiConfig().isQuestGuiNextPageButtonEnchanted(), jobQuests.getGuiConfig().getQuestGuiNextPageButtonCustomModelData(), null);
             nextPageButtonSlot = jobQuests.getGuiConfig().getQuestGuiNextPageButtonSlot() + 9 * (jobQuests.getGuiConfig().getQuestGuiRows() - 1);
             inventory.setItem(nextPageButtonSlot, nextPageButton);
         }
@@ -135,7 +135,7 @@ public class QuestsGui implements InventoryHolder {
         LocalDateTime refreshDate = jobQuests.getTimeUtil().getRefreshDate(now, quest.getRefreshTime());
         String refreshTime = jobQuests.getTimeUtil().getTimeFormattedFromDates(now, refreshDate);
         lore.add(MessageFormat.format(jobQuests.getGuiConfig().getQuestItemRefreshTime(), refreshTime));
-        return jobQuests.getGuiUtil().getItemStack(material, name, lore, 1, jobQuests.getGuiConfig().isQuestItemEnchanted(), jobQuests.getGuiConfig().getQuestItemCustomModelData());
+        return jobQuests.getGuiUtil().getItemStack(material, name, lore, 1, jobQuests.getGuiConfig().isQuestItemEnchanted(), jobQuests.getGuiConfig().getQuestItemCustomModelData(), null);
     }
 
     private ItemStack getLockedQuestItem(String jobId, Quest quest) {
@@ -155,7 +155,7 @@ public class QuestsGui implements InventoryHolder {
         LocalDateTime refreshDate = jobQuests.getTimeUtil().getRefreshDate(now, quest.getRefreshTime());
         String refreshTime = jobQuests.getTimeUtil().getTimeFormattedFromDates(now, refreshDate);
         lore.add(MessageFormat.format(jobQuests.getGuiConfig().getLockedQuestItemRefreshTime(), refreshTime));
-        return jobQuests.getGuiUtil().getItemStack(material, name, lore, 1, jobQuests.getGuiConfig().isLockedQuestItemEnchanted(), jobQuests.getGuiConfig().getLockedQuestItemCustomModelData());
+        return jobQuests.getGuiUtil().getItemStack(material, name, lore, 1, jobQuests.getGuiConfig().isLockedQuestItemEnchanted(), jobQuests.getGuiConfig().getLockedQuestItemCustomModelData(), null);
     }
 
     private ItemStack getCompletedQuestItem(String jobId, Quest quest, PlayerQuest playerQuest) {
@@ -175,11 +175,16 @@ public class QuestsGui implements InventoryHolder {
         LocalDateTime refreshDate = jobQuests.getTimeUtil().getRefreshDate(playerQuest.getCompletedDate(), quest.getRefreshTime());
         String refreshTime = jobQuests.getTimeUtil().getTimeFormattedFromDates(now, refreshDate);
         lore.add(MessageFormat.format(jobQuests.getGuiConfig().getCompletedQuestItemRefreshTime(), refreshTime));
-        return jobQuests.getGuiUtil().getItemStack(material, name, lore, 1, jobQuests.getGuiConfig().isCompletedQuestItemEnchanted(), jobQuests.getGuiConfig().getCompletedQuestItemCustomModelData());
+        return jobQuests.getGuiUtil().getItemStack(material, name, lore, 1, jobQuests.getGuiConfig().isCompletedQuestItemEnchanted(), jobQuests.getGuiConfig().getCompletedQuestItemCustomModelData(), null);
     }
 
     @Override
     public @NotNull Inventory getInventory() {
         return inventory;
+    }
+
+    @Override
+    public Inventory getBackInventory() {
+        return jobsForQuestsGui.getInventory();
     }
 }

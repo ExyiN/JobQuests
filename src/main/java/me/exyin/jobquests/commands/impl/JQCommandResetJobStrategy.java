@@ -18,6 +18,11 @@ public class JQCommandResetJobStrategy implements JQCommand {
     }
 
     @Override
+    public boolean canExecute(CommandSender commandSender) {
+        return commandSender.hasPermission("jobquests.admin");
+    }
+
+    @Override
     public void execute(CommandSender commandSender, String[] args) {
         if (args.length < 3) {
             jobQuests.getMessageUtil().sendMessage(commandSender, jobQuests.getMessageConfig().getAdminHelp());

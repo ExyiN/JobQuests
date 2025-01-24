@@ -2,6 +2,8 @@ package me.exyin.jobquests.listeners;
 
 import me.exyin.jobquests.JobQuests;
 import me.exyin.jobquests.gui.JQGui;
+import me.exyin.jobquests.gui.LeaderboardGui;
+import me.exyin.jobquests.gui.PageableGui;
 import me.exyin.jobquests.gui.QuestsGui;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,7 +20,7 @@ public class InventoryListener implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         Inventory inventory = event.getInventory();
-        if (!(inventory.getHolder(false) instanceof JQGui) && !(inventory.getHolder(false) instanceof QuestsGui)) {
+        if (!(inventory.getHolder(false) instanceof JQGui) && !(inventory.getHolder(false) instanceof QuestsGui) && !(inventory.getHolder(false) instanceof LeaderboardGui)) {
             return;
         }
         event.setCancelled(true);
@@ -26,21 +28,20 @@ public class InventoryListener implements Listener {
         if (inventory != null
                 && inventory.getHolder(false) instanceof JQGui jqGui
                 && jobQuests.getGuiConfig().getJobGuiSlot().get(event.getSlot()) != null) {
-            QuestsGui questsGui = new QuestsGui(jobQuests, jqGui, event.getWhoClicked().getUniqueId(), jobQuests.getGuiConfig().getJobGuiSlot().get(event.getSlot()));
-            event.getWhoClicked().openInventory(questsGui.getInventory());
+            event.getWhoClicked().openInventory(jqGui.getOnClickInventory(event.getWhoClicked().getUniqueId(), event.getSlot()));
         }
         if (inventory != null
-                && inventory.getHolder(false) instanceof QuestsGui questsGui) {
-            if (event.getSlot() == questsGui.getBackButtonSlot()) {
-                event.getWhoClicked().openInventory(questsGui.getJqGui().getInventory());
+                && inventory.getHolder(false) instanceof PageableGui pageableGui) {
+            if (event.getSlot() == pageableGui.getBackButtonSlot()) {
+                event.getWhoClicked().openInventory(pageableGui.getBackInventory());
             }
-            if (event.getSlot() == questsGui.getPrevPageButtonSlot()) {
-                questsGui.setPIndex(questsGui.getPIndex() - 1);
-                questsGui.setupPage(questsGui.getPIndex());
+            if (event.getSlot() == pageableGui.getPrevPageButtonSlot()) {
+                pageableGui.setPIndex(pageableGui.getPIndex() - 1);
+                pageableGui.setupPage(pageableGui.getPIndex());
             }
-            if (event.getSlot() == questsGui.getNextPageButtonSlot()) {
-                questsGui.setPIndex(questsGui.getPIndex() + 1);
-                questsGui.setupPage(questsGui.getPIndex());
+            if (event.getSlot() == pageableGui.getNextPageButtonSlot()) {
+                pageableGui.setPIndex(pageableGui.getPIndex() + 1);
+                pageableGui.setupPage(pageableGui.getPIndex());
             }
         }
     }

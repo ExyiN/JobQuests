@@ -32,15 +32,15 @@ public class PlayerManager {
     }
 
     public boolean isPlayerLoaded(UUID uuid) {
-        return !jqPlayers.stream().filter(jqPlayer -> jqPlayer.getUuid() == uuid).toList().isEmpty();
+        return !jqPlayers.stream().filter(jqPlayer -> jqPlayer.getUuid().equals(uuid)).toList().isEmpty();
     }
 
     public void unloadPlayer(UUID uuid) {
-        jqPlayers.remove(jqPlayers.stream().filter(jqPlayer -> jqPlayer.getUuid() == uuid).toList().getFirst());
+        jqPlayers.remove(jqPlayers.stream().filter(jqPlayer -> jqPlayer.getUuid().equals(uuid)).toList().getFirst());
     }
 
     public JQPlayer getJQPlayer(UUID uuid) {
-        return jqPlayers.stream().filter(jqPlayer -> jqPlayer.getUuid() == uuid).toList().getFirst();
+        return jqPlayers.stream().filter(jqPlayer -> jqPlayer.getUuid().equals(uuid)).toList().getFirst();
     }
 
     public PlayerJob getPlayerJob(UUID uuid, String jobId) {

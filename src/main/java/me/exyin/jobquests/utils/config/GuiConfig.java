@@ -75,6 +75,31 @@ public class GuiConfig {
     private String questGuiMinute;
     private String questGuiSecond;
 
+    private String leaderboardGuiTitle;
+    private int leaderboardGuiRows;
+    private Material leaderboardGuiEmpty;
+    private Map<String, String> leaderboardGuiRank;
+    private String leaderboardGuiJobLevel;
+    private String leaderboardGuiJobXp;
+    private int leaderboardGuiBackButtonSlot;
+    private Material leaderboardGuiBackButtonMaterial;
+    private int leaderboardGuiBackButtonCustomModelData;
+    private String leaderboardGuiBackButtonName;
+    private List<String> leaderboardGuiBackButtonLore;
+    private boolean leaderboardGuiBackButtonEnchanted;
+    private int leaderboardGuiPrevPageButtonSlot;
+    private Material leaderboardGuiPrevPageButtonMaterial;
+    private int leaderboardGuiPrevPageButtonCustomModelData;
+    private String leaderboardGuiPrevPageButtonName;
+    private List<String> leaderboardGuiPrevPageButtonLore;
+    private boolean leaderboardGuiPrevPageButtonEnchanted;
+    private int leaderboardGuiNextPageButtonSlot;
+    private Material leaderboardGuiNextPageButtonMaterial;
+    private int leaderboardGuiNextPageButtonCustomModelData;
+    private String leaderboardGuiNextPageButtonName;
+    private List<String> leaderboardGuiNextPageButtonLore;
+    private boolean leaderboardGuiNextPageButtonEnchanted;
+
 
     public GuiConfig(JobQuests jobQuests) {
         this.jobQuests = jobQuests;
@@ -84,6 +109,7 @@ public class GuiConfig {
     public void setupValues() {
         setupJobGuiValues();
         setupQuestGuiValues();
+        setupLeaderboardGuiValues();
     }
 
     private void setupJobGuiValues() {
@@ -126,7 +152,7 @@ public class GuiConfig {
         }
         YamlConfiguration yaml = YamlConfiguration.loadConfiguration(questGuiFile);
         questGuiTitle = yaml.getString("title", "{0}");
-        questGuiRows = yaml.getInt("rows") > 1 && yaml.getInt("rows") < 7 ? yaml.getInt("rows") : 6;
+        questGuiRows = yaml.getInt("rows") > 6 || yaml.getInt("rows") < 2 ? 6 : yaml.getInt("rows");
         questGuiEmpty = Material.valueOf(yaml.getString("empty", "AIR"));
 
         ConfigurationSection questItemSection = yaml.getConfigurationSection("questItem");
@@ -223,5 +249,50 @@ public class GuiConfig {
         questGuiHour = yaml.getString("time.hour", "h");
         questGuiMinute = yaml.getString("time.minute", "m");
         questGuiSecond = yaml.getString("time.second", "s");
+    }
+
+    private void setupLeaderboardGuiValues() {
+        File leaderboardGuiFile = new File(jobQuests.getDataFolder(), "gui" + File.separator + "leaderboardGui.yml");
+        if (!leaderboardGuiFile.exists()) {
+            jobQuests.saveResource("gui" + File.separator + "leaderboardGui.yml", false);
+        }
+        YamlConfiguration yaml = YamlConfiguration.loadConfiguration(leaderboardGuiFile);
+        leaderboardGuiTitle = yaml.getString("title", "Leaderboard » {0}");
+        leaderboardGuiRows = yaml.getInt("rows") > 6 || yaml.getInt("rows") < 2 ? 6 : yaml.getInt("rows");
+        leaderboardGuiEmpty = Material.valueOf(yaml.getString("empty", "AIR"));
+        leaderboardGuiJobLevel = yaml.getString("jobLevel", "<dark_gray>»</dark_gray> <gray>ʟᴠʟ</gray> {0}");
+        leaderboardGuiJobXp = yaml.getString("jobXp", "<dark_gray>»</dark_gray> {0} <gray>xᴘ</gray>");
+
+        leaderboardGuiBackButtonSlot = yaml.getInt("footer.backButton.slot", 4);
+        leaderboardGuiBackButtonMaterial = Material.valueOf(yaml.getString("footer.backButton.material", "ARROW"));
+        leaderboardGuiBackButtonCustomModelData = yaml.getInt("footer.backButton.customModelData", -1);
+        leaderboardGuiBackButtonName = yaml.getString("footer.backButton.name", "<gray>⮪ Back</gray>");
+        leaderboardGuiBackButtonLore = yaml.getStringList("footer.backButton.lore");
+        leaderboardGuiBackButtonEnchanted = yaml.getBoolean("footer.backButton.enchanted");
+
+        leaderboardGuiPrevPageButtonSlot = yaml.getInt("footer.prevPageButton.slot", 3);
+        leaderboardGuiPrevPageButtonMaterial = Material.valueOf(yaml.getString("footer.prevPageButton.material", "PAPER"));
+        leaderboardGuiPrevPageButtonCustomModelData = yaml.getInt("footer.prevPageButton.customModelData", -1);
+        leaderboardGuiPrevPageButtonName = yaml.getString("footer.prevPageButton.name", "<gray>⮪ Previous page</gray>");
+        leaderboardGuiPrevPageButtonLore = yaml.getStringList("footer.prevPageButton.lore");
+        leaderboardGuiPrevPageButtonEnchanted = yaml.getBoolean("footer.prevPageButton.enchanted");
+
+        leaderboardGuiNextPageButtonSlot = yaml.getInt("footer.nextPageButton.slot", 5);
+        leaderboardGuiNextPageButtonMaterial = Material.valueOf(yaml.getString("footer.nextPageButton.material", "PAPER"));
+        leaderboardGuiNextPageButtonCustomModelData = yaml.getInt("footer.nextPageButton.customModelData", -1);
+        leaderboardGuiNextPageButtonName = yaml.getString("footer.nextPageButton.name", "<gray>⮫ Next page</gray>");
+        leaderboardGuiNextPageButtonLore = yaml.getStringList("footer.nextPageButton.lore");
+        leaderboardGuiNextPageButtonEnchanted = yaml.getBoolean("footer.nextPageButton.enchanted");
+        
+        leaderboardGuiRank = new HashMap<>();
+        leaderboardGuiRank.put("default", "{0} <dark_gray>#{1}</dark_gray>");
+        ConfigurationSection rankSection = yaml.getConfigurationSection("rank");
+        if (rankSection == null) {
+            jobQuests.getLogger().severe(MessageFormat.format("In file {0}: Missing rank section.", leaderboardGuiFile.getPath()));
+            return;
+        }
+        for (String rankKey: rankSection.getKeys(false)) {
+            leaderboardGuiRank.put(rankKey, rankSection.getString(rankKey));
+        }
     }
 }

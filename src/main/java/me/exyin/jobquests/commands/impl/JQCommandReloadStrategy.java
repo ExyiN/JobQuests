@@ -14,6 +14,11 @@ public class JQCommandReloadStrategy implements JQCommand {
     }
 
     @Override
+    public boolean canExecute(CommandSender commandSender) {
+        return commandSender.hasPermission("jobquests.admin");
+    }
+
+    @Override
     public void execute(CommandSender commandSender, String[] args) {
         jobQuests.reloadPlugin();
         jobQuests.getServer().getOnlinePlayers().forEach(player -> jobQuests.getPlayerManager().updatePlayer(player.getUniqueId()));

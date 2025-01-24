@@ -1,5 +1,6 @@
 package me.exyin.jobquests.utils;
 
+import com.destroystokyo.paper.profile.PlayerProfile;
 import me.exyin.jobquests.JobQuests;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -7,8 +8,10 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.List;
+import java.util.UUID;
 
 public class GuiUtil {
     private final JobQuests jobQuests;
@@ -17,7 +20,7 @@ public class GuiUtil {
         this.jobQuests = jobQuests;
     }
 
-    public ItemStack getItemStack(Material material, String name, List<String> lore, int amount, boolean isEnchanted, int customModelData) {
+    public ItemStack getItemStack(Material material, String name, List<String> lore, int amount, boolean isEnchanted, int customModelData, UUID uuid) {
         ItemStack item = new ItemStack(material, amount);
         item.editMeta(itemMeta -> {
             if (name != null) {
@@ -32,6 +35,10 @@ public class GuiUtil {
             }
             if (customModelData >= 0) {
                 itemMeta.setCustomModelData(customModelData);
+            }
+            if (itemMeta instanceof SkullMeta skullMeta) {
+                PlayerProfile playerProfile = jobQuests.getServer().createProfile(uuid);
+                skullMeta.setPlayerProfile(playerProfile);
             }
             itemMeta.setEnchantmentGlintOverride(isEnchanted);
             itemMeta.addAttributeModifier(Attribute.GENERIC_LUCK, new AttributeModifier(new NamespacedKey(jobQuests, "hide"), 0, AttributeModifier.Operation.ADD_NUMBER));

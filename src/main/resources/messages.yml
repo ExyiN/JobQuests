@@ -21,10 +21,16 @@ resetQuest: '<green>Reset quest {0} of job {1} for player {2}.</green>'
 reload: '<green>Configurations reloaded.</green>'
 setLevel: '<green>Set {0} job {1} level to {2}.</green>'
 noPerm: "<red>You don't have access to this command.</red>"
+playerHelp:
+  - '<gray>Help:</gray>'
+  - '<dark_gray>• <yellow>/jobquests</yellow> »</dark_gray> <gray>Open jobs main menu.</gray>'
+  - '<dark_gray>• <yellow>/jobquests leaderboard</yellow> »</dark_gray> <gray>Open jobs leaderboards menu.</gray>'
 adminHelp:
   - '<gray>Help:</gray>'
+  - '<dark_gray>• <yellow>/jobquests</yellow> »</dark_gray> <gray>Open jobs main menu.</gray>'
+  - '<dark_gray>• <yellow>/jobquests leaderboard</yellow> »</dark_gray> <gray>Open jobs leaderboards menu.</gray>'
   - '<dark_gray>• <yellow>/jobquests purgejobs <player></yellow> »</dark_gray> <gray>Remove all non-existing jobs from a player data.</gray>'
-  - '<dark_gray>• <yellow>/jobquests reload »</dark_gray> <gray>Reload all configurations.</gray>'
+  - '<dark_gray>• <yellow>/jobquests reload</yellow> »</dark_gray> <gray>Reload all configurations.</gray>'
   - '<dark_gray>• <yellow>/jobquests resetjob <player> <jobId></yellow> »</dark_gray> <gray>Reset a job for a player.</gray>'
   - '<dark_gray>• <yellow>/jobquests resetquest <player> <jobId> <questId></yellow> »</dark_gray> <gray>Reset a quest for a player.</gray>'
   - '<dark_gray>• <yellow>/jobquests setlevel <player> <jobId> <level></yellow> »</dark_gray> <gray>Set the level of a job for a player.</gray>'

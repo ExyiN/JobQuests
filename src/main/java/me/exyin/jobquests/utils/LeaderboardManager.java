@@ -26,10 +26,10 @@ public class LeaderboardManager {
             }
             leaderboard.get(playerJob.getJobId()).add(new LeaderboardPlayer(jqPlayer.getUuid(), playerJob.getLevel(), playerJob.getXp()));
         }));
-        for (Map.Entry<String, List<LeaderboardPlayer>> entry : leaderboard.entrySet()) {
-            entry.getValue().sort(Comparator.comparingDouble(LeaderboardPlayer::getXp).reversed());
-            entry.getValue().sort(Comparator.comparingLong(LeaderboardPlayer::getLevel).reversed());
-        }
+        leaderboard.values().forEach(leaderboardPlayers -> {
+            Comparator<LeaderboardPlayer> comparator = Comparator.comparingLong(LeaderboardPlayer::getLevel).thenComparingDouble(LeaderboardPlayer::getXp);
+            leaderboardPlayers.sort(comparator.reversed());
+        });
         jobQuests.getPlayerManager().unloadAllOfflinePlayers();
     }
 }

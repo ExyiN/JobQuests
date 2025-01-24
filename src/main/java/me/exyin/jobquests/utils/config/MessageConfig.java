@@ -31,6 +31,7 @@ public class MessageConfig {
     private String reload;
     private String setLevel;
     private String noPerm;
+    private List<String> playerHelp;
     private List<String> adminHelp;
 
     public MessageConfig(JobQuests jobQuests) {
@@ -63,6 +64,7 @@ public class MessageConfig {
         reload = yaml.getString("reload", "<green>Configurations reloaded.</green>");
         setLevel = yaml.getString("setLevel", "<green>Set {0} job {1} level to {2}.</green>");
         noPerm = yaml.getString("noPerm", "<red>You don't have access to this command.</red>");
+        playerHelp = yaml.getStringList("playerHelp");
         adminHelp = yaml.getStringList("adminHelp");
     }
 }

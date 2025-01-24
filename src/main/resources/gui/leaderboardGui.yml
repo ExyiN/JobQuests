@@ -1,0 +1,32 @@
+title: 'Leaderboard » {0}'
+rows: 6
+empty: BLACK_STAINED_GLASS_PANE
+rank:
+  1: "<white>{0}</white> <dark_gray>◇</dark_gray> <color:#fdb919>ᴛᴏᴘ {1}</color>"
+  2: "<white>{0}</white> <dark_gray>◇</dark_gray> <color:#dacfcd>ᴛᴏᴘ {1}</color>"
+  3: "<white>{0}</white> <dark_gray>◇</dark_gray> <color:#e1893c>ᴛᴏᴘ {1}</color>"
+  default: "<white>{0}</white> <dark_gray>◇</dark_gray> <dark_gray>#{1}</dark_gray>"
+jobLevel: "<dark_gray>»</dark_gray> <gray>ʟᴠʟ</gray> <yellow>{0}</yellow>"
+jobXp: "<dark_gray>»</dark_gray> <green>{0}</green> <gray>xᴘ</gray>"
+footer:
+  backButton:
+    slot: 4
+    material: ARROW
+    name: '<gray>⮪ Back</gray>'
+    lore:
+      - '<dark_gray>Go back to main menu</dark_gray>'
+    enchanted: false
+  prevPageButton:
+    slot: 3
+    material: PAPER
+    name: '<gray>⮪ Previous page</gray>'
+    lore:
+      - '<dark_gray>Show page {0}</dark_gray>'
+    enchanted: false
+  nextPageButton:
+    slot: 5
+    material: PAPER
+    name: '<gray>⮫ Next page</gray>'
+    lore:
+      - '<dark_gray>Show page {0}</dark_gray>'
+    enchanted: false
