@@ -186,7 +186,8 @@ public class PlayerManager {
     }
 
     public void unloadAllOfflinePlayers() {
-        jqPlayers.forEach(jqPlayer -> {
+        List<JQPlayer> jqPlayerIterator = new ArrayList<>(jqPlayers);
+        jqPlayerIterator.forEach(jqPlayer -> {
             if (jobQuests.getServer().getOfflinePlayer(jqPlayer.getUuid()).isOnline()) {
                 return;
             }
