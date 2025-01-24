@@ -3,6 +3,7 @@ package me.exyin.jobquests.gui;
 import lombok.Getter;
 import lombok.Setter;
 import me.exyin.jobquests.JobQuests;
+import me.exyin.jobquests.gui.interfaces.PageableGui;
 import me.exyin.jobquests.model.Job;
 import me.exyin.jobquests.model.player.LeaderboardPlayer;
 import org.bukkit.Material;

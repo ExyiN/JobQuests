@@ -1,6 +1,7 @@
 package me.exyin.jobquests.gui;
 
 import me.exyin.jobquests.JobQuests;
+import me.exyin.jobquests.gui.interfaces.JQGui;
 import me.exyin.jobquests.model.Job;
 import me.exyin.jobquests.model.player.PlayerJob;
 import org.bukkit.inventory.Inventory;

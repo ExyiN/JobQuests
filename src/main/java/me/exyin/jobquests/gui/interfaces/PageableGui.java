@@ -1,4 +1,4 @@
-package me.exyin.jobquests.gui;
+package me.exyin.jobquests.gui.interfaces;
 
 import org.bukkit.inventory.Inventory;
 

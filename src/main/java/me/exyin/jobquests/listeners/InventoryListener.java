@@ -1,9 +1,9 @@
 package me.exyin.jobquests.listeners;
 
 import me.exyin.jobquests.JobQuests;
-import me.exyin.jobquests.gui.JQGui;
+import me.exyin.jobquests.gui.interfaces.JQGui;
 import me.exyin.jobquests.gui.LeaderboardGui;
-import me.exyin.jobquests.gui.PageableGui;
+import me.exyin.jobquests.gui.interfaces.PageableGui;
 import me.exyin.jobquests.gui.QuestsGui;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
