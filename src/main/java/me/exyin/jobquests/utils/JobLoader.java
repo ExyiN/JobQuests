@@ -32,6 +32,7 @@ public class JobLoader {
         jobQuests.saveResource("jobs" + File.separator + "hunter.yml", false);
         jobQuests.saveResource("jobs" + File.separator + "lumberjack.yml", false);
         jobQuests.saveResource("jobs" + File.separator + "farmer.yml", false);
+        jobQuests.saveResource("jobs" + File.separator + "fisherman.yml", false);
     }
 
     public List<Job> loadAllJobs() {

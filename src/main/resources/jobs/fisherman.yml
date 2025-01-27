@@ -1,0 +1,22 @@
+id: fisherman
+name: Fisherman
+material: FISHING_ROD
+description:
+  - <dark_gray>Fish to earn XP and money
+quests:
+  1:
+    title: I like fishes
+    requiredLevel: 1
+    refreshTime: 1 h
+    objectives:
+      1:
+        eventType: FISH
+        type: COD
+        quantity: 8
+    rewards:
+      1:
+        type: XP
+        quantity: 200.0
+      2:
+        type: MONEY
+        quantity: 1000.0
