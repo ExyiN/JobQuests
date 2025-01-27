@@ -25,10 +25,8 @@ public class EntityDeathListener implements Listener {
     @EventHandler
     public void onEntityDeath(EntityDeathEvent entityDeathEvent) {
         Player player = entityDeathEvent.getEntity().getKiller();
-        if (player == null) {
-            return;
-        }
-        if (!player.hasPermission("jobquests.use")
+        if (player == null
+                || !player.hasPermission("jobquests.use")
                 || jobQuests.getConfigManager().getWorldBlacklist().contains(player.getWorld().getName())
                 || jobQuests.getConfigManager().getGameModeBlacklist().contains(player.getGameMode())) {
             return;
