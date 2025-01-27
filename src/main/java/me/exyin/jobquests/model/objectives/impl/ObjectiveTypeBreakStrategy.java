@@ -1,7 +1,6 @@
 package me.exyin.jobquests.model.objectives.impl;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 import me.exyin.jobquests.JobQuests;
 import me.exyin.jobquests.model.enums.ObjectiveEventType;
@@ -10,12 +9,11 @@ import org.bukkit.Material;
 
 import java.text.MessageFormat;
 
-@Getter
 @ToString
-@NoArgsConstructor
 public class ObjectiveTypeBreakStrategy implements ObjectiveType {
+    @Getter
     private Material type;
-    private JobQuests jobQuests;
+    private final JobQuests jobQuests;
 
     public ObjectiveTypeBreakStrategy(JobQuests jobQuests) {
         this.jobQuests = jobQuests;

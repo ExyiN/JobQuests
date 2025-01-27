@@ -3,6 +3,7 @@ package me.exyin.jobquests.model.objectives;
 import me.exyin.jobquests.JobQuests;
 import me.exyin.jobquests.model.enums.ObjectiveEventType;
 import me.exyin.jobquests.model.objectives.impl.ObjectiveTypeBreakStrategy;
+import me.exyin.jobquests.model.objectives.impl.ObjectiveTypeFishStrategy;
 import me.exyin.jobquests.model.objectives.impl.ObjectiveTypeKillStrategy;
 import me.exyin.jobquests.model.objectives.interfaces.ObjectiveType;
 
@@ -14,6 +15,7 @@ public class ObjectiveFactory {
     public ObjectiveFactory(JobQuests jobQuests) {
         map.put(ObjectiveEventType.KILL, new ObjectiveTypeKillStrategy(jobQuests));
         map.put(ObjectiveEventType.BREAK, new ObjectiveTypeBreakStrategy(jobQuests));
+        map.put(ObjectiveEventType.FISH, new ObjectiveTypeFishStrategy(jobQuests));
     }
 
     public ObjectiveType getStrategy(ObjectiveEventType objectiveEventType) {

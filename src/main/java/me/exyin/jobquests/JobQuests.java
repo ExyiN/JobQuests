@@ -2,10 +2,7 @@ package me.exyin.jobquests;
 
 import lombok.Getter;
 import me.exyin.jobquests.commands.JQCommands;
-import me.exyin.jobquests.listeners.BlockBreakListener;
-import me.exyin.jobquests.listeners.EntityDeathListener;
-import me.exyin.jobquests.listeners.InventoryListener;
-import me.exyin.jobquests.listeners.PlayerListener;
+import me.exyin.jobquests.listeners.*;
 import me.exyin.jobquests.model.Job;
 import me.exyin.jobquests.runnables.AutoSaveRunnable;
 import me.exyin.jobquests.runnables.CheckQuestRefreshRunnable;
@@ -83,11 +80,12 @@ public final class JobQuests extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new EntityDeathListener(this), this);
         this.getServer().getPluginManager().registerEvents(new BlockBreakListener(this), this);
         this.getServer().getPluginManager().registerEvents(new InventoryListener(this), this);
+        this.getServer().getPluginManager().registerEvents(new PlayerFishListener(this), this);
     }
 
     private void launchRunnables() {
         new CheckQuestRefreshRunnable(this).runTaskTimer(this, 0L, 20L);
-        leaderboardUpdateRunnable =  new LeaderboardUpdateRunnable(this).runTaskTimer(this, 0L, configManager.getRefreshLeaderboardPeriod());
+        leaderboardUpdateRunnable = new LeaderboardUpdateRunnable(this).runTaskTimer(this, 0L, configManager.getRefreshLeaderboardPeriod());
         autoSaveRunnable = new AutoSaveRunnable(this).runTaskTimer(this, 0L, configManager.getAutoSavePeriod());
     }
 
@@ -100,6 +98,6 @@ public final class JobQuests extends JavaPlugin {
         autoSaveRunnable.cancel();
         leaderboardUpdateRunnable.cancel();
         autoSaveRunnable = new AutoSaveRunnable(this).runTaskTimer(this, 0L, configManager.getAutoSavePeriod());
-        leaderboardUpdateRunnable =  new LeaderboardUpdateRunnable(this).runTaskTimer(this, 0L, configManager.getRefreshLeaderboardPeriod());
+        leaderboardUpdateRunnable = new LeaderboardUpdateRunnable(this).runTaskTimer(this, 0L, configManager.getRefreshLeaderboardPeriod());
     }
 }
