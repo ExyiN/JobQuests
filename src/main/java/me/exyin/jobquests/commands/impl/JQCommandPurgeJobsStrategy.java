@@ -39,7 +39,7 @@ public class JQCommandPurgeJobsStrategy implements JQCommand {
     @Override
     public List<String> getTabCompletion(String[] args) {
         if (args.length == 2) {
-            return jobQuests.getServer().getOnlinePlayers().stream().map(Player::getName).toList();
+            return jobQuests.getServer().getOnlinePlayers().stream().map(Player::getName).filter(player -> player.toLowerCase().startsWith(args[1].toLowerCase())).toList();
         }
         return List.of();
     }

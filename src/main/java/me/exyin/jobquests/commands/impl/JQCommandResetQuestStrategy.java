@@ -53,15 +53,15 @@ public class JQCommandResetQuestStrategy implements JQCommand {
     @Override
     public List<String> getTabCompletion(String[] args) {
         if (args.length == 2) {
-            return jobQuests.getServer().getOnlinePlayers().stream().map(Player::getName).toList();
+            return jobQuests.getServer().getOnlinePlayers().stream().map(Player::getName).filter(player -> player.toLowerCase().startsWith(args[1].toLowerCase())).toList();
         }
         if (args.length == 3) {
-            return jobQuests.getJobManager().getJobs().stream().map(Job::getId).toList();
+            return jobQuests.getJobManager().getJobs().stream().map(Job::getId).filter(job -> job.toLowerCase().startsWith(args[2].toLowerCase())).toList();
         }
         if (args.length == 4) {
             String jobId = args[2];
             if (jobQuests.getJobManager().existsJob(jobId)) {
-                return jobQuests.getJobManager().getJob(jobId).getQuests().stream().map(quest -> String.valueOf(quest.getId())).toList();
+                return jobQuests.getJobManager().getJob(jobId).getQuests().stream().map(quest -> String.valueOf(quest.getId())).filter(quest -> quest.toLowerCase().startsWith(args[3].toLowerCase())).toList();
             }
         }
         return List.of();

@@ -49,10 +49,10 @@ public class JQCommandSetLevelStrategy implements JQCommand {
     @Override
     public List<String> getTabCompletion(String[] args) {
         if (args.length == 2) {
-            return jobQuests.getServer().getOnlinePlayers().stream().map(Player::getName).toList();
+            return jobQuests.getServer().getOnlinePlayers().stream().map(Player::getName).filter(player -> player.toLowerCase().startsWith(args[1].toLowerCase())).toList();
         }
         if (args.length == 3) {
-            return jobQuests.getJobManager().getJobs().stream().map(Job::getId).toList();
+            return jobQuests.getJobManager().getJobs().stream().map(Job::getId).filter(job -> job.toLowerCase().startsWith(args[2].toLowerCase())).toList();
         }
         return List.of();
     }
