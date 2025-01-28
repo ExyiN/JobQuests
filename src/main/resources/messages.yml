@@ -8,9 +8,9 @@ questRefreshed: '<gray>Quest refreshed</gray> <dark_gray>◇</dark_gray> {0}'
 rewardXp: '{0} <green>+{1} XP</green>'
 rewardMoney: '<gray>You earned</gray> <gold>{0}</gold>'
 
-objectiveKILLCompleted: '<gray>Kill {0} <lang:entity.minecraft.{1}></gray>'
-objectiveBREAKCompleted: '<gray>Break {0} <lang:block.minecraft.{1}></gray>'
-objectiveFISHCompleted: '<gray>Fish {0} <lang:item.minecraft.{1}></gray>'
+objectiveKILLCompleted: '<gray>Kill {0} <lang:{1}></gray>'
+objectiveBREAKCompleted: '<gray>Break {0} <lang:{1}></gray>'
+objectiveFISHCompleted: '<gray>Fish {0} <lang:{1}></gray>'
 
 playerNotFound: '<red>Player not found.</red>'
 jobNotFound: '<red>Job not found.</red>'

@@ -26,11 +26,11 @@ public class ObjectiveTypeFishStrategy implements ObjectiveType {
 
     @Override
     public String getDescription(int progression, int quantity) {
-        return MessageFormat.format(jobQuests.getGuiConfig().getQuestGuiObjective().get(ObjectiveEventType.FISH), progression, quantity, type.toString().toLowerCase());
+        return MessageFormat.format(jobQuests.getGuiConfig().getQuestGuiObjective().get(ObjectiveEventType.FISH), progression, quantity, type.translationKey());
     }
 
     @Override
     public String getCompletedMessage(int quantity) {
-        return MessageFormat.format(jobQuests.getMessageConfig().getObjectiveFISHCompleted(), quantity, type.toString().toLowerCase());
+        return MessageFormat.format(jobQuests.getMessageConfig().getObjectiveFISHCompleted(), quantity, type.translationKey());
     }
 }

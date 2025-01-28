@@ -26,11 +26,11 @@ public class ObjectiveTypeBreakStrategy implements ObjectiveType {
 
     @Override
     public String getDescription(int progression, int quantity) {
-        return MessageFormat.format(jobQuests.getGuiConfig().getQuestGuiObjective().get(ObjectiveEventType.BREAK), progression, quantity, type.toString().toLowerCase());
+        return MessageFormat.format(jobQuests.getGuiConfig().getQuestGuiObjective().get(ObjectiveEventType.BREAK), progression, quantity, type.translationKey());
     }
 
     @Override
     public String getCompletedMessage(int quantity) {
-        return MessageFormat.format(jobQuests.getMessageConfig().getObjectiveBREAKCompleted(), quantity, type.toString().toLowerCase());
+        return MessageFormat.format(jobQuests.getMessageConfig().getObjectiveBREAKCompleted(), quantity, type.translationKey());
     }
 }
