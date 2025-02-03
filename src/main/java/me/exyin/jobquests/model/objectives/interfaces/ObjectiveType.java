@@ -1,8 +1,10 @@
 package me.exyin.jobquests.model.objectives.interfaces;
 
+import net.kyori.adventure.text.Component;
+
 public interface ObjectiveType {
     void setType(String type);
     Object getType();
-    String getDescription(int progression, int quantity);
-    String getCompletedMessage(int quantity);
+    Component getDescription(int progression, int quantity);
+    Component getCompletedMessage(int quantity);
 }

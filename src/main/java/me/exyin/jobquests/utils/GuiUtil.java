@@ -2,6 +2,7 @@ package me.exyin.jobquests.utils;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
 import me.exyin.jobquests.JobQuests;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -20,7 +21,7 @@ public class GuiUtil {
         this.jobQuests = jobQuests;
     }
 
-    public ItemStack getItemStack(Material material, String name, List<String> lore, int amount, boolean isEnchanted, int customModelData, UUID uuid) {
+    public ItemStack getItemStack(Material material, String name, List<Component> lore, int amount, boolean isEnchanted, int customModelData, UUID uuid) {
         ItemStack item = new ItemStack(material, amount);
         item.editMeta(itemMeta -> {
             if (name != null) {
@@ -30,8 +31,8 @@ public class GuiUtil {
                 }
             }
             if (!lore.isEmpty()) {
-                List<String> modifiedLore = lore.stream().map(line -> "<!i><white>" + line).toList();
-                itemMeta.lore(modifiedLore.stream().map(line -> jobQuests.getMessageUtil().toMiniMessageComponent(line)).toList());
+                List<Component> modifiedLore = lore.stream().map(line -> jobQuests.getMessageUtil().toMiniMessageComponent("<!i><white>").append(line)).toList();
+                itemMeta.lore(modifiedLore);
             }
             if (customModelData >= 0) {
                 itemMeta.setCustomModelData(customModelData);

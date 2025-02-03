@@ -4,9 +4,12 @@ import lombok.Getter;
 import me.exyin.jobquests.JobQuests;
 import me.exyin.jobquests.model.enums.ObjectiveEventType;
 import me.exyin.jobquests.model.objectives.interfaces.ObjectiveType;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 
 import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ObjectiveTypeCraftStrategy implements ObjectiveType {
     @Getter
@@ -23,12 +26,18 @@ public class ObjectiveTypeCraftStrategy implements ObjectiveType {
     }
 
     @Override
-    public String getDescription(int progression, int quantity) {
-        return MessageFormat.format(jobQuests.getGuiConfig().getQuestGuiObjective().get(ObjectiveEventType.CRAFT), progression, quantity, type.translationKey());
+    public Component getDescription(int progression, int quantity) {
+        String message = MessageFormat.format(jobQuests.getGuiConfig().getQuestGuiObjective().get(ObjectiveEventType.CRAFT), progression, quantity, "<type>");
+        Map<String, Component> placeholders = new HashMap<>();
+        placeholders.put("type", Component.translatable(type.translationKey()));
+        return jobQuests.getMessageUtil().toMiniMessageComponent(message, placeholders);
     }
 
     @Override
-    public String getCompletedMessage(int quantity) {
-        return MessageFormat.format(jobQuests.getMessageConfig().getObjectiveCRAFTCompleted(), quantity, type.translationKey());
+    public Component getCompletedMessage(int quantity) {
+        String message = MessageFormat.format(jobQuests.getMessageConfig().getObjectiveCRAFTCompleted(), quantity, "<type>");
+        Map<String, Component> placeholders = new HashMap<>();
+        placeholders.put("type", Component.translatable(type.translationKey()));
+        return jobQuests.getMessageUtil().toMiniMessageComponent(message, placeholders);
     }
 }

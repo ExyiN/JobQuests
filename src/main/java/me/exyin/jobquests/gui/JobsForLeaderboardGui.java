@@ -39,7 +39,7 @@ public class JobsForLeaderboardGui implements InventoryHolder, JQGui {
             double nextLevelRequiredXp = jobQuests.getPlayerManager().getNextLevelRequiredXp(level);
             List<String> lore = new ArrayList<>(job.getDescription());
             jobQuests.getGuiConfig().getJobItemLore().forEach(line -> lore.add(MessageFormat.format(line, String.format("%.2f", playerJob.getXp()), String.format("%.2f", nextLevelRequiredXp))));
-            ItemStack itemStack = jobQuests.getGuiUtil().getItemStack(job.getMaterial(), itemName, lore, 1, jobQuests.getGuiConfig().isJobItemEnchanted(), job.getCustomModelData(), null);
+            ItemStack itemStack = jobQuests.getGuiUtil().getItemStack(job.getMaterial(), itemName, lore.stream().map(line -> jobQuests.getMessageUtil().toMiniMessageComponent(line)).toList(), 1, jobQuests.getGuiConfig().isJobItemEnchanted(), job.getCustomModelData(), null);
             inventory.setItem(slot, itemStack);
         });
     }
