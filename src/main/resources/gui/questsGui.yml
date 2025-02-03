@@ -24,6 +24,7 @@ objective:
   kill: 'Kill {0}/{1} <lang:{2}>'
   break: 'Break {0}/{1} <lang:{2}>'
   fish: 'Fish {0}/{1} <lang:{2}>'
+  craft: 'Craft {0}/{1} <lang:{2}>'
 reward:
   xp: '<dark_gray>»</dark_gray> <green>+{0} XP</green>'
   money: '<dark_gray>»</dark_gray> <gold>+{0}</gold>'

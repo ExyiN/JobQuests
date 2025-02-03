@@ -22,6 +22,7 @@ public class MessageConfig {
     private String objectiveKILLCompleted;
     private String objectiveBREAKCompleted;
     private String objectiveFISHCompleted;
+    private String objectiveCRAFTCompleted;
     private String playerNotFound;
     private String jobNotFound;
     private String questNotFound;
@@ -56,6 +57,7 @@ public class MessageConfig {
         objectiveKILLCompleted = yaml.getString("objectiveKILLCompleted", "<gray>Kill {0} <lang:entity.minecraft.{1}></gray>");
         objectiveBREAKCompleted = yaml.getString("objectiveBREAKCompleted", "<gray>Break {0} <lang:block.minecraft.{1}></gray>");
         objectiveFISHCompleted = yaml.getString("objectiveFISHCompleted", "<gray>Fish {0} <lang:item.minecraft.{1}></gray>");
+        objectiveCRAFTCompleted = yaml.getString("objectiveCRAFTCompleted", "<gray>Craft {0} <lang:item.minecraft.{1}></gray>");
         playerNotFound = yaml.getString("playerNotFound", "<red>Player not found.</red>");
         jobNotFound = yaml.getString("jobNotFound", "<red>Job not found.</red>");
         questNotFound = yaml.getString("questNotFound", "<red>Quest not found.</red>");

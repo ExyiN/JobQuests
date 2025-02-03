@@ -81,6 +81,7 @@ public final class JobQuests extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new BlockBreakListener(this), this);
         this.getServer().getPluginManager().registerEvents(new InventoryListener(this), this);
         this.getServer().getPluginManager().registerEvents(new PlayerFishListener(this), this);
+        this.getServer().getPluginManager().registerEvents(new CraftItemListener(), this);
     }
 
     private void launchRunnables() {
