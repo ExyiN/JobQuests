@@ -60,6 +60,13 @@ public class PlayerManager {
         playerObjective.setProgression(playerObjective.getProgression() + 1);
     }
 
+    public void incrementProgression(UUID uuid, String jobId, int questId, int objectiveId, int amount) {
+        PlayerObjective playerObjective = getPlayerObjective(uuid, jobId, questId, objectiveId);
+        Objective objective = jobQuests.getJobManager().getObjective(jobId, questId, objectiveId);
+        int newProgression = playerObjective.getProgression() + amount;
+        playerObjective.setProgression(Math.min(newProgression, objective.getQuantity()));
+    }
+
     public boolean checkQuestCompletion(UUID uuid, String jobId, int questId) {
         for (Objective objective : jobQuests.getJobManager().getQuest(jobId, questId).getObjectives()) {
             if (getPlayerObjective(uuid, jobId, questId, objective.getId()).getProgression() < objective.getQuantity()) {

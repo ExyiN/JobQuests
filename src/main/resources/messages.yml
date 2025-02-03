@@ -11,6 +11,7 @@ rewardMoney: '<gray>You earned</gray> <gold>{0}</gold>'
 objectiveKILLCompleted: '<gray>Kill {0} <lang:{1}></gray>'
 objectiveBREAKCompleted: '<gray>Break {0} <lang:{1}></gray>'
 objectiveFISHCompleted: '<gray>Fish {0} <lang:{1}></gray>'
+objectiveCRAFTCompleted: '<gray>Craft {0} <lang:{1}></gray>'
 
 playerNotFound: '<red>Player not found.</red>'
 jobNotFound: '<red>Job not found.</red>'
