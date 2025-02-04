@@ -6,6 +6,7 @@ import me.exyin.jobquests.JobQuests;
 import me.exyin.jobquests.gui.interfaces.PageableGui;
 import me.exyin.jobquests.model.Job;
 import me.exyin.jobquests.model.player.LeaderboardPlayer;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -66,7 +67,7 @@ public class LeaderboardGui implements InventoryHolder, PageableGui {
             List<String> lore = new ArrayList<>();
             lore.add(MessageFormat.format(jobQuests.getGuiConfig().getLeaderboardGuiJobLevel(), leaderboardPlayer.getLevel()));
             lore.add(MessageFormat.format(jobQuests.getGuiConfig().getLeaderboardGuiJobXp(), String.format("%.2f", leaderboardPlayer.getXp())));
-            ItemStack itemStack = jobQuests.getGuiUtil().getItemStack(Material.PLAYER_HEAD, name, lore, 1, false, -1, leaderboardPlayer.getUuid());
+            ItemStack itemStack = jobQuests.getGuiUtil().getItemStack(Material.PLAYER_HEAD, name, lore.stream().map(line -> jobQuests.getMessageUtil().toMiniMessageComponent(line)).toList(), 1, false, -1, leaderboardPlayer.getUuid());
             page.put(slot.get(), itemStack);
             slot.incrementAndGet();
         });
@@ -80,7 +81,7 @@ public class LeaderboardGui implements InventoryHolder, PageableGui {
         for (int i = 0; i < inventory.getSize(); i++) {
             inventory.setItem(i, emptySlot);
         }
-        ItemStack backButton = jobQuests.getGuiUtil().getItemStack(jobQuests.getGuiConfig().getLeaderboardGuiBackButtonMaterial(), jobQuests.getGuiConfig().getLeaderboardGuiBackButtonName(), jobQuests.getGuiConfig().getLeaderboardGuiBackButtonLore(), 1, jobQuests.getGuiConfig().isLeaderboardGuiBackButtonEnchanted(), jobQuests.getGuiConfig().getLeaderboardGuiBackButtonCustomModelData(), null);
+        ItemStack backButton = jobQuests.getGuiUtil().getItemStack(jobQuests.getGuiConfig().getLeaderboardGuiBackButtonMaterial(), jobQuests.getGuiConfig().getLeaderboardGuiBackButtonName(), jobQuests.getGuiConfig().getLeaderboardGuiBackButtonLore().stream().map(line -> jobQuests.getMessageUtil().toMiniMessageComponent(line)).toList(), 1, jobQuests.getGuiConfig().isLeaderboardGuiBackButtonEnchanted(), jobQuests.getGuiConfig().getLeaderboardGuiBackButtonCustomModelData(), null);
         inventory.setItem(backButtonSlot, backButton);
         Map<Integer, ItemStack> page = pages.get(pageIndex);
         for (Map.Entry<Integer, ItemStack> entry : page.entrySet()) {
@@ -90,13 +91,13 @@ public class LeaderboardGui implements InventoryHolder, PageableGui {
             return;
         }
         if (pageIndex > 1) {
-            List<String> modifiedLore = jobQuests.getGuiConfig().getLeaderboardGuiPrevPageButtonLore().stream().map(line -> MessageFormat.format(line, pageIndex - 1)).toList();
+            List<Component> modifiedLore = jobQuests.getGuiConfig().getLeaderboardGuiPrevPageButtonLore().stream().map(line -> jobQuests.getMessageUtil().toMiniMessageComponent(MessageFormat.format(line, pageIndex - 1))).toList();
             ItemStack prevPageButton = jobQuests.getGuiUtil().getItemStack(jobQuests.getGuiConfig().getLeaderboardGuiPrevPageButtonMaterial(), jobQuests.getGuiConfig().getLeaderboardGuiPrevPageButtonName(), modifiedLore, 1, jobQuests.getGuiConfig().isLeaderboardGuiPrevPageButtonEnchanted(), jobQuests.getGuiConfig().getLeaderboardGuiPrevPageButtonCustomModelData(), null);
             prevPageButtonSlot = jobQuests.getGuiConfig().getLeaderboardGuiPrevPageButtonSlot() + 9 * (jobQuests.getGuiConfig().getLeaderboardGuiRows() - 1);
             inventory.setItem(prevPageButtonSlot, prevPageButton);
         }
         if (pageIndex < pages.size()) {
-            List<String> modifiedLore = jobQuests.getGuiConfig().getLeaderboardGuiNextPageButtonLore().stream().map(line -> MessageFormat.format(line, pageIndex + 1)).toList();
+            List<Component> modifiedLore = jobQuests.getGuiConfig().getLeaderboardGuiNextPageButtonLore().stream().map(line -> jobQuests.getMessageUtil().toMiniMessageComponent(MessageFormat.format(line, pageIndex + 1))).toList();
             ItemStack nextPageButton = jobQuests.getGuiUtil().getItemStack(jobQuests.getGuiConfig().getLeaderboardGuiNextPageButtonMaterial(), jobQuests.getGuiConfig().getLeaderboardGuiNextPageButtonName(), modifiedLore, 1, jobQuests.getGuiConfig().isLeaderboardGuiNextPageButtonEnchanted(), jobQuests.getGuiConfig().getLeaderboardGuiNextPageButtonCustomModelData(), null);
             nextPageButtonSlot = jobQuests.getGuiConfig().getLeaderboardGuiNextPageButtonSlot() + 9 * (jobQuests.getGuiConfig().getLeaderboardGuiRows() - 1);
             inventory.setItem(nextPageButtonSlot, nextPageButton);

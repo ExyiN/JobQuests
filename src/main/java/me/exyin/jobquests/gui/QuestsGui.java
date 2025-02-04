@@ -10,6 +10,7 @@ import me.exyin.jobquests.model.player.PlayerJob;
 import me.exyin.jobquests.model.player.PlayerObjective;
 import me.exyin.jobquests.model.player.PlayerQuest;
 import me.exyin.jobquests.model.rewards.RewardFactory;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -91,7 +92,7 @@ public class QuestsGui implements InventoryHolder, PageableGui {
         for (int i = 0; i < inventory.getSize(); i++) {
             inventory.setItem(i, emptySlot);
         }
-        ItemStack backButton = jobQuests.getGuiUtil().getItemStack(jobQuests.getGuiConfig().getQuestGuiBackButtonMaterial(), jobQuests.getGuiConfig().getQuestGuiBackButtonName(), jobQuests.getGuiConfig().getQuestGuiBackButtonLore(), 1, jobQuests.getGuiConfig().isQuestGuiBackButtonEnchanted(), jobQuests.getGuiConfig().getQuestGuiBackButtonCustomModelData(), null);
+        ItemStack backButton = jobQuests.getGuiUtil().getItemStack(jobQuests.getGuiConfig().getQuestGuiBackButtonMaterial(), jobQuests.getGuiConfig().getQuestGuiBackButtonName(), jobQuests.getGuiConfig().getQuestGuiBackButtonLore().stream().map(line -> jobQuests.getMessageUtil().toMiniMessageComponent(line)).toList(), 1, jobQuests.getGuiConfig().isQuestGuiBackButtonEnchanted(), jobQuests.getGuiConfig().getQuestGuiBackButtonCustomModelData(), null);
         inventory.setItem(backButtonSlot, backButton);
         Map<Integer, ItemStack> page = pages.get(pageIndex);
         for (Map.Entry<Integer, ItemStack> entry : page.entrySet()) {
@@ -101,13 +102,13 @@ public class QuestsGui implements InventoryHolder, PageableGui {
             return;
         }
         if (pageIndex > 1) {
-            List<String> modifiedLore = jobQuests.getGuiConfig().getQuestGuiPrevPageButtonLore().stream().map(line -> MessageFormat.format(line, pageIndex - 1)).toList();
+            List<Component> modifiedLore = jobQuests.getGuiConfig().getQuestGuiPrevPageButtonLore().stream().map(line -> jobQuests.getMessageUtil().toMiniMessageComponent(MessageFormat.format(line, pageIndex - 1))).toList();
             ItemStack prevPageButton = jobQuests.getGuiUtil().getItemStack(jobQuests.getGuiConfig().getQuestGuiPrevPageButtonMaterial(), jobQuests.getGuiConfig().getQuestGuiPrevPageButtonName(), modifiedLore, 1, jobQuests.getGuiConfig().isQuestGuiPrevPageButtonEnchanted(), jobQuests.getGuiConfig().getQuestGuiPrevPageButtonCustomModelData(), null);
             prevPageButtonSlot = jobQuests.getGuiConfig().getQuestGuiPrevPageButtonSlot() + 9 * (jobQuests.getGuiConfig().getQuestGuiRows() - 1);
             inventory.setItem(prevPageButtonSlot, prevPageButton);
         }
         if (pageIndex < pages.size()) {
-            List<String> modifiedLore = jobQuests.getGuiConfig().getQuestGuiNextPageButtonLore().stream().map(line -> MessageFormat.format(line, pageIndex + 1)).toList();
+            List<Component> modifiedLore = jobQuests.getGuiConfig().getQuestGuiNextPageButtonLore().stream().map(line -> jobQuests.getMessageUtil().toMiniMessageComponent(MessageFormat.format(line, pageIndex + 1))).toList();
             ItemStack nextPageButton = jobQuests.getGuiUtil().getItemStack(jobQuests.getGuiConfig().getQuestGuiNextPageButtonMaterial(), jobQuests.getGuiConfig().getQuestGuiNextPageButtonName(), modifiedLore, 1, jobQuests.getGuiConfig().isQuestGuiNextPageButtonEnchanted(), jobQuests.getGuiConfig().getQuestGuiNextPageButtonCustomModelData(), null);
             nextPageButtonSlot = jobQuests.getGuiConfig().getQuestGuiNextPageButtonSlot() + 9 * (jobQuests.getGuiConfig().getQuestGuiRows() - 1);
             inventory.setItem(nextPageButtonSlot, nextPageButton);
@@ -117,16 +118,18 @@ public class QuestsGui implements InventoryHolder, PageableGui {
     private ItemStack getQuestItem(String jobId, Quest quest) {
         Material material = jobQuests.getGuiConfig().getQuestItemMaterial();
         String name = MessageFormat.format(jobQuests.getGuiConfig().getQuestItemName(), quest.getTitle(), quest.getRequiredLevel());
-        List<String> lore = new ArrayList<>();
+        List<Component> lore = new ArrayList<>();
         quest.getObjectives().forEach(objective -> {
             PlayerObjective playerObjective = jobQuests.getPlayerManager().getPlayerObjective(playerUuid, jobId, quest.getId(), objective.getId());
             String line;
             if (playerObjective.getProgression() >= objective.getQuantity()) {
-                line = MessageFormat.format(jobQuests.getGuiConfig().getQuestItemCompletedObjective(), objective.getObjectiveType().getDescription(playerObjective.getProgression(), objective.getQuantity()));
+                line = MessageFormat.format(jobQuests.getGuiConfig().getQuestItemCompletedObjective(), "<objective>");
             } else {
-                line = MessageFormat.format(jobQuests.getGuiConfig().getQuestItemObjective(), objective.getObjectiveType().getDescription(playerObjective.getProgression(), objective.getQuantity()));
+                line = MessageFormat.format(jobQuests.getGuiConfig().getQuestItemObjective(), "<objective>");
             }
-            lore.add(line);
+            Map<String, Component> placeholders = new HashMap<>();
+            placeholders.put("objective", objective.getObjectiveType().getDescription(playerObjective.getProgression(), objective.getQuantity()));
+            lore.add(jobQuests.getMessageUtil().toMiniMessageComponent(line, placeholders));
         });
         quest.getRewards().forEach(reward -> {
             RewardFactory rewardFactory = new RewardFactory(jobQuests);
@@ -135,18 +138,20 @@ public class QuestsGui implements InventoryHolder, PageableGui {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime refreshDate = jobQuests.getTimeUtil().getRefreshDate(now, quest.getRefreshTime());
         String refreshTime = jobQuests.getTimeUtil().getTimeFormattedFromDates(now, refreshDate);
-        lore.add(MessageFormat.format(jobQuests.getGuiConfig().getQuestItemRefreshTime(), refreshTime));
+        lore.add(jobQuests.getMessageUtil().toMiniMessageComponent(MessageFormat.format(jobQuests.getGuiConfig().getQuestItemRefreshTime(), refreshTime)));
         return jobQuests.getGuiUtil().getItemStack(material, name, lore, 1, jobQuests.getGuiConfig().isQuestItemEnchanted(), jobQuests.getGuiConfig().getQuestItemCustomModelData(), null);
     }
 
     private ItemStack getLockedQuestItem(String jobId, Quest quest) {
         Material material = jobQuests.getGuiConfig().getLockedQuestItemMaterial();
         String name = MessageFormat.format(jobQuests.getGuiConfig().getLockedQuestItemName(), quest.getTitle(), quest.getRequiredLevel());
-        List<String> lore = new ArrayList<>();
+        List<Component> lore = new ArrayList<>();
         quest.getObjectives().forEach(objective -> {
             PlayerObjective playerObjective = jobQuests.getPlayerManager().getPlayerObjective(playerUuid, jobId, quest.getId(), objective.getId());
-            String line = MessageFormat.format(jobQuests.getGuiConfig().getLockedQuestItemObjective(), objective.getObjectiveType().getDescription(playerObjective.getProgression(), objective.getQuantity()));
-            lore.add(line);
+            String line = MessageFormat.format(jobQuests.getGuiConfig().getLockedQuestItemObjective(), "<objective>");
+            Map<String, Component> placeholders = new HashMap<>();
+            placeholders.put("objective", objective.getObjectiveType().getDescription(playerObjective.getProgression(), objective.getQuantity()));
+            lore.add(jobQuests.getMessageUtil().toMiniMessageComponent(line, placeholders));
         });
         quest.getRewards().forEach(reward -> {
             RewardFactory rewardFactory = new RewardFactory(jobQuests);
@@ -155,18 +160,20 @@ public class QuestsGui implements InventoryHolder, PageableGui {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime refreshDate = jobQuests.getTimeUtil().getRefreshDate(now, quest.getRefreshTime());
         String refreshTime = jobQuests.getTimeUtil().getTimeFormattedFromDates(now, refreshDate);
-        lore.add(MessageFormat.format(jobQuests.getGuiConfig().getLockedQuestItemRefreshTime(), refreshTime));
+        lore.add(jobQuests.getMessageUtil().toMiniMessageComponent(MessageFormat.format(jobQuests.getGuiConfig().getLockedQuestItemRefreshTime(), refreshTime)));
         return jobQuests.getGuiUtil().getItemStack(material, name, lore, 1, jobQuests.getGuiConfig().isLockedQuestItemEnchanted(), jobQuests.getGuiConfig().getLockedQuestItemCustomModelData(), null);
     }
 
     private ItemStack getCompletedQuestItem(String jobId, Quest quest, PlayerQuest playerQuest) {
         Material material = jobQuests.getGuiConfig().getCompletedQuestItemMaterial();
         String name = MessageFormat.format(jobQuests.getGuiConfig().getCompletedQuestItemName(), quest.getTitle(), quest.getRequiredLevel());
-        List<String> lore = new ArrayList<>();
+        List<Component> lore = new ArrayList<>();
         quest.getObjectives().forEach(objective -> {
             PlayerObjective playerObjective = jobQuests.getPlayerManager().getPlayerObjective(playerUuid, jobId, quest.getId(), objective.getId());
-            String line = MessageFormat.format(jobQuests.getGuiConfig().getCompletedQuestItemObjective(), objective.getObjectiveType().getDescription(playerObjective.getProgression(), objective.getQuantity()));
-            lore.add(line);
+            String line = MessageFormat.format(jobQuests.getGuiConfig().getCompletedQuestItemObjective(), "<objective>");
+            Map<String, Component> placeholders = new HashMap<>();
+            placeholders.put("objective", objective.getObjectiveType().getDescription(playerObjective.getProgression(), objective.getQuantity()));
+            lore.add(jobQuests.getMessageUtil().toMiniMessageComponent(line, placeholders));
         });
         quest.getRewards().forEach(reward -> {
             RewardFactory rewardFactory = new RewardFactory(jobQuests);
@@ -175,7 +182,7 @@ public class QuestsGui implements InventoryHolder, PageableGui {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime refreshDate = jobQuests.getTimeUtil().getRefreshDate(playerQuest.getCompletedDate(), quest.getRefreshTime());
         String refreshTime = jobQuests.getTimeUtil().getTimeFormattedFromDates(now, refreshDate);
-        lore.add(MessageFormat.format(jobQuests.getGuiConfig().getCompletedQuestItemRefreshTime(), refreshTime));
+        lore.add(jobQuests.getMessageUtil().toMiniMessageComponent(MessageFormat.format(jobQuests.getGuiConfig().getCompletedQuestItemRefreshTime(), refreshTime)));
         return jobQuests.getGuiUtil().getItemStack(material, name, lore, 1, jobQuests.getGuiConfig().isCompletedQuestItemEnchanted(), jobQuests.getGuiConfig().getCompletedQuestItemCustomModelData(), null);
     }
 

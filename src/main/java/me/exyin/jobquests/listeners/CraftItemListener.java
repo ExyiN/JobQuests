@@ -5,6 +5,7 @@ import me.exyin.jobquests.model.enums.ObjectiveEventType;
 import me.exyin.jobquests.model.player.PlayerJob;
 import me.exyin.jobquests.model.player.PlayerObjective;
 import me.exyin.jobquests.model.player.PlayerQuest;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -16,6 +17,8 @@ import org.bukkit.inventory.ItemStack;
 
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CraftItemListener implements Listener {
     private final JobQuests jobQuests;
@@ -54,7 +57,10 @@ public class CraftItemListener implements Listener {
                 }
                 jobQuests.getPlayerManager().incrementProgression(player.getUniqueId(), job.getId(), quest.getId(), objective.getId(), getCraftedAmount(craftItemEvent));
                 if (playerObjective.getProgression() >= objective.getQuantity()) {
-                    jobQuests.getMessageUtil().sendMessage(player, MessageFormat.format(jobQuests.getMessageConfig().getObjectiveCompleted(), objective.getObjectiveType().getCompletedMessage(objective.getQuantity())));
+                    String message = MessageFormat.format(jobQuests.getMessageConfig().getObjectiveCompleted(), "<objective>");
+                    Map<String, Component> placeholders = new HashMap<>();
+                    placeholders.put("objective", objective.getObjectiveType().getCompletedMessage(objective.getQuantity()));
+                    jobQuests.getMessageUtil().sendMessage(player, jobQuests.getMessageUtil().toMiniMessageComponent(message, placeholders));
                     player.playSound(player.getLocation(), Sound.valueOf(jobQuests.getConfigManager().getObjectiveCompletionSound()), jobQuests.getConfigManager().getObjectiveCompletionSoundVolume(), jobQuests.getConfigManager().getObjectiveCompletionSoundPitch());
                 }
             });

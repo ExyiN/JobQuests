@@ -3,6 +3,7 @@ package me.exyin.jobquests.model.rewards.impl;
 import me.exyin.jobquests.JobQuests;
 import me.exyin.jobquests.model.enums.RewardType;
 import me.exyin.jobquests.model.rewards.interfaces.Reward;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -17,8 +18,8 @@ public class RewardMoneyStrategy implements Reward {
     }
 
     @Override
-    public String getDescription(double quantity) {
-        return MessageFormat.format(jobQuests.getGuiConfig().getQuestGuiReward().get(RewardType.MONEY), jobQuests.getEconomy().format(quantity));
+    public Component getDescription(double quantity) {
+        return jobQuests.getMessageUtil().toMiniMessageComponent(MessageFormat.format(jobQuests.getGuiConfig().getQuestGuiReward().get(RewardType.MONEY), jobQuests.getEconomy().format(quantity)));
     }
 
     @Override

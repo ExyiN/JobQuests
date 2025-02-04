@@ -5,6 +5,7 @@ import me.exyin.jobquests.model.Job;
 import me.exyin.jobquests.model.enums.RewardType;
 import me.exyin.jobquests.model.player.PlayerJob;
 import me.exyin.jobquests.model.rewards.interfaces.Reward;
+import net.kyori.adventure.text.Component;
 
 import java.text.MessageFormat;
 import java.util.UUID;
@@ -17,8 +18,8 @@ public class RewardXpStrategy implements Reward {
     }
 
     @Override
-    public String getDescription(double quantity) {
-        return MessageFormat.format(jobQuests.getGuiConfig().getQuestGuiReward().get(RewardType.XP), quantity);
+    public Component getDescription(double quantity) {
+        return jobQuests.getMessageUtil().toMiniMessageComponent(MessageFormat.format(jobQuests.getGuiConfig().getQuestGuiReward().get(RewardType.XP), quantity));
     }
 
     @Override
