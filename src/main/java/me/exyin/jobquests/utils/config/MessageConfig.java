@@ -23,6 +23,8 @@ public class MessageConfig {
     private String objectiveBREAKCompleted;
     private String objectiveFISHCompleted;
     private String objectiveCRAFTCompleted;
+    private String playerInfoTitle;
+    private String playerInfoLine;
     private String playerNotFound;
     private String jobNotFound;
     private String questNotFound;
@@ -58,6 +60,8 @@ public class MessageConfig {
         objectiveBREAKCompleted = yaml.getString("objectiveBREAKCompleted", "<gray>Break {0} <lang:block.minecraft.{1}></gray>");
         objectiveFISHCompleted = yaml.getString("objectiveFISHCompleted", "<gray>Fish {0} <lang:item.minecraft.{1}></gray>");
         objectiveCRAFTCompleted = yaml.getString("objectiveCRAFTCompleted", "<gray>Craft {0} <lang:item.minecraft.{1}></gray>");
+        playerInfoTitle = yaml.getString("playerInfoTitle", "{0}''s jobs:");
+        playerInfoLine = yaml.getString("playerInfoLine", "<dark_gray>•</dark_gray> {0} <dark_gray>◇</dark_gray> <gray>ʟᴠʟ</gray> <yellow>{1}</yellow> <dark_gray>»</dark_gray> <green>{2}</green><gray>/{3} XP</gray>");
         playerNotFound = yaml.getString("playerNotFound", "<red>Player not found.</red>");
         jobNotFound = yaml.getString("jobNotFound", "<red>Job not found.</red>");
         questNotFound = yaml.getString("questNotFound", "<red>Quest not found.</red>");

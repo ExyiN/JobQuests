@@ -24,8 +24,12 @@ public class GuiUtil {
     public ItemStack getItemStack(Material material, String name, List<Component> lore, int amount, boolean isEnchanted, int customModelData, UUID uuid) {
         ItemStack item = new ItemStack(material, amount);
         item.editMeta(itemMeta -> {
+            if (itemMeta instanceof SkullMeta skullMeta) {
+                PlayerProfile playerProfile = jobQuests.getServer().createProfile(uuid);
+                skullMeta.setPlayerProfile(playerProfile);
+            }
             if (name != null) {
-                itemMeta.itemName(jobQuests.getMessageUtil().toMiniMessageComponent(name));
+                itemMeta.displayName(jobQuests.getMessageUtil().toMiniMessageComponent("<!i>" + name));
                 if (name.isBlank()) {
                     itemMeta.setHideTooltip(true);
                 }
@@ -36,10 +40,6 @@ public class GuiUtil {
             }
             if (customModelData >= 0) {
                 itemMeta.setCustomModelData(customModelData);
-            }
-            if (itemMeta instanceof SkullMeta skullMeta) {
-                PlayerProfile playerProfile = jobQuests.getServer().createProfile(uuid);
-                skullMeta.setPlayerProfile(playerProfile);
             }
             itemMeta.setEnchantmentGlintOverride(isEnchanted);
             itemMeta.addAttributeModifier(Attribute.GENERIC_LUCK, new AttributeModifier(new NamespacedKey(jobQuests, "hide"), 0, AttributeModifier.Operation.ADD_NUMBER));

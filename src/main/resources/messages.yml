@@ -13,6 +13,9 @@ objectiveBREAKCompleted: '<gray>Break {0} {1}</gray>'
 objectiveFISHCompleted: '<gray>Fish {0} {1}</gray>'
 objectiveCRAFTCompleted: '<gray>Craft {0} {1}</gray>'
 
+playerInfoTitle: "{0}''s jobs:"
+playerInfoLine: '<dark_gray>•</dark_gray> {0} <dark_gray>◇</dark_gray> <gray>ʟᴠʟ</gray> <yellow>{1}</yellow> <dark_gray>»</dark_gray> <green>{2}</green><gray>/{3} XP</gray>'
+
 playerNotFound: '<red>Player not found.</red>'
 jobNotFound: '<red>Job not found.</red>'
 questNotFound: '<red>Quest not found.</red>'
@@ -27,10 +30,12 @@ playerHelp:
   - '<gray>Help:</gray>'
   - '<dark_gray>• <yellow>/jobquests</yellow> »</dark_gray> <gray>Open jobs main menu.</gray>'
   - '<dark_gray>• <yellow>/jobquests leaderboard</yellow> »</dark_gray> <gray>Open jobs leaderboards menu.</gray>'
+  - '<dark_gray>• <yellow>/jobquests playerinfo <player></yellow> »</dark_gray> <gray>Show a player jobs info.</gray>'
 adminHelp:
   - '<gray>Help:</gray>'
   - '<dark_gray>• <yellow>/jobquests</yellow> »</dark_gray> <gray>Open jobs main menu.</gray>'
   - '<dark_gray>• <yellow>/jobquests leaderboard</yellow> »</dark_gray> <gray>Open jobs leaderboards menu.</gray>'
+  - '<dark_gray>• <yellow>/jobquests playerinfo <player></yellow> »</dark_gray> <gray>Show a player jobs info.</gray>'
   - '<dark_gray>• <yellow>/jobquests purgejobs <player></yellow> »</dark_gray> <gray>Remove all non-existing jobs from a player data.</gray>'
   - '<dark_gray>• <yellow>/jobquests reload</yellow> »</dark_gray> <gray>Reload all configurations.</gray>'
   - '<dark_gray>• <yellow>/jobquests resetjob <player> <jobId></yellow> »</dark_gray> <gray>Reset a job for a player.</gray>'
