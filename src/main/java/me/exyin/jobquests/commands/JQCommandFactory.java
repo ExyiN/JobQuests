@@ -13,6 +13,7 @@ public class JQCommandFactory {
     public JQCommandFactory(JobQuests jobQuests) {
         map.put(JQCommandsEnum.HELP, new JQCommandDefaultStrategy(jobQuests));
         map.put(JQCommandsEnum.LEADERBOARD, new JQCommandLeaderboardStrategy(jobQuests));
+        map.put(JQCommandsEnum.PLAYERINFO, new JQCommandPlayerInfoStrategy(jobQuests));
         map.put(JQCommandsEnum.PURGEJOBS, new JQCommandPurgeJobsStrategy(jobQuests));
         map.put(JQCommandsEnum.RELOAD, new JQCommandReloadStrategy(jobQuests));
         map.put(JQCommandsEnum.RESETJOB, new JQCommandResetJobStrategy(jobQuests));

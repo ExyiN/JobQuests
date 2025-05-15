@@ -13,7 +13,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class JQCommands implements CommandExecutor, TabCompleter {
     private final JobQuests jobQuests;
@@ -49,13 +48,10 @@ public class JQCommands implements CommandExecutor, TabCompleter {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
-        if (args.length == 1) {
-            if (commandSender.hasPermission("jobquests.admin")) {
-                return Arrays.stream(JQCommandsEnum.values()).map(value -> value.toString().toLowerCase()).filter(suggestion -> suggestion.toLowerCase().startsWith(args[0].toLowerCase())).toList();
-            }
-            return Stream.of(JQCommandsEnum.HELP.name().toLowerCase(), JQCommandsEnum.LEADERBOARD.name().toLowerCase()).filter(suggestion -> suggestion.toLowerCase().startsWith(args[0].toLowerCase())).toList();
-        }
         JQCommandFactory jqCommandFactory = new JQCommandFactory(jobQuests);
+        if (args.length == 1) {
+            return Arrays.stream(JQCommandsEnum.values()).filter(value -> jqCommandFactory.getStrategy(value).canExecute(commandSender)).map(value -> value.toString().toLowerCase()).filter(suggestion -> suggestion.toLowerCase().startsWith(args[0].toLowerCase())).toList();
+        }
         JQCommandsEnum commandsEnum;
         try {
             commandsEnum = JQCommandsEnum.valueOf(args[0].toUpperCase());
